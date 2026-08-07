@@ -109,14 +109,14 @@ industrial gearbox is engineered by a designer who opens a standard,
 selects a correction method, and computes a life estimate---unknowingly
 entering what we term the \textbf{Standard Gamble}: a lottery in which
 the predicted fatigue life of an identical gear can span
-2.79~dex (a factor of $\sim$620) purely through legitimate, defensible
+2.79~dex (a factor of $\sim$640) purely through legitimate, defensible
 methodological choices, none of which violates its respective published
 standard. The stakes are hidden, because few organizations run the same
 gear through three competing standards to discover the spread. This
 paper quantifies that spread, attributes it to individual choices, and
-shows that more than half of the total prediction variance---55.3\%---
+shows that more than half of the total prediction variance---55.3\%--- % @source: size_surface_standard_var_pct
 originates from a single decision: which size-and-surface factor
-formulation to trust. % @source: size_surface_standard_var_pct
+formulation to trust.
 
 The present study is a purely numerical investigation, confined to a
 single quenched-and-tempered 42CrMo4 spur gear ($m_n=3$~mm,
@@ -1299,11 +1299,11 @@ designer can make
 to reduce prediction uncertainty is to exclude mean-stress correction
 methods that are not material-appropriate. A practicing engineer who selects the most conservative
 combination
-(FKM~+~Goodman~+~as-forged $R_z$) will predict a finite life of
-$\sim$$10^{3.2}$ cycles, whereas one who selects the least
+(FKM~+~SWT~+~as-forged $R_z$) will predict a finite life of
+$\sim$$1.3\times10^{3}$ cycles, whereas one who selects the least
 conservative standard chain (ISO~6336~+~Gerber~+~ground) obtains
-run-out ($>10^7$ cycles)---a gap of more than three orders of
-magnitude---even if they agree on geometry, material,
+run-out ($>10^7$ cycles)---a gap of nearly four orders of
+magnitude ($10^{3.9}$)---even if they agree on geometry, material,
 load, and S--N curve. The three factors' bootstrap confidence intervals
 overlap modestly: the rankings among them should not be over-interpreted,
 but the AFT decomposition and bootstrap validation both confirm that each
@@ -1921,10 +1921,11 @@ Choice & Median $\log_{10}(N_f)$ & [P5, P95] \\
 \end{tabular}
 \end{table*}
 
-The most conservative defensible combination---FKM standard, Goodman
+The most conservative defensible combination---FKM standard, SWT
 mean-stress correction, as-forged surface finish, the S--N curve with
 the lower fatigue strength (Waterloo~\#68), and Modified Miner---predicts a
-median life of approximately $10^{3.19} \approx 1.6\times10^3$~cycles.
+median life of approximately $1.3\times10^3$~cycles, the global
+minimum across all 144 full-factorial combinations.
 At the other extreme, the least conservative combination that still
 produces finite-life predictions (AGMA~2001, Morrow correction,
 as-forged finish, Waterloo~\#66, Miner) yields a median
@@ -1940,8 +1941,9 @@ of magnitude larger than the explicit design safety factors of
 The practical implication is that the choice of calculation methodology
 generates an \emph{implicit calculation-induced life offset} that is
 rarely made explicit during design review. A design team that adopts
-FKM~+~Goodman generates a predicted life approximately two orders of
-magnitude shorter than a team using ISO~+~Gerber for the same gear.
+FKM~+~SWT generates a predicted life approximately four orders of
+magnitude shorter than a team using ISO~+~Gerber for the same gear
+($1.3\times10^{3}$~cycles vs.\ run-out beyond $10^7$~cycles).
 This offset is purely mathematical---it reflects formula differences, not
 physical safety reserves---and must not be confused with the explicit
 design safety factor, which separately accounts for material scatter,
@@ -2288,7 +2290,7 @@ tool to answer that question case by case.
         (target: 0), range [$-$2.15, 0.99]. One entry exhibits
         $|M| > 2$, concentrated in a combination where the model
         severely overestimates survival. This outlier corresponds to
-        FKM + Goodman + as-forged Rz combinations that produce the
+        FKM + SWT + as-forged Rz combinations that produce the
         shortest predicted lives; their presence is expected given the
         extreme conservatism of this combination and does not indicate
         model misspecification.
@@ -2623,9 +2625,11 @@ endurance limit for this geometry---I find:
         assumption the engineer selects.
   \item In this numerical case study, the combined effect of all five
         methodological choices spans 2.79~dex. The most conservative
-        combination (FKM~+~Goodman~+~as-forged $R_z$) carries an
-        implicit safety factor of approximately $10^{2.5}$ relative to
-        the least conservative (ISO~+~Gerber~+~ground), purely from
+        combination (FKM~+~SWT~+~as-forged $R_z$, predicting
+        $1.3\times10^{3}$ cycles) carries an implicit safety factor of
+        $\sim$$10^{2.8}$ (a factor of $\sim$640) relative to the
+        least conservative (ISO~+~Gerber~+~ground, run-out beyond
+        $10^6$ cycles), purely from
         methodological divergence rather than from explicit design
         margins. The framework quantifies this divergence and attributes
         it to individual choices---a capability that, once validated
@@ -2664,9 +2668,9 @@ endurance limit for this geometry---I find:
 uncertainty in gear bending fatigue life originates from a single
 decision: which size-and-surface factor formulation to use. Not material
 scatter. Not manufacturing tolerance. Not load variation. Just the choice
-of handbook. An engineer who selects FKM, Goodman, and an as-forged
+of handbook. An engineer who selects FKM, SWT, and an as-forged
 roughness assumption---all defensible within published standards---will
-report a predicted life as short as $1.6\times10^3$ cycles. % @source: sweep.json (FKM+Goodman+as-forged min Nf)
+report a predicted life as short as $1.3\times10^3$ cycles. % @source: sweep.json (FKM+SWT+as-forged min Nf)
 A colleague who
 selects ISO, Gerber, and a ground finish will report run-out. The gear
 did not change. The standard did.
