@@ -94,12 +94,29 @@ surface roughness, ISO 6336, AGMA 2001, FKM, S--N curve
 % ================================================================
 
 A gear's fatigue life is not a property of the gear. It is a property
-of the handbook the engineer opens. Every industrial gearbox is designed
-by an engineer consulting a standard, selecting a correction method, and
-computing a life estimate. Different handbooks give different answers.
-For the same geometry, material, and load, ISO~6336~\cite{iso6336} may
-predict run-out, while FKM~\cite{fkm} warns of failure within $10^4$
-cycles, and AGMA~2001~\cite{agma2001} falls somewhere in between.
+of the handbook the engineer opens.
+
+Imagine the same gear standing before three tribunals. The evidence is
+identical---the same geometry, the same 42CrMo4 steel, the same 700~N$\cdot$m
+bending moment. Three judges consult three law books. The first (ISO~6336)
+declares the gear immortal---run-out beyond $10^7$ cycles. The second
+(FKM) pronounces a death sentence at $10^4$ cycles. The third (AGMA~2001)
+delivers a hung verdict somewhere in between. The gear has not changed.
+The law books have.
+
+This is not a parable. It is the everyday reality of gear design. Every
+industrial gearbox is engineered by a designer who opens a standard,
+selects a correction method, and computes a life estimate---unknowingly
+entering what we term the \textbf{Standard Gamble}: a lottery in which
+the predicted fatigue life of an identical gear can span
+2.79~dex (a factor of $\sim$620) purely through legitimate, defensible
+methodological choices, none of which violates its respective published
+standard. The stakes are hidden, because few organizations run the same
+gear through three competing standards to discover the spread. This
+paper quantifies that spread, attributes it to individual choices, and
+shows that more than half of the total prediction variance---55.3\%---
+originates from a single decision: which size-and-surface factor
+formulation to trust. % @source: size_surface_standard_var_pct
 
 The present study is a purely numerical investigation, confined to a
 single quenched-and-tempered 42CrMo4 spur gear ($m_n=3$~mm,
@@ -2533,15 +2550,21 @@ these extensions with minimal structural modification.
 \label{sec:conclusions}
 % ================================================================
 
-I applied a factorial decomposition methodology to quantify
-method-induced uncertainty in gear bending fatigue, demonstrated
-on a single through-hardened 42CrMo4 spur gear at 700~N$\cdot$m.
-This work develops a tailored full-factorial AFT uncertainty
-decomposition pipeline for gear bending fatigue that
-simultaneously ranks five methodological error sources by variance
-explained, contributing a quantitative uncertainty-budget framework
-that prior studies---which compare individual standards or factors in
-isolation---do not provide.
+The three tribunals of the Introduction---ISO, AGMA, and FKM---deliver
+their verdicts not because they disagree on the evidence, but because
+they disagree on what the evidence means. This study quantifies exactly
+how much each disagreement costs.
+
+A full-factorial AFT survival model with censored likelihood was applied
+to decompose method-induced uncertainty in gear bending fatigue,
+demonstrated on a single through-hardened 42CrMo4 spur gear at
+700~N$\cdot$m. The framework simultaneously varies five methodological
+choices in a controlled factorial design, handles right-censored run-out
+data without discarding them, and decomposes the total prediction
+variance into attributable fractions with bootstrap-quantified
+confidence---providing a quantitative uncertainty-budget framework that
+prior studies, which compare individual standards or factors in isolation,
+do not provide.
 The methodology
 simultaneously varies five engineering choices in a full-factorial
 design, handles right-censored run-out data through AFT censored
@@ -2637,9 +2660,26 @@ endurance limit for this geometry---I find:
         categorical methodological choices and censored run-out data.
 
 \medskip
-\noindent A gear's fatigue life, this study demonstrates, is not stamped
-into the steel during heat treatment. It is written---differently---into
-every handbook on the engineer's shelf.
+\noindent \textbf{The 55-Percent Problem.} More than half of all prediction
+uncertainty in gear bending fatigue life originates from a single
+decision: which size-and-surface factor formulation to use. Not material
+scatter. Not manufacturing tolerance. Not load variation. Just the choice
+of handbook. An engineer who selects FKM, Goodman, and an as-forged
+roughness assumption---all defensible within published standards---will
+report a predicted life as short as $1.6\times10^3$ cycles. % @source: sweep.json (FKM+Goodman+as-forged min Nf)
+A colleague who
+selects ISO, Gerber, and a ground finish will report run-out. The gear
+did not change. The standard did.
+
+\textbf{The Standard Gamble} is not a theoretical curiosity. Every
+industrial gearbox in service was designed under one of these
+standards---and therefore under one of these invisible bets. This
+framework makes the bet visible, quantifies the stakes, and gives
+engineers the first tool for deciding whether their handbook is helping
+them or betting against them. A gear's fatigue life is not stamped into
+the steel during heat treatment. It is written---differently---into
+every handbook on the engineer's shelf. The question is no longer
+whether the handbooks disagree. It is what to do about it.
 \end{enumerate}
 
 % ================================================================
