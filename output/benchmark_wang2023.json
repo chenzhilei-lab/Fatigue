@@ -1,0 +1,66 @@
+{
+  "description": "Wang et al. (2023) benchmark: 5-switch pipeline on published test gear",
+  "wang_gear": {
+    "m": 6,
+    "z": 20,
+    "b": 25,
+    "material": "42CrMo (carburized, HRC 58-62)",
+    "R": 0.1
+  },
+  "wang_stress_levels_MPa": [
+    292.95,
+    257.12,
+    221.14,
+    186.02,
+    150.74
+  ],
+  "wang_fatigue_limit_MPa_at_1e7": [
+    167.23,
+    151.72,
+    149.22,
+    144.1
+  ],
+  "wang_reported_scatter_dex": "0.4-0.6 (Tab. 3, levels I-IV)",
+  "results": {
+    "292.95": {
+      "torque_Nm": 879,
+      "sigma_F0_actual": 292.95,
+      "n_finite": 0,
+      "n_runout": 144,
+      "median_logNf": null,
+      "spread_dex": null
+    },
+    "257.12": {
+      "torque_Nm": 771,
+      "sigma_F0_actual": 257.12,
+      "n_finite": 0,
+      "n_runout": 144,
+      "median_logNf": null,
+      "spread_dex": null
+    },
+    "221.14": {
+      "torque_Nm": 663,
+      "sigma_F0_actual": 221.14,
+      "n_finite": 0,
+      "n_runout": 144,
+      "median_logNf": null,
+      "spread_dex": null
+    },
+    "186.02": {
+      "torque_Nm": 558,
+      "sigma_F0_actual": 186.02,
+      "n_finite": 0,
+      "n_runout": 144,
+      "median_logNf": null,
+      "spread_dex": null
+    },
+    "150.74": {
+      "torque_Nm": 452,
+      "sigma_F0_actual": 150.74,
+      "n_finite": 0,
+      "n_runout": 144,
+      "median_logNf": null,
+      "spread_dex": null
+    }
+  }
+}

@@ -1,0 +1,118 @@
+{
+  "summary": {
+    "design": "5 x 4 x 2 x 3 x 3 = 360 combinations at 700 N*m; S-N factor spans 5 levels (2 Waterloo + 3 synthetic heat treatments)",
+    "synthetic_curves": {
+      "Waterloo_SMDIdbase_Iter068": {
+        "uts": 1355.7,
+        "sigma_w_1e6": 610.5244200798128,
+        "b": -0.055,
+        "sigma_f_prime": 1356.0,
+        "synthetic": false
+      },
+      "Waterloo_SMDIdbase_Iter066": {
+        "uts": 1537.0,
+        "sigma_w_1e6": 609.9159453139856,
+        "b": -0.07,
+        "sigma_f_prime": 1684.0,
+        "synthetic": false
+      },
+      "Synthetic_42CrMo4_HighStrength": {
+        "uts": 1660.0,
+        "sigma_w_1e6": 747.0,
+        "b": -0.06,
+        "sigma_f_prime": 1783.9,
+        "synthetic": true
+      },
+      "Synthetic_42CrMo4_Classic500": {
+        "uts": 1322.0,
+        "sigma_w_1e6": 594.9,
+        "b": -0.06,
+        "sigma_f_prime": 1420.7,
+        "synthetic": true
+      },
+      "Synthetic_42CrMo4_Classic560": {
+        "uts": 1151.0,
+        "sigma_w_1e6": 518.0,
+        "b": -0.055,
+        "sigma_f_prime": 1150.4,
+        "synthetic": true
+      }
+    },
+    "baseline_2_curves": {
+      "sn_source_share_%": 2.46,
+      "n_censored": 84,
+      "n_total": 144,
+      "sigma_aft": 0.1745
+    },
+    "extended_5_curves": {
+      "sn_source_share_%": 34.74,
+      "n_censored": 194,
+      "n_total": 360,
+      "sigma_aft": 0.2417,
+      "shares_%": {
+        "mean_stress_method": 16.22,
+        "size_surface_standard": 33.59,
+        "rz_level": 14.27,
+        "sn_source": 34.74,
+        "damage_method": 0.19,
+        "size_surface_standard x rz_level": 0.99
+      },
+      "delta_logLik": {
+        "mean_stress_method": 660.804,
+        "size_surface_standard": 1368.861,
+        "rz_level": 581.518,
+        "sn_source": 1415.703,
+        "damage_method": 7.782,
+        "size_surface_standard x rz_level": 40.171
+      }
+    },
+    "change": {
+      "sn_share_pp": 32.3,
+      "direction": "higher"
+    }
+  },
+  "baseline_2_curves_decomposition": {
+    "shares_%": {
+      "mean_stress_method": 18.18,
+      "size_surface_standard": 55.27,
+      "rz_level": 22.61,
+      "sn_source": 2.46,
+      "damage_method": 0.33,
+      "size_surface_standard x rz_level": 1.15
+    },
+    "delta_logLik": {
+      "mean_stress_method": 324.213,
+      "size_surface_standard": 985.712,
+      "rz_level": 403.307,
+      "sn_source": 43.902,
+      "damage_method": 5.878,
+      "size_surface_standard x rz_level": 20.54
+    },
+    "sigma_aft": 0.1745,
+    "logLik_full": 11.32,
+    "n_censored": 84,
+    "n_total": 144
+  },
+  "extended_5_curves_decomposition": {
+    "shares_%": {
+      "mean_stress_method": 16.22,
+      "size_surface_standard": 33.59,
+      "rz_level": 14.27,
+      "sn_source": 34.74,
+      "damage_method": 0.19,
+      "size_surface_standard x rz_level": 0.99
+    },
+    "delta_logLik": {
+      "mean_stress_method": 660.804,
+      "size_surface_standard": 1368.861,
+      "rz_level": 581.518,
+      "sn_source": 1415.703,
+      "damage_method": 7.782,
+      "size_surface_standard x rz_level": 40.171
+    },
+    "sigma_aft": 0.2417,
+    "logLik_full": -24.61,
+    "n_censored": 194,
+    "n_total": 360
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "description": "Wang et al. (2023) benchmark: 5-switch pipeline on published test gear",
+  "wang_gear": {
+    "mn": 3.5,
+    "z": 35,
+    "b": 22,
+    "material": "42CrMo4",
+    "R": 0.1
+  },
+  "wang_stress_levels_MPa": [
+    151,
+    180,
+    210,
+    252,
+    293
+  ],
+  "wang_reported_scatter_dex": "~1.0",
+  "results": {
+    "151": {
+      "torque_Nm": 260,
+      "sigma_F0_actual": 151.8,
+      "n_finite": 0,
+      "n_runout": 144,
+      "median_logNf": null,
+      "spread_dex": null
+    },
+    "180": {
+      "torque_Nm": 310,
+      "sigma_F0_actual": 181.0,
+      "n_finite": 0,
+      "n_runout": 144,
+      "median_logNf": null,
+      "spread_dex": null
+    },
+    "210": {
+      "torque_Nm": 362,
+      "sigma_F0_actual": 211.1,
+      "n_finite": 0,
+      "n_runout": 144,
+      "median_logNf": null,
+      "spread_dex": null
+    },
+    "252": {
+      "torque_Nm": 434,
+      "sigma_F0_actual": 253.4,
+      "n_finite": 0,
+      "n_runout": 144,
+      "median_logNf": null,
+      "spread_dex": null
+    },
+    "293": {
+      "torque_Nm": 505,
+      "sigma_F0_actual": 294.6,
+      "n_finite": 0,
+      "n_runout": 144,
+      "median_logNf": null,
+      "spread_dex": null
+    }
+  }
+}

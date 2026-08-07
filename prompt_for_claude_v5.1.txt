@@ -1,0 +1,31 @@
+齿轮疲劳论文 Phase 1 — 文本层修改
+
+## 你的任务
+
+编辑 D:/Papers/0723-Gear_Fatigue_UQ/paper/gear_fatigue_v5.0.tex，
+改完另存 gear_fatigue_v5.1.tex，不覆盖原文件。
+
+## 数字来源（铁律）
+
+论文所有数字只能从以下文件取：
+  D:/Papers/0723-Gear_Fatigue_UQ/output/canonical_numbers.json
+
+禁止打开或读取 output/ 下的任何其他 .json 文件。
+如果规范表里没有的数字，不要写进论文。
+
+## 修改内容
+
+1. 全文文本润色：去 AI 味（删除 However/Moreover/Furthermore/This paper argues 等），
+   改自然学术英语，不碰数字。
+
+2. 所有数字与 canonical_numbers.json 逐条核对，不一致的改成规范表的值。
+   特别注意表 Table 2 的方差分解百分比。
+
+3. 检查引用完整性，确认每条 \cite 文献在 .bib 中有对应条目。
+
+4. 最终输出 gear_fatigue_v5.1.tex，0 Error / 0 Warning 编译通过。
+
+## 我的角色
+
+我是 Hermes，只做审计。你交稿后我来跑 paper_check.py 和独立验证。
+我本次不动你的稿子。

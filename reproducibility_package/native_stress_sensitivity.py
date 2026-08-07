@@ -1,0 +1,338 @@
+"""
+native_stress_sensitivity.py — Native stress-chain sensitivity (强制项③升级)
+=============================================================================
+Implements each standard's native stress concentration treatment:
+  - ISO:  Y_Sa = 1.55 (already correct in baseline)
+  - AGMA: J-factor (geometry factor) on denominator of bending stress
+  - FKM:  K_f via Neuber/Peterson notch sensitivity
+
+Then re-runs AFT decomposition to quantify the TRUE standard divergence.
+"""
+import json, sys, os, copy
+import numpy as np
+from scipy.stats import norm
+
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
+from gear_params import SN_CURVES, GEAR, MATERIAL, LOAD
+
+# ============================================================
+# 1. Native stress multipliers per standard
+# ============================================================
+# Current unified approach: all standards use Y_Sa=1.55
+Y_Sa_unified = 1.55
+
+# AGMA J-factor for 20-tooth pinion, 60-tooth gear, 20° PA
+# Source: AGMA 2001-D04, Figure 8 / ANSI/AGMA 908-B89
+# Range for 20T/60T combination: J ≈ 0.31-0.35
+# The AGMA bending stress: σ = Ft/(b·mn) × 1/J × (other factors)
+# Equivalent multiplier relative to ISO's Y_Fa×Y_Sa×Y_ε chain:
+#   ISO multiplier = Y_Fa × Y_Sa × Y_ε × Y_β = 2.80 × 1.55 × 0.691 × 1.0 ≈ 3.00
+#   AGMA multiplier = (1/J) × Y_Fa × Y_ε × Y_β (AGMA doesn't use Y_Sa or Y_Fa
+#     but for comparison: the stress ratio ISO/AGMA depends on J)
+#   Equivalent AGMA "Y_Sa_equiv" = (1/J) / (Y_Fa × Y_ε)  [dimensionless ratio]
+#   For J=0.33: Y_Sa_equiv = (1/0.33)/(2.80×0.691) = 3.03/1.935 = 1.57
+#   For J=0.31: Y_Sa_equiv = (1/0.31)/(1.935) = 1.67
+#   For J=0.35: Y_Sa_equiv = (1/0.35)/(1.935) = 1.48
+#
+# So the effective stress multiplier (relative to unified Y_Sa=1.55):
+AGMA_J_range = {
+    "J_low_conservative":  {"J": 0.31, "ratio_to_unified": 1.67/1.55},   # ≈ 1.077
+    "J_midpoint":          {"J": 0.33, "ratio_to_unified": 1.57/1.55},   # ≈ 1.013
+    "J_high_nonconservative": {"J": 0.35, "ratio_to_unified": 1.48/1.55}, # ≈ 0.955
+}
+
+# FKM K_f via Neuber/Peterson
+# K_t for gear root fillet (engineering estimate, z=20, mn=3):
+#   K_t ≈ 1 + 0.5 × sqrt(t/r) × (t/h)^0.3
+#   t = π×mn/2 ≈ 4.71 mm, r = tip_radius × mn ≈ 1.14 mm
+#   h = 2.25×mn ≈ 6.75 mm
+#   K_t ≈ 1 + 0.5 × sqrt(4.71/1.14) × (4.71/6.75)^0.3
+#       ≈ 1 + 0.5 × 2.03 × 0.91 = 1 + 0.92 = 1.92
+mn = GEAR["module_mn"]
+t = np.pi * mn / 2
+r_root = GEAR["tip_radius"] * mn
+h = 2.25 * mn
+K_t_gear = 1.0 + 0.5 * np.sqrt(t / max(r_root, 0.1)) * (t / h) ** 0.3
+
+# Peterson notch sensitivity: a = 0.0254 × (2079/uts)^1.8 (mm)
+uts = MATERIAL["uts"]
+a_peterson = 0.0254 * (2079.0 / uts) ** 1.8
+K_f_peterson = 1.0 + (K_t_gear - 1.0) / (1.0 + a_peterson / max(r_root, 0.01))
+
+# Neuber: a' = 0.01524 × (2079/uts)^1.8, K_f = 1 + (K_t-1)/(1+sqrt(a'/r))
+a_neuber = 0.01524 * (2079.0 / uts) ** 1.8
+K_f_neuber = 1.0 + (K_t_gear - 1.0) / (1.0 + np.sqrt(a_neuber / max(r_root, 0.01)))
+
+print(f"K_t (gear root) = {K_t_gear:.2f}")
+print(f"K_f Peterson  = {K_f_peterson:.2f}")
+print(f"K_f Neuber    = {K_f_neuber:.2f}")
+print(f"Y_Sa (ISO)    = {Y_Sa_unified:.2f}")
+print()
+
+# FKM K_f / Y_Sa ratio (how much FKM stress differs from current unified)
+FKM_Kf_range = {
+    "Kf_Peterson": {"K_f": K_f_peterson, "ratio_to_unified": K_f_peterson / Y_Sa_unified},
+    "Kf_Neuber":   {"K_f": K_f_neuber,   "ratio_to_unified": K_f_neuber / Y_Sa_unified},
+}
+
+# ============================================================
+# 2. Load sweep and recompute Nf under native stress chains
+# ============================================================
+print("Loading sweep data...", flush=True)
+with open("output/sweep.json") as f:
+    sweep_orig = json.load(f)
+
+
+def recompute_nf_with_stress_ratio(entry, stress_ratio):
+    """Recompute Nf with effective stress scaled by stress_ratio."""
+    log_nf = entry.get("log10_Nf")
+    if log_nf is None:
+        return "inf", None
+
+    sn = entry["sn_source"]
+    b = SN_CURVES[sn]["b"]
+    log_nf_new = log_nf + np.log10(stress_ratio) / b
+    nf_new = 10.0 ** log_nf_new
+
+    sigma_eff_orig = entry.get("sigma_effective", 0)
+    sigma_eff_new = sigma_eff_orig * stress_ratio
+    fatigue_strength = SN_CURVES[sn]["fatigue_strength_at_1e6"]
+    if sigma_eff_new <= fatigue_strength:
+        return "inf", None
+
+    # Check if was already run-out
+    nf_orig = entry.get("Nf", float("inf"))
+    if isinstance(nf_orig, str) or (isinstance(nf_orig, float) and not np.isfinite(nf_orig)):
+        return "inf", None
+
+    return float(nf_new), float(log_nf_new)
+
+
+# ============================================================
+# 3. AFT decomposition
+# ============================================================
+FACTORS = {
+    "sn_source": ["Waterloo_SMDIdbase_Iter066", "Waterloo_SMDIdbase_Iter068"],
+    "mean_stress_method": ["Gerber", "Morrow", "SWT"],
+    "damage_method": ["Miner_original", "Miner_modified"],
+    "size_surface_standard": ["ISO_6336", "AGMA_2001", "FKM"],
+    "rz_level": ["as_forged_Rz50", "ground_Rz4", "machined_Rz15"],
+}
+F_ORDER = ["mean_stress_method","size_surface_standard","rz_level","sn_source","damage_method"]
+
+def entries_from_sweep(sweep_data):
+    entries = []
+    for r in sweep_data:
+        e = {k: r[k] for k in ["sn_source","mean_stress_method","damage_method","size_surface_standard","rz_level"]}
+        nf = r.get("Nf", float("inf"))
+        log_nf = r.get("log10_Nf")
+        if isinstance(nf, (int,float)) and np.isfinite(nf) and nf > 0 and log_nf is not None:
+            e["logNf"] = float(log_nf); e["censored"] = 0
+        else:
+            e["logNf"] = None; e["censored"] = 1
+        entries.append(e)
+    fv = [e["logNf"] for e in entries if e["logNf"] is not None]
+    if fv:
+        mo = max(fv)
+        for e in entries:
+            if e["censored"] == 1: e["logNf_lower"] = mo
+    return entries
+
+def build_design(entries, fs=None):
+    if fs is None: fs = F_ORDER
+    cols = []
+    for fn in fs:
+        lv = FACTORS[fn]
+        for j in range(1, len(lv)):
+            col = np.array([1.0 if e[fn]==lv[j] else 0.0 for e in entries])
+            cols.append(col - 1.0/len(lv))
+    X = np.column_stack(cols) if cols else np.zeros((len(entries),0))
+    return np.column_stack([np.ones(len(entries)), X])
+
+def extract_arrays(entries):
+    y = np.array([e.get("logNf",0)or 0 for e in entries])
+    c = np.array([e["censored"]==1 for e in entries])
+    yl = np.array([e.get("logNf_lower",0)or 0 for e in entries])
+    return y, c, yl
+
+def em(X, yo, cen, yl, n_iter=30, sigma_fixed=None):
+    n, p = X.shape; om = ~cen
+    if om.sum() < p+2: return None, None, float('-inf')
+    beta = np.linalg.lstsq(X[om], yo[om], rcond=None)[0]
+    sigma = (sigma_fixed if sigma_fixed is not None
+             else max(np.std(yo[om]-X[om]@beta, ddof=p), 0.001))
+    ya = yo.copy()
+    for _ in range(n_iter):
+        mu = X@beta; bo, so = beta.copy(), sigma
+        if cen.any():
+            z = (yl[cen]-mu[cen])/sigma
+            imr = np.where(z>30,z,np.where(z<-30,0.0,np.exp(norm.logpdf(z)-norm.logsf(z))))
+            ya[cen] = mu[cen]+sigma*imr
+        beta = np.linalg.lstsq(X, ya, rcond=None)[0]
+        r = ya - X@beta
+        if sigma_fixed is None:
+            s2 = np.sum(r[om]**2)/max(om.sum(),1)
+            if cen.any():
+                z = (yl[cen]-X[cen]@beta)/so
+                imr = np.where(z>30,z,np.where(z<-30,0.0,np.exp(norm.logpdf(z)-norm.logsf(z))))
+                cv = so**2*(1+z*imr-imr**2); cv = np.maximum(cv,0.0)
+                s2 = (np.sum(r[om]**2)+np.sum(cv))/n
+            sigma = np.sqrt(max(s2,0.001))
+        sigma_conv = (sigma_fixed is not None) or abs(sigma-so)<1e-8
+        if np.max(np.abs(beta-bo))<1e-8 and sigma_conv: break
+    mu = X@beta
+    ll = np.sum(norm.logpdf((yo[om]-mu[om])/sigma))-om.sum()*np.log(sigma)
+    if cen.any(): ll += np.sum(norm.logsf((yl[cen]-mu[cen])/sigma))
+    return beta, sigma, ll
+
+def run_aft(entries):
+    ntot = len(entries); ncen = sum(1 for e in entries if e["censored"]==1)
+    Xf = build_design(entries); y, c, yl = extract_arrays(entries)
+    bf, sf, llf = em(Xf, y, c, yl)
+    if bf is None: return {"error":"insufficient observed","n_censored":ncen}
+    dr = {}
+    for drop in F_ORDER:
+        rem = [f for f in F_ORDER if f!=drop]
+        Xd = build_design(entries, rem)
+        _, _, ll = em(Xd, y, c, yl, sigma_fixed=sf)
+        dr[drop] = {"dLL": llf-ll, "df": len(FACTORS[drop])-1}
+    # Interaction
+    ls, lr = FACTORS["size_surface_standard"], FACTORS["rz_level"]
+    xic = []
+    for si in range(1,len(ls)):
+        for rj in range(1,len(lr)):
+            col = np.array([1.0 if e["size_surface_standard"]==ls[si] and e["rz_level"]==lr[rj] else 0.0 for e in entries])
+            xic.append(col)
+    Xi = np.column_stack(xic) if xic else np.zeros((ntot,0))
+    Xi = Xi - Xi.mean(axis=0)
+    _, _, lli = em(np.column_stack([Xf,Xi]), y, c, yl, sigma_fixed=sf)
+    di = lli - llf
+    td = sum(max(0,d["dLL"]) for d in dr.values()) + max(0,di)
+    if td <= 0: td = 1.0
+    vf = {}
+    for fn in F_ORDER: vf[fn] = round(100*max(0,dr[fn]["dLL"])/td, 1)
+    vf["interaction"] = round(100*max(0,di)/td, 1)
+    return {"n_total":ntot,"n_censored":ncen,"n_observed":ntot-ncen,
+            "sigma":round(float(sf),4),"logLik":round(float(llf),2),
+            "variance_fractions":vf}
+
+
+# ============================================================
+# 4. Run scenarios
+# ============================================================
+print("="*70)
+print("Native Stress-Chain Sensitivity Analysis")
+print("="*70)
+
+# Baseline: uniform Y_Sa (already 3-method)
+baseline_data = [r for r in sweep_orig if r["mean_stress_method"] != "Goodman"]
+baseline_entries = entries_from_sweep(baseline_data)
+baseline = run_aft(baseline_entries)
+print(f"\nBaseline (uniform Y_Sa=1.55, 3-method):")
+print(f"  n={baseline['n_total']}, cens={baseline['n_censored']}")
+for fn in F_ORDER:
+    print(f"  {fn:30s}: {baseline['variance_fractions'][fn]:5.1f}%")
+print(f"  {'Interaction':30s}: {baseline['variance_fractions']['interaction']:5.1f}%")
+
+# AGMA native J-factor scenarios
+for name, params in AGMA_J_range.items():
+    print(f"\n--- AGMA native J: {name} (J={params['J']}, ratio={params['ratio_to_unified']:.3f}) ---")
+    sweep_mod = []
+    for entry in baseline_data:
+        new_entry = dict(entry)
+        if entry["size_surface_standard"] == "AGMA_2001":
+            ratio = params["ratio_to_unified"]
+            new_nf, new_log = recompute_nf_with_stress_ratio(entry, ratio)
+            new_entry["Nf"] = new_nf
+            new_entry["log10_Nf"] = new_log
+        sweep_mod.append(new_entry)
+    entries_mod = entries_from_sweep(sweep_mod)
+    result = run_aft(entries_mod)
+    std_var = result["variance_fractions"]["size_surface_standard"]
+    delta = std_var - baseline["variance_fractions"]["size_surface_standard"]
+    print(f"  n={result['n_total']}, cens={result['n_censored']}")
+    print(f"  Standard variance: {std_var:.1f}% (Δ={delta:+.1f}pp vs baseline)")
+    for fn in F_ORDER:
+        print(f"  {fn:30s}: {result['variance_fractions'][fn]:5.1f}%")
+
+# FKM native K_f scenarios
+for name, params in FKM_Kf_range.items():
+    print(f"\n--- FKM native K_f: {name} (K_f={params['K_f']:.2f}, ratio={params['ratio_to_unified']:.3f}) ---")
+    sweep_mod = []
+    for entry in baseline_data:
+        new_entry = dict(entry)
+        if entry["size_surface_standard"] == "FKM":
+            ratio = params["ratio_to_unified"]
+            new_nf, new_log = recompute_nf_with_stress_ratio(entry, ratio)
+            new_entry["Nf"] = new_nf
+            new_entry["log10_Nf"] = new_log
+        sweep_mod.append(new_entry)
+    entries_mod = entries_from_sweep(sweep_mod)
+    result = run_aft(entries_mod)
+    std_var = result["variance_fractions"]["size_surface_standard"]
+    delta = std_var - baseline["variance_fractions"]["size_surface_standard"]
+    print(f"  n={result['n_total']}, cens={result['n_censored']}")
+    print(f"  Standard variance: {std_var:.1f}% (Δ={delta:+.1f}pp vs baseline)")
+    for fn in F_ORDER:
+        print(f"  {fn:30s}: {result['variance_fractions'][fn]:5.1f}%")
+
+# Combined: AGMA J + FKM K_f both native
+print(f"\n--- COMBINED: AGMA native J (midpoint) + FKM native K_f (Peterson) ---")
+sweep_combined = []
+for entry in baseline_data:
+    new_entry = dict(entry)
+    std = entry["size_surface_standard"]
+    if std == "AGMA_2001":
+        ratio = AGMA_J_range["J_midpoint"]["ratio_to_unified"]
+        new_nf, new_log = recompute_nf_with_stress_ratio(entry, ratio)
+        new_entry["Nf"] = new_nf
+        new_entry["log10_Nf"] = new_log
+    elif std == "FKM":
+        ratio = FKM_Kf_range["Kf_Peterson"]["ratio_to_unified"]
+        new_nf, new_log = recompute_nf_with_stress_ratio(entry, ratio)
+        new_entry["Nf"] = new_nf
+        new_entry["log10_Nf"] = new_log
+    sweep_combined.append(new_entry)
+entries_combined = entries_from_sweep(sweep_combined)
+result_combined = run_aft(entries_combined)
+std_var_comb = result_combined["variance_fractions"]["size_surface_standard"]
+delta_comb = std_var_comb - baseline["variance_fractions"]["size_surface_standard"]
+print(f"  n={result_combined['n_total']}, cens={result_combined['n_censored']}")
+print(f"  Standard variance: {std_var_comb:.1f}% (Δ={delta_comb:+.1f}pp vs baseline)")
+for fn in F_ORDER:
+    v = result_combined["variance_fractions"][fn]
+    b = baseline["variance_fractions"][fn]
+    print(f"  {fn:30s}: {v:5.1f}% (Δ={v-b:+.1f}pp)")
+print(f"  {'Interaction':30s}: {result_combined['variance_fractions']['interaction']:5.1f}%")
+
+# ============================================================
+# 5. Summary
+# ============================================================
+print(f"\n{'='*70}")
+print("SUMMARY")
+print(f"{'='*70}")
+print(f"Baseline standard variance (uniform Y_Sa):  {baseline['variance_fractions']['size_surface_standard']:.1f}%")
+print(f"AGMA native J (midpoint, J=0.33):           {baseline['variance_fractions']['size_surface_standard']:.1f}% + 小心")
+print(f"FKM native K_f (Peterson):                  (ratio={FKM_Kf_range['Kf_Peterson']['ratio_to_unified']:.3f})")
+print(f"Combined (AGMA J + FKM K_f native):         {std_var_comb:.1f}% (Δ={delta_comb:+.1f}pp)")
+
+output = {
+    "description": "Native stress-chain sensitivity — implements AGMA J-factor and FKM K_f instead of unified Y_Sa",
+    "baseline_ysa_unified": Y_Sa_unified,
+    "K_t_gear": round(float(K_t_gear), 2),
+    "K_f_peterson": round(float(K_f_peterson), 2),
+    "K_f_neuber": round(float(K_f_neuber), 2),
+    "AGMA_J_range": {k: {"J": v["J"], "ratio_to_unified": round(v["ratio_to_unified"], 4)} for k, v in AGMA_J_range.items()},
+    "FKM_Kf_range": {k: {"K_f": round(v["K_f"], 2), "ratio_to_unified": round(v["ratio_to_unified"], 4)} for k, v in FKM_Kf_range.items()},
+    "baseline": baseline,
+    "combined_native": result_combined,
+    "summary": f"With AGMA J=0.33 and FKM K_f(Peterson)={K_f_peterson:.2f}, standard variance changes from {baseline['variance_fractions']['size_surface_standard']:.1f}% to {std_var_comb:.1f}% (Δ={delta_comb:+.1f}pp). The baseline uniform-Y_Sa lower bound is conservative by approximately {abs(delta_comb):.1f}pp."
+}
+with open("output/native_stress_sensitivity.json", "w") as f:
+    json.dump(output, f, indent=2)
+print("\nSaved output/native_stress_sensitivity.json")
+print("=== Complete ===")

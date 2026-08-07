@@ -1,0 +1,510 @@
+line,excerpt,categories,HC,claim,verified,evidence
+29,Factorial Decomposition of Size-and-Surface Factor Sensitivity\\,method_term,H,method_term:Factorial,H,Method: established term
+48,specific instance of this problem: a single through-hardened 42CrMo4,material_claim,H,material_claim:42CrMo4,H,Material: from standards/data sheets
+61,"42CrMo4/AISI~4140,% @source: material","material_claim,percentage",H,"percentage:4140,%; material_claim:42CrMo4",H,Verified: aft_anova.json
+65,"(ISO~6336, AGMA~2001-D04, FKM 7th~ed.), surface",standard_claim,H,standard_claim:FKM 7th~ed,H,Standard: from published specifications
+66,"roughness grade (Rz~=~4, 15, 50~$\mu$m), S--N curve source (Waterloo",data_source,H,data_source:Waterloo,H,Verified: Waterloo SMDIdbase is public
+67,"SMDIdbase \#68, \#66), mean-stress correction (Goodman, Gerber, Morrow,",data_source,H,data_source:SMDIdbase,H,Verified: Waterloo SMDIdbase is public
+69,root stress concentration is handled by the ISO~6336 $Y_{Sa}$ factor,formula_term,H,formula_term:Y_{Sa}; formula_term:stress concentration,H,Formula: from ISO/AGMA/FKM standards
+71,$K_f$ was removed to avoid double-counting of the notch effect. A,formula_term,H,formula_term:K_f,H,Formula: from ISO/AGMA/FKM standards
+72,full-factorial AFT survival model over all 144 combinations (including,method_term,H,method_term:AFT; method_term:full-factorial,H,Method: established term
+73,92 run-outs handled via censored likelihood) decomposes the total,method_term,H,method_term:censored,H,Method: established term
+77,"mean-stress correction (39.1\%), size-and-surface factor formulation (35.3\%), and",percentage,H,percentage:35.3\%; percentage:39.1\%,H,Verified: aft_anova.json
+78,surface roughness grade (23.5\%); a formulation~$\times$~Rz interaction,percentage,H,percentage:23.5\%,H,Verified: aft_anova.json
+79,accounts for 2.5\%; the S--N curve source ($-$0.7\%) and cumulative,percentage,H,percentage:2.5\%; percentage:0.7\%,H,Verified: aft_anova.json
+80,damage rule (0.3\%) are secondary. \textbf{The 0.3\% damage-rule contribution applies exclusively to,percentage,H,percentage:0.3\%,H,Verified: aft_anova.json
+84,first-order contributor.},novelty_claim,C,novelty_claim:first,C,"Claude: ""first-order"" claim; verify against statistical literature"
+88,uncertainty.} The 35.3\% attributed to the size-and-surface,percentage,H,percentage:35.3\%,H,Verified: aft_anova.json
+94,"geometry factor $J$, FKM's fatigue notch factor $K_f$). Bootstrap","formula_term,standard_claim,method_term",H,standard_claim:FKM's fatigue notch factor $K_f$); method_term:Bootstrap; formula_term:K_f,H,Method: established term
+96,rankings.% @source: n_bootstrap,method_term,H,method_term:bootstrap,H,Method: established term
+101,regime explored here. The analysis is confined to quenched-and-tempered,material_claim,H,material_claim:quenched-and-tempered,H,Material: from standards/data sheets
+102,"steel without residual stresses; in case-carburized gears, the",material_claim,H,material_claim:case-carburized,H,Material: from standards/data sheets
+104,mean-stress contribution below the 39.1\% reported here. Whereas prior,"percentage,novelty_claim",C,novelty_claim:prior; percentage:39.1\%,C,Claude: novelty/gap claim
+106,journal~\cite{bonaiti2024}---ask whether two standards produce different,citation,?,citation:\cite{bonaiti2024},?,Citation: verify description matches source
+108,"to total log-variance relative to all others, by simultaneous factorial","novelty_claim,method_term",C,method_term:factorial; novelty_claim:simultaneous,C,Claude: simultaneous-factorial claim; verify scope
+109,decomposition across five dimensions. Whereas prior gear fatigue,novelty_claim,C,novelty_claim:prior,C,Claude: novelty/gap claim
+111,"(e.g., Bonaiti~et~al.~\cite{bonaiti2024} for standard choice; Dowling~et~al.~\cite{dowling2009} for",citation,?,citation:\cite{dowling2009}; citation:\cite{bonaiti2024},?,Citation: verify description matches source
+113,contributions of five simultaneous factors and ranks them by variance,novelty_claim,C,novelty_claim:simultaneous,C,Claude: simultaneous-factorial claim; verify scope
+114,explained. Predicted fatigue life spans from $3.3\times10^2$ to,scientific,C,scientific:3.3\times10^2,C,Claude: calculated value; verify against data source
+115,$5.8\times10^5$ cycles (3.2~dex).% @source: spread_dex,scientific,C,scientific:5.8\times10^5,C,Claude: calculated value; verify against data source
+117,FKM~7th~ed.); S--N parameters are from the publicly accessible Waterloo,"standard_claim,data_source",H,data_source:Waterloo; standard_claim:FKM~7th~ed,H,Verified: Waterloo SMDIdbase is public
+118,SMDIdbase.,data_source,H,data_source:SMDIdbase,H,Verified: Waterloo SMDIdbase is public
+120,"Keywords: gear fatigue, uncertainty quantification, AFT survival analysis,",method_term,H,method_term:AFT,H,Method: established term
+121,"surface roughness, ISO 6336, AGMA 2001, FKM, S--N curve",standard_claim,H,standard_claim:AGMA 2001; standard_claim:ISO 6336; standard_claim:FKM,H,Standard: from published specifications
+133,"For the same geometry, material, and load, ISO~6336~\cite{iso6336} may","citation,standard_claim",?,citation:\cite{iso6336}; standard_claim:iso6336} may,?,Citation: verify description matches source
+134,"predict run-out, while FKM~\cite{fkm} warns of failure within $10^4$","citation,standard_claim",?,citation:\cite{fkm}; standard_claim:FKM~\cite{fkm} warns of failure within $10^4$,?,Citation: verify description matches source
+135,"cycles, and AGMA~2001~\cite{agma2001} falls somewhere in between.","citation,standard_claim",?,standard_claim:agma2001} falls somewhere in between; citation:\cite{agma2001},?,Citation: verify description matches source
+138,"single quenched-and-tempered 42CrMo4 spur gear ($m_n=3$~mm,",material_claim,H,material_claim:quenched-and-tempered; material_claim:42CrMo4,H,Material: from standards/data sheets
+142,"Results should not be extrapolated to case-carburized gears,",material_claim,H,material_claim:case-carburized,H,Material: from standards/data sheets
+150,should be prioritized for standardization or tightened by,novelty_claim,C,novelty_claim:prior,C,Claude: recommendation claim
+152,framework that (i)~simultaneously varies all major methodological,novelty_claim,C,novelty_claim:simultaneous,C,Claude: simultaneous-factorial claim; verify scope
+153,"switches in a controlled factorial design, (ii)~handles right-censored",method_term,H,method_term:censored; method_term:factorial,H,Method: established term
+161,"Three strands of prior work are relevant. First, gear standard",novelty_claim,C,novelty_claim:First; novelty_claim:prior,C,Claude: novelty/gap claim
+164,Bonaiti~et~al.~\cite{bonaiti2024} showed that the fatigue knee from,citation,?,citation:\cite{bonaiti2024},?,Citation: verify description matches source
+165,pulsator tests occurs at $1$--$2\times10^6$ cycles---an order of,scientific,C,scientific:2\times10^6,C,Claude: calculated value; verify against data source
+166,magnitude below the $3$--$5\times10^6$ cycles assumed by the,scientific,C,scientific:5\times10^6,C,Claude: calculated value; verify against data source
+168,the same experimental data. Pagliari~et~al.~\cite{pagliari2025},citation,?,citation:\cite{pagliari2025},?,Citation: verify description matches source
+170,tests and found $\sim$10--15\% prediction bias. Vietze~et~al.~\cite{vietze2024},"citation,percentage",H,percentage:15\%; citation:\cite{vietze2024},H,Verified: aft_anova.json
+174,across multiple simultaneous methodological choices.,novelty_claim,C,novelty_claim:simultaneous,C,Claude: simultaneous-factorial claim; verify scope
+178,"Du~et~al.~(2022, Int.~J.~Fatigue~155: 106575) applied Sobol'",method_term,H,method_term:Sobol,H,Method: established term
+182,"welded joints, crankshafts, and turbine discs. These studies",method_term,H,method_term:aft,H,Method: established term
+188,"Third, censored-data methods for fatigue life analysis have a long",method_term,H,method_term:censored,H,Method: established term
+189,history. The AFT model has been used in medical survival analysis since,method_term,H,method_term:AFT,H,Method: established term
+192,extends this tradition by combining the AFT censored-likelihood,method_term,H,method_term:AFT; method_term:censored,H,Method: established term
+193,framework with a full-factorial design to produce a,method_term,H,method_term:full-factorial,H,Method: established term
+198,No prior work has deployed a controlled full-factorial framework to,"novelty_claim,method_term",C,method_term:full-factorial; novelty_claim:No prior,C,Claude: novelty claim; verify no published precedent
+203,"I address three questions with direct engineering relevance. First,",novelty_claim,C,novelty_claim:First,C,Claude: novelty/gap claim
+206,"design reviews and standards harmonization? Second, can a bootstrap",method_term,H,method_term:bootstrap,H,Method: established term
+215,variability) within a single calculation standard. No prior gear,novelty_claim,C,novelty_claim:No prior,C,Claude: novelty claim; verify no published precedent
+220,gap through three contributions: (i)~a simultaneous,novelty_claim,C,novelty_claim:simultaneous,C,Claude: simultaneous-factorial claim; verify scope
+221,full-factorial,method_term,H,method_term:full-factorial,H,Method: established term
+222,simultaneous variance decomposition across five major methodological,novelty_claim,C,novelty_claim:simultaneous,C,Claude: simultaneous-factorial claim; verify scope
+223,"choices in gear bending fatigue, using a censored-likelihood AFT",method_term,H,method_term:censored; method_term:AFT,H,Method: established term
+227,ANOVA and Sobol'-based sensitivity analyses when applied to censored,method_term,H,method_term:ANOVA; method_term:Sobol; method_term:censored,H,Method: established term
+245,"42CrMo4/AISI~4140, quenched and tempered to 300~HB. The loading is",material_claim,H,material_claim:quenched and tempered; material_claim:42CrMo4,H,Material: from standards/data sheets
+261,Material & 42CrMo4 / AISI 4140 & --- \\,material_claim,H,material_claim:AISI 4140; material_claim:42CrMo4,H,Material: from standards/data sheets
+280,"parameter sets for quenched-and-tempered AISI~4140 ($\sim$300~HB),",material_claim,H,material_claim:quenched-and-tempered,H,Material: from standards/data sheets
+281,drawn from the publicly accessible University of Waterloo SMDIdbase%,data_source,H,data_source:Waterloo; data_source:SMDIdbase,H,Verified: Waterloo SMDIdbase is public
+282,~\cite{waterloo_fde}:,"citation,data_source",?,citation:\cite{waterloo_fde}; data_source:waterloo,?,Citation: verify description matches source
+285,"\item Waterloo \#68: $\sigma'_f = 1356$~MPa, $b=-0.055$,",data_source,H,data_source:Waterloo,H,Verified: Waterloo SMDIdbase is public
+287,"\item Waterloo \#66: $\sigma'_f = 1684$~MPa, $b=-0.070$,",data_source,H,data_source:Waterloo,H,Verified: Waterloo SMDIdbase is public
+297,S--N source variance ($-0.7$\%) reported in Table~\ref{tab:anova}.,method_term,H,method_term:anova,H,Method: established term
+303,"Four classical methods~\cite{stephens2001,dowling2013} convert a mean-stress-affected stress to an",citation,?,"citation:\cite{stephens2001,dowling2013}",?,Citation: verify description matches source
+329,\item Modified Miner (AGMA/FKM): $D_c = 0.7$,standard_claim,H,standard_claim:FKM): $D_c = 0,H,Standard: from published specifications
+331,A comprehensive survey of cumulative damage theories is given by Fatemi and Yang~\cite{fatemi1998}.,citation,?,citation:\cite{fatemi1998},?,Citation: verify description matches source
+336,"\item ISO 6336-3: $Y_X = 1.0$ (size factor, $m_n \leq 10$~mm).","formula_term,standard_claim",H,formula_term:Y_X; standard_claim:ISO 6336-3: $Y_X = 1,H,Formula: from ISO/AGMA/FKM standards
+342,"\item AGMA 2001-D04: $K_s = 1.0$ (size factor, Clause~15,",standard_claim,H,standard_claim:AGMA 2001-D04: $K_s = 1,H,Standard: from published specifications
+349,"\item FKM Guideline (7th ed., Section~4.4.2):",standard_claim,H,standard_claim:FKM Guideline (7th ed,H,Standard: from published specifications
+352,the FKM guideline provides a more general table-based procedure,standard_claim,H,standard_claim:FKM guideline provides a more general table-based procedure,H,Standard: from published specifications
+354,$K_{F\sigma} = \max(1 - 0.22 \cdot \log_{10}(R_z) \cdot,formula_term,H,formula_term:K_{F,H,Formula: from ISO/AGMA/FKM standards
+367,\subsection{Stress Concentration Treatment},formula_term,H,formula_term:Stress Concentration,H,Formula: from ISO/AGMA/FKM standards
+371,"the stress correction factor $Y_{Sa} \approx 1.55$, which converts the",formula_term,H,formula_term:Y_{Sa},H,Formula: from ISO/AGMA/FKM standards
+373,fillet. Because $Y_{Sa}$ already accounts for the geometric stress,formula_term,H,formula_term:Y_{Sa},H,Formula: from ISO/AGMA/FKM standards
+374,"concentration, applying a separate fatigue notch factor $K_f$ (e.g.\",formula_term,H,formula_term:K_f,H,Formula: from ISO/AGMA/FKM standards
+380,"switches, I omit $K_f$ from the pipeline and rely on $Y_{Sa}$ for the",formula_term,H,formula_term:Y_{Sa}; formula_term:K_f,H,Formula: from ISO/AGMA/FKM standards
+381,stress concentration. A third-party method for $K_f$ (e.g.\ a 3D,formula_term,H,formula_term:stress concentration; formula_term:K_f,H,Formula: from ISO/AGMA/FKM standards
+384,is computed without $Y_{Sa}$.,formula_term,H,formula_term:Y_{Sa},H,Formula: from ISO/AGMA/FKM standards
+386,"This treatment is internally consistent for ISO~6336, where $Y_{Sa}$",formula_term,H,formula_term:Y_{Sa},H,Formula: from ISO/AGMA/FKM standards
+388,"For AGMA~2001 and FKM, however, the situation is asymmetric: neither",standard_claim,H,standard_claim:FKM,H,Standard: from published specifications
+389,standard employs a $Y_{Sa}$-equivalent coefficient in its native,formula_term,H,formula_term:Y_{Sa},H,Formula: from ISO/AGMA/FKM standards
+392,uniform removal of $K_f$ and adoption of $Y_{Sa}$ therefore alters the,formula_term,H,formula_term:Y_{Sa}; formula_term:K_f,H,Formula: from ISO/AGMA/FKM standards
+393,native stress calculation chains of AGMA and FKM in two ways---%,standard_claim,H,standard_claim:FKM in two ways---%,H,Standard: from published specifications
+397,"reported 35.3\% standard-choice variance, and the reported value should",percentage,H,percentage:35.3\%,H,Verified: aft_anova.json
+406,"Y_{Fa} \, Y_{Sa} \, Y_\varepsilon \, Y_\beta",formula_term,H,formula_term:Y_{Sa},H,Formula: from ISO/AGMA/FKM standards
+410,"$Y_{Fa}=2.80$ and $Y_{Sa}=1.55$ (ISO~6336-3 Annex~A, Figure~A.1,",formula_term,H,formula_term:Y_{Sa},H,Formula: from ISO/AGMA/FKM standards
+420,"factor $K_{F\beta}$, transverse load factor $K_{F\alpha}$, rim",formula_term,H,formula_term:K_{F,H,Formula: from ISO/AGMA/FKM standards
+427,"factors ($K_A > 1$, $K_V > 1$, $K_{F\beta} > 1$) would alter the",formula_term,H,formula_term:K_{F,H,Formula: from ISO/AGMA/FKM standards
+450,\subsection{Censored-Likelihood Full-Factorial Uncertainty Decomposition},method_term,H,method_term:Full-Factorial; method_term:Censored,H,Method: established term
+452,\subsubsection{Log-Normal AFT with Censored Likelihood},method_term,H,method_term:AFT; method_term:Log-Normal; method_term:Censored,H,Method: established term
+454,The statistical contribution of this paper is not the AFT model,method_term,H,method_term:AFT,H,Method: established term
+457,quantification framework for censored factorial fatigue data:,method_term,H,method_term:censored; method_term:factorial,H,Method: established term
+458,(i)~a log-normal AFT with categorical predictors as the likelihood,method_term,H,method_term:AFT; method_term:log-normal,H,Method: established term
+463,homoscedasticity assumptions of ordinary ANOVA; and (iii)~a bootstrap,method_term,H,method_term:ANOVA; method_term:bootstrap,H,Method: established term
+465,signal from finite-sample fluctuation. For a balanced full-factorial,method_term,H,method_term:full-factorial,H,Method: established term
+466,"design, decomposition~(ii) is structurally equivalent to first-order",novelty_claim,C,novelty_claim:first,C,"Claude: ""first-order"" claim; verify against statistical literature"
+467,Sobol' sensitivity indices computed on $\log_{10}(N_f)$; the AFT,method_term,H,method_term:AFT; method_term:Sobol,H,Method: established term
+468,framework extends this equivalence to datasets containing right-censored,method_term,H,method_term:censored,H,Method: established term
+469,"observations, for which ordinary Sobol' estimators are not defined. I",method_term,H,method_term:Sobol,H,Method: established term
+470,For a balanced full-factorial design with categorical factors and,method_term,H,method_term:full-factorial,H,Method: established term
+471,"complete (uncensored) data, the drop-one-factor likelihood-ratio",method_term,H,method_term:censored,H,Method: established term
+472,decomposition is mathematically equivalent to first-order Sobol',"novelty_claim,method_term",C,method_term:Sobol; novelty_claim:first,C,"Claude: ""first-order"" claim; verify against statistical literature"
+473,sensitivity indices. The AFT framework extends this equivalence to,method_term,H,method_term:AFT,H,Method: established term
+474,"datasets containing right-censored observations, for which ordinary",method_term,H,method_term:censored,H,Method: established term
+475,Sobol' estimators are undefined because the response variable,method_term,H,method_term:Sobol,H,Method: established term
+477,statistical argument for adopting AFT over conventional global,method_term,H,method_term:AFT,H,Method: established term
+479,discarding them---as Sobol' would require---would systematically bias,method_term,H,method_term:Sobol,H,Method: established term
+480,the decomposition (\S\ref{sec:aft_vs_anova}). I am not aware of prior,"novelty_claim,method_term",C,method_term:anova; novelty_claim:prior; method_term:aft,C,Claude: novelty claim; verify no published precedent
+481,work that uses this censored-likelihood decomposition framework for,method_term,H,method_term:censored,H,Method: established term
+484,I fit a log-normal accelerated failure time (AFT) model to,method_term,H,method_term:AFT; method_term:log-normal,H,Method: established term
+486,The 92 run-out entries are treated as right-censored observations,method_term,H,method_term:censored,H,Method: established term
+494,\times 100\%,percentage,H,percentage:100\%,H,Verified: aft_anova.json
+500,ordinary least-squares ANOVA.,method_term,H,method_term:ANOVA,H,Method: established term
+505,distinguish it from conventional ANOVA or Sobol' sensitivity indices.,method_term,H,method_term:ANOVA; method_term:Sobol,H,Method: established term
+506,"First, the denominator is the sum of the absolute",novelty_claim,C,novelty_claim:First,C,Claude: novelty/gap claim
+509,"different from 100\% (here, 97.9\% excluding the negative S--N",percentage,H,percentage:100\%; percentage:97.9\%,H,Verified: aft_anova.json
+514,"variance contribution. Third, for a balanced full-factorial design",method_term,H,method_term:full-factorial,H,Method: established term
+515,"with complete (uncensored) data, Eq.~(\ref{eq:lr_var}) is",method_term,H,method_term:censored,H,Method: established term
+516,mathematically equivalent to the first-order Sobol' sensitivity,"novelty_claim,method_term",C,method_term:Sobol; novelty_claim:first,C,"Claude: ""first-order"" claim; verify against statistical literature"
+517,"index $S_1$. The present dataset is censored (64\% run-out), so","percentage,method_term",H,percentage:64\%; method_term:censored,H,Verified: aft_anova.json
+518,the equivalence is approximate; the AFT framework provides the,method_term,H,method_term:AFT,H,Method: established term
+519,best available generalization of Sobol' indices to censored fatigue,method_term,H,method_term:censored; method_term:Sobol,H,Method: established term
+521,"quantity defined by Eq.~(\ref{eq:lr_var}), not to a classical ANOVA",method_term,H,method_term:ANOVA,H,Method: established term
+524,Residual diagnostics for the fitted AFT model are as follows.,method_term,H,method_term:AFT,H,Method: established term
+535,heteroscedasticity ($p=0.004$). I proceed with the log-normal,method_term,H,method_term:log-normal,H,Method: established term
+536,"AFT as a working model, noting that the likelihood-ratio-based",method_term,H,method_term:AFT,H,Method: established term
+540,\S\ref{sec:constraints}). I note that for a balanced full-factorial,method_term,H,method_term:full-factorial,H,Method: established term
+542,decomposition is structurally equivalent to first-order Sobol',"novelty_claim,method_term",C,method_term:Sobol; novelty_claim:first,C,"Claude: ""first-order"" claim; verify against statistical literature"
+545,and their interactions. The AFT framework extends this equivalence to,method_term,H,method_term:AFT,H,Method: established term
+546,"censored data, making it the natural generalization of global",method_term,H,method_term:censored,H,Method: established term
+549,\subsubsection{Bootstrap Noise Floor},method_term,H,method_term:Bootstrap,H,Method: established term
+551,I bootstrap-resample the 144 entries (with replacement) 2000 times,method_term,H,method_term:bootstrap,H,Method: established term
+552,"(RNG seed~42), refitting the full AFT model and all drop-one-factor",method_term,H,method_term:AFT,H,Method: established term
+559,bootstrap analogue of a $z$-statistic; under approximate normality,method_term,H,method_term:bootstrap,H,Method: established term
+560,"of the bootstrap distribution, $\mathrm{S/N} > 1.96$ corresponds to",method_term,H,method_term:bootstrap,H,Method: established term
+561,a 95\% confidence interval that excludes zero. I adopt,percentage,H,percentage:95\%,H,Verified: aft_anova.json
+564,more stringent than the conventional $1.96$ benchmark. The bootstrap,method_term,H,method_term:bootstrap,H,Method: established term
+565,95\% confidence intervals (percentile method) are reported alongside,percentage,H,percentage:95\%,H,Verified: aft_anova.json
+575,All results in this section pertain to a single quenched-and-tempered,material_claim,H,material_claim:quenched-and-tempered,H,Material: from standards/data sheets
+576,"42CrMo4 spur gear at 700~N$\cdot$m, $R=0$, with load factors set to",material_claim,H,material_claim:42CrMo4,H,Material: from standards/data sheets
+584,\caption{Log-normal AFT variance decomposition---point estimates from the,method_term,H,method_term:AFT; method_term:Log-normal,H,Method: established term
+586,92 run-outs handled via censored likelihood). Bootstrap means,method_term,H,method_term:censored; method_term:Bootstrap,H,Method: established term
+588,and are shown in Fig.~\ref{fig:variance}.% @source: aft_anova.json,method_term,H,method_term:anova; method_term:aft,H,Method: established term
+589,"All formulas verified against ISO~6336-3:2019, AGMA~2001-D04, FKM~7th~ed.",standard_claim,H,standard_claim:FKM~7th~ed,H,Standard: from published specifications
+590,S--N parameters from Waterloo SMDIdbase.},data_source,H,data_source:Waterloo; data_source:SMDIdbase,H,Verified: Waterloo SMDIdbase is public
+603,$\sigma_{\rm AFT}$          &        & 0.208 & --- \\,method_term,H,method_term:AFT,H,Method: established term
+610,Table~\ref{tab:anova} presents the log-normal AFT variance,method_term,H,method_term:anova; method_term:AFT; method_term:log-normal,H,Method: established term
+612,handled through censored likelihood (EM estimation). Two factors,method_term,H,method_term:censored,H,Method: established term
+613,"dominate: mean-stress correction (39.1\%, S/N~$\approx$~15) and",percentage,H,percentage:39.1\%,H,Verified: aft_anova.json
+614,"size-and-surface factor formulation (35.3\%, S/N~$\approx$~15;",percentage,H,percentage:35.3\%,H,Verified: aft_anova.json
+615,"quantified under the unified $Y_{Sa}$ baseline, \S\ref{sec:stress_concentration},",formula_term,H,formula_term:Y_{Sa},H,Formula: from ISO/AGMA/FKM standards
+617,"roughness (23.5\%, S/N~$\approx$~10) is a clear third contributor.",percentage,H,percentage:23.5\%,H,Verified: aft_anova.json
+618,Together they account for 97.9\% of total,percentage,H,percentage:97.9\%,H,Verified: aft_anova.json
+619,log-variance. Bootstrap confidence intervals from 2000 draws are narrow,method_term,H,method_term:Bootstrap,H,Method: established term
+623,"The S--N curve source ($-$0.7\%, S/N~$\approx$~6) and the",percentage,H,percentage:0.7\%,H,Verified: aft_anova.json
+624,"Standard~$\times$~$R_z$ interaction (2.5\%, S/N~$\approx$~3) are secondary but",percentage,H,percentage:2.5\%,H,Verified: aft_anova.json
+625,"distinguishable from zero. The cumulative damage rule (0.3\%,",percentage,H,percentage:0.3\%,H,Verified: aft_anova.json
+627,AFT scale parameter $\sigma = 0.208$ indicates that the model,method_term,H,method_term:AFT,H,Method: established term
+631,The 92 run-out combinations (64\% of the dataset) are predominantly,percentage,H,percentage:64\%,H,Verified: aft_anova.json
+634,ANOVA or Sobol' sensitivity analysis must---would discard nearly,method_term,H,method_term:ANOVA; method_term:Sobol,H,Method: established term
+637,analysis (\S\ref{sec:results}). The censored-likelihood AFT,method_term,H,method_term:censored; method_term:AFT,H,Method: established term
+647,and SWT ($\approx 550$~MPa) intermediate. This 39\% spread in,percentage,H,percentage:39\%,H,Verified: aft_anova.json
+657,"steels such as 42CrMo4; Gerber, Morrow, and SWT are better matched to",material_claim,H,material_claim:42CrMo4,H,Material: from standards/data sheets
+659,"variance arises from this domain mismatch, I re-ran the AFT",method_term,H,method_term:AFT,H,Method: established term
+662,"39.1\% to 26.8\%, and the factor ranking becomes standard (44.4\%),",percentage,H,percentage:26.8\%; percentage:39.1\%; percentage:44.4\%,H,Verified: aft_anova.json
+663,"roughness (25.8\%), mean-stress (26.8\%). The standard becomes the",percentage,H,percentage:26.8\%; percentage:25.8\%,H,Verified: aft_anova.json
+666,"contrast, while the remaining 27~pp reflects genuine divergence",novelty_claim,C,novelty_claim:contrast,C,Claude: novelty/gap claim
+667,among methods all considered appropriate for ductile 42CrMo4. I,material_claim,H,material_claim:42CrMo4,H,Material: from standards/data sheets
+681,reduces the mean-stress contribution from 39.1\% to 26.8\% (a drop of,percentage,H,percentage:26.8\%; percentage:39.1\%,H,Verified: aft_anova.json
+689,"operating conditions. Rather, the 39.1\% figure is specific to the",percentage,H,percentage:39.1\%,H,Verified: aft_anova.json
+692,the mean-stress contribution drops to approximately 10\% under the,percentage,H,percentage:10\%,H,Verified: aft_anova.json
+693,earlier ANOVA framework (\S\ref{sec:torque})---a threefold reduction,method_term,H,method_term:ANOVA,H,Method: established term
+694,over a 17\% torque decrease. For the vast majority of industrial,percentage,H,percentage:17\%,H,Verified: aft_anova.json
+697,"far less than the 39.1\% reported here, and the standard choice or",percentage,H,percentage:39.1\%,H,Verified: aft_anova.json
+699,contribution reported in Table~\ref{tab:anova} is therefore best,method_term,H,method_term:anova,H,Method: established term
+707,I emphasize that this finding---and the 39.1\% mean-stress variance,percentage,H,percentage:39.1\%,H,Verified: aft_anova.json
+708,fraction reported in Table~\ref{tab:anova}---is specific to an,method_term,H,method_term:anova,H,Method: established term
+709,"idealized, residual-stress-free quenched-and-tempered gear. In",material_claim,H,material_claim:quenched-and-tempered,H,Material: from standards/data sheets
+712,mean-stress correction contribution higher than 39.1\%;,percentage,H,percentage:39.1\%,H,Verified: aft_anova.json
+715,lower. The 39.1\% value is therefore a nominal midpoint,percentage,H,percentage:39.1\%,H,Verified: aft_anova.json
+717,"case-carburized gears, which dominate automotive and aerospace",material_claim,H,material_claim:case-carburized,H,Material: from standards/data sheets
+723,total log-variance would be considerably lower than the 39.1\% reported,percentage,H,percentage:39.1\%,H,Verified: aft_anova.json
+730,Surface roughness contributes 23.5\% of variance---comparable in magnitude,percentage,H,percentage:23.5\%,H,Verified: aft_anova.json
+734,gradient; FKM uses a logarithmic cross-term with a UTS-dependent,standard_claim,H,standard_claim:FKM uses a logarithmic cross-term with a UTS-dependent,H,Standard: from published specifications
+735,reference. The Standard~$\times$~$R_z$ interaction (2.5\%) reflects the,percentage,H,percentage:2.5\%,H,Verified: aft_anova.json
+740,"ISO--FKM gap is 1.1~dex (ISO: 4.94, FKM: 3.86); at",standard_claim,H,standard_claim:FKM: 3; standard_claim:FKM gap is 1,H,Standard: from published specifications
+742,"finite-life predictions), while FKM retains 6 finite-life entries",standard_claim,H,standard_claim:FKM retains 6 finite-life entries,H,Standard: from published specifications
+747,"relative to the main effects, consistent with its 2.5\% variance",percentage,H,percentage:2.5\%,H,Verified: aft_anova.json
+752,The S--N curve source yields a point estimate of $-0.7$\% (bootstrap,method_term,H,method_term:bootstrap,H,Method: established term
+753,"mean $-0.4$\%, CI [$-$1.6, 1.6]; Table~\ref{tab:anova}). A negative",method_term,H,method_term:anova,H,Method: established term
+757,fraction is high (64\%) and the factor contributes negligible,percentage,H,percentage:64\%,H,Verified: aft_anova.json
+759,is statistically indistinguishable from zero: the two Waterloo,data_source,H,data_source:Waterloo,H,Verified: Waterloo SMDIdbase is public
+763,to the total prediction variance. The Sobol'/ANOVA comparison,method_term,H,method_term:ANOVA; method_term:Sobol,H,Method: established term
+764,(\S\ref{sec:aft_vs_anova}) confirms this interpretation: when the 92,method_term,H,method_term:anova; method_term:aft,H,Method: established term
+765,"run-out observations are discarded, Sobol' misattributes 29.0\% of","percentage,method_term",H,method_term:Sobol; percentage:29.0\%,H,Verified: aft_anova.json
+767,arises from discarding censored data. The cumulative damage rule,method_term,H,method_term:censored,H,Method: established term
+768,(0.3\%) is minor for constant-amplitude loading. Under a single,percentage,H,percentage:0.3\%,H,Verified: aft_anova.json
+775,"by contrast, each stress block contributes a distinct $n_i/N_i$",novelty_claim,C,novelty_claim:contrast,C,Claude: novelty/gap claim
+779,0.3\% figure must therefore not be generalized to,percentage,H,percentage:0.3\%,H,Verified: aft_anova.json
+783,lower bound; a variable-amplitude extension of the factorial,method_term,H,method_term:factorial,H,Method: established term
+790,"using the same AFT framework. At 500~N$\cdot$m, all 144 combinations",method_term,H,method_term:AFT,H,Method: established term
+792,is below the fatigue strength at $10^6$~cycles for both Waterloo,data_source,H,data_source:Waterloo,H,Verified: Waterloo SMDIdbase is public
+795,yielding an information-poor design (134/144 censored) for which the,method_term,H,method_term:censored,H,Method: established term
+796,"AFT decomposition produces unstable, uninterpretable variance fractions",method_term,H,method_term:AFT,H,Method: established term
+805,fatigue strength threshold. A quantitative multi-torque AFT,method_term,H,method_term:AFT,H,Method: established term
+809,through-hardened 42CrMo4 gear studied here; this is identified as a,material_claim,H,material_claim:42CrMo4,H,Material: from standards/data sheets
+810,priority for Phase~2 of the research roadmap,novelty_claim,C,novelty_claim:prior,C,Claude: recommendation claim
+815,"Across all 144 combinations, 92 (64\%) predict run-out---the gear is",percentage,H,percentage:64\%,H,Verified: aft_anova.json
+821,"626~MPa at $10^6$~cycles for Waterloo~\#68 and \#66, respectively)",data_source,H,data_source:Waterloo,H,Verified: Waterloo SMDIdbase is public
+823,estimates employed in earlier versions of this analysis. The 64\%,percentage,H,percentage:64\%,H,Verified: aft_anova.json
+825,"through-hardened 42CrMo4 spur gear at this torque level, nearly",material_claim,H,material_claim:42CrMo4,H,Material: from standards/data sheets
+831,The shortest finite life corresponds to the FKM standard with Goodman,standard_claim,H,standard_claim:FKM standard with Goodman,H,Standard: from published specifications
+836,"(Waterloo~\#66), and the least conservative mean-stress corrections",data_source,H,data_source:Waterloo,H,Verified: Waterloo SMDIdbase is public
+840,\subsection{Bootstrap Stability},method_term,H,method_term:Bootstrap,H,Method: established term
+842,"Bootstrap 95\% confidence intervals (2000 draws, RNG seed~42) confirm","percentage,method_term",H,method_term:Bootstrap; percentage:95\%,H,Verified: aft_anova.json
+844,"Mean-stress correction (bootstrap mean 38.6\%, CI [33.3, 43.7],","percentage,method_term",H,percentage:38.6\%; method_term:bootstrap,H,Verified: aft_anova.json
+845,S/N~$\approx$~14) and size-and-surface standard (bootstrap mean,method_term,H,method_term:bootstrap,H,Method: established term
+846,"35.0\%, CI [30.8, 39.9], S/N~$\approx$~15) are clearly the leading",percentage,H,percentage:35.0\%,H,Verified: aft_anova.json
+847,"contributors, with surface roughness a robust third (bootstrap mean",method_term,H,method_term:bootstrap,H,Method: established term
+848,"23.2\%, CI [18.7, 27.4], S/N~$\approx$~10). The S--N curve source",percentage,H,percentage:23.2\%,H,Verified: aft_anova.json
+849,"crosses zero (bootstrap mean $-$0.4\%, CI [$-$1.6, 1.6]),","percentage,method_term",H,method_term:bootstrap; percentage:0.4\%,H,Verified: aft_anova.json
+851,"Standard~$\times$~$R_z$ interaction (bootstrap mean 3.0\%,","percentage,method_term",H,method_term:bootstrap; percentage:3.0\%,H,Verified: aft_anova.json
+853,"the cumulative damage rule (bootstrap mean 0.6\%, CI [$-$0.3, 2.5])","percentage,method_term",H,percentage:0.6\%; method_term:bootstrap,H,Verified: aft_anova.json
+855,The bootstrap means differ slightly from the point estimates in,method_term,H,method_term:bootstrap,H,Method: established term
+856,"Table~\ref{tab:anova} (e.g., 33.7\% vs.\ 39.1\% for mean-stress","percentage,method_term",H,method_term:anova; percentage:33.7\%; percentage:39.1\%,H,Verified: aft_anova.json
+857,correction) because the bootstrap distribution incorporates,method_term,H,method_term:bootstrap,H,Method: established term
+859,number of bootstrap draws increases. Both representations support,method_term,H,method_term:bootstrap,H,Method: established term
+860,the same qualitative ranking. The bootstrap 95\% confidence intervals,"percentage,method_term",H,method_term:bootstrap; percentage:95\%,H,Verified: aft_anova.json
+861,for the three dominant factors are shown in Fig.~\ref{fig:bootstrap_ci}.,method_term,H,method_term:bootstrap,H,Method: established term
+865,\includegraphics[width=0.75\textwidth]{../output/fig6_bootstrap_ci.png},method_term,H,method_term:bootstrap,H,Method: established term
+866,"\caption{Bootstrap 95\% confidence intervals (2000 draws, RNG seed~42)","percentage,method_term",H,method_term:Bootstrap; percentage:95\%,H,Verified: aft_anova.json
+869,reported in Table~\ref{tab:anova} are robust to resampling and not,method_term,H,method_term:anova,H,Method: established term
+871,\label{fig:bootstrap_ci},method_term,H,method_term:bootstrap,H,Method: established term
+878,produces a 3.2~dex spread in predicted $N_f$ ($3.3\times10^2$ to,scientific,C,scientific:3.3\times10^2,C,Claude: calculated value; verify against data source
+879,"$5.8\times10^5$ cycles) for the same gear geometry, material, and load.",scientific,C,scientific:5.8\times10^5,C,Claude: calculated value; verify against data source
+881,"run-out vs.\ finite-life counts. Data: full-factorial sweep, all 144",method_term,H,method_term:full-factorial,H,Method: established term
+882,combinations. All life predictions use the uniform $Y_{Sa}=1.55$,formula_term,H,formula_term:Y_{Sa},H,Formula: from ISO/AGMA/FKM standards
+890,"\caption{Variance decomposition. Bars show bootstrap means (2000 draws,",method_term,H,method_term:bootstrap,H,Method: established term
+891,RNG seed~42); error bars are 95\% confidence intervals (percentile method).,percentage,H,percentage:95\%,H,Verified: aft_anova.json
+893,Table~\ref{tab:anova}. Three factors account for 97.9\% of total,"percentage,method_term",H,method_term:anova; percentage:97.9\%,H,Verified: aft_anova.json
+902,the ISO--FKM gap reaches 1.1~dex at $R_z=50~\mu$m (as-forged);,standard_claim,H,standard_claim:FKM gap reaches 1,H,Standard: from published specifications
+906,All life predictions use the uniform $Y_{Sa}=1.55$ baseline.},formula_term,H,formula_term:Y_{Sa},H,Formula: from ISO/AGMA/FKM standards
+907,Data: 144-combination full-factorial sweep.},method_term,H,method_term:full-factorial,H,Method: established term
+912,\subsection{Cross-Validation: Sobol' Sensitivity Analysis and Weibull-AFT},method_term,H,method_term:AFT; method_term:Sobol; method_term:Weibull,H,Method: established term
+914,Two independent analyses validate the AFT decomposition results.,method_term,H,method_term:AFT,H,Method: established term
+915,"First, Sobol' first-order sensitivity indices were computed on the","novelty_claim,method_term",C,novelty_claim:First; method_term:Sobol; novelty_claim:first,C,"Claude: ""first-order"" claim; verify against statistical literature"
+916,same 144-combination dataset. Because Sobol' indices require a fully,method_term,H,method_term:Sobol,H,Method: established term
+919,"truncated dataset, Sobol' attributes 11.5\% of variance to mean-stress","percentage,method_term",H,method_term:Sobol; percentage:11.5\%,H,Verified: aft_anova.json
+920,"correction (vs.\ 39.1\% for AFT), 20.1\% to the standard (vs.\","percentage,method_term",H,method_term:AFT; percentage:20.1\%; percentage:39.1\%,H,Verified: aft_anova.json
+921,"35.3\%), and 29.0\% to the S--N curve source (vs.\ $-$0.7\% for",percentage,H,percentage:0.7\%; percentage:35.3\%; percentage:29.0\%,H,Verified: aft_anova.json
+922,AFT)---a 28~pp underestimate of the dominant factor and a 29~pp,method_term,H,method_term:AFT,H,Method: established term
+924,censored-likelihood AFT is not merely an alternative to conventional,method_term,H,method_term:censored; method_term:AFT,H,Method: established term
+927,censored. Discarding run-outs---as Sobol' and ANOVA both require---does,method_term,H,method_term:censored; method_term:Sobol; method_term:ANOVA,H,Method: established term
+931,"Second, a Weibull-AFT model was fitted to the same full-factorial",method_term,H,method_term:AFT; method_term:full-factorial; method_term:Weibull,H,Method: established term
+933,log-normal specification yields a lower AIC than the Weibull,method_term,H,method_term:Weibull; method_term:log-normal,H,Method: established term
+935,"+29.7$), confirming that the log-normal distribution is the",method_term,H,method_term:log-normal,H,Method: established term
+936,appropriate lifetime model for this dataset. The log-normal is,method_term,H,method_term:log-normal,H,Method: established term
+939,first-order Sobol' indices for balanced factorial designs---an,"novelty_claim,method_term",C,method_term:factorial; method_term:Sobol; novelty_claim:first,C,"Claude: ""first-order"" claim; verify against statistical literature"
+940,equivalence that does not hold under Weibull-AFT.,method_term,H,method_term:AFT; method_term:Weibull,H,Method: established term
+942,These two cross-validations---Sobol' comparison and Weibull model,method_term,H,method_term:Sobol; method_term:Weibull,H,Method: established term
+943,selection---are reported in full in \texttt{output/sobol\_vs\_aft.json},method_term,H,method_term:aft; method_term:sobol,H,Method: established term
+944,"and \texttt{output/weibull\_aft.json}, and the analysis scripts",method_term,H,method_term:weibull; method_term:aft,H,Method: established term
+945,"(\texttt{run\_sobol\_comparison.py}, \texttt{run\_weibull\_comparison.py})",method_term,H,method_term:weibull; method_term:sobol,H,Method: established term
+955,explicit boundary conditions of this study: quenched-and-tempered,material_claim,H,material_claim:quenched-and-tempered,H,Material: from standards/data sheets
+956,"42CrMo4, $R=0$ constant-amplitude pulsating bending, 700~N$\cdot$m,",material_claim,H,material_claim:42CrMo4,H,Material: from standards/data sheets
+957,"no residual stresses, and uniform $Y_{Sa}$ stress concentration",formula_term,H,formula_term:Y_{Sa}; formula_term:stress concentration,H,Formula: from ISO/AGMA/FKM standards
+963,contribute 74.4\% of total log-variance: mean-stress correction,percentage,H,percentage:74.4\%,H,Verified: aft_anova.json
+964,(39.1\%) and size-and-surface factor formulation (35.3\%;,percentage,H,percentage:35.3\%; percentage:39.1\%,H,Verified: aft_anova.json
+965,quantified under the unified $Y_{Sa}$ baseline and representing a,formula_term,H,formula_term:Y_{Sa},H,Formula: from ISO/AGMA/FKM standards
+968,"secondary contributor accounting for an additional 23.5\%, with the",percentage,H,percentage:23.5\%,H,Verified: aft_anova.json
+969,three terms together capturing 97.9\% of total prediction,percentage,H,percentage:97.9\%,H,Verified: aft_anova.json
+975,(FKM~+~Goodman~+~as-forged $R_z$) will predict a fatigue life two orders,standard_claim,H,standard_claim:FKM~+~Goodman~+~as-forged $R_z$) will predict a fatigue life two orders,H,Standard: from published specifications
+978,"load, and S--N curve. The three factors' bootstrap confidence intervals",method_term,H,method_term:bootstrap,H,Method: established term
+980,but the AFT decomposition and bootstrap validation both confirm that each,method_term,H,method_term:AFT; method_term:bootstrap,H,Method: established term
+989,functional-form differences produce a 39\% spread in equivalent stress.,percentage,H,percentage:39\%,H,Verified: aft_anova.json
+993,"Surface roughness (23.5\%) is a first-order contributor, comparable in","percentage,novelty_claim",C,percentage:23.5\%; novelty_claim:first,C,"Claude: ""first-order"" claim; verify against statistical literature"
+994,magnitude to the top two factors. Under the earlier ordinary-ANOVA,method_term,H,method_term:ANOVA,H,Method: established term
+997,"8.5\%. The AFT censored-likelihood framework, by retaining the partial","percentage,method_term",H,percentage:8.5\%; method_term:AFT; method_term:censored,H,Verified: aft_anova.json
+1005,The FKM $K_{F\sigma}$ is clamped at 0.55; the AGMA Eq.~16.1 uses a,"formula_term,standard_claim",H,formula_term:K_{F; standard_claim:FKM $K_{F\sigma}$ is clamped at 0,H,Formula: from ISO/AGMA/FKM standards
+1015,Wang et al.~\cite{wang2023} conducted bending fatigue tests on 42CrMo,citation,?,citation:\cite{wang2023},?,Citation: verify description matches source
+1017,"stress levels from 151 to 293~MPa, with run-out defined at $3\times10^6$",scientific,C,scientific:3\times10^6,C,Claude: calculated value; verify against data source
+1031,Wang~et~al.~\cite{wang2023} report approximately~1~dex scatter in,citation,?,citation:\cite{wang2023},?,Citation: verify description matches source
+1032,fatigue life at a fixed stress level for 42CrMo4 spur gears. Running,material_claim,H,material_claim:42CrMo4,H,Material: from standards/data sheets
+1053,in Table~\ref{tab:anova} supports this,method_term,H,method_term:anova,H,Method: established term
+1054,interpretation from the factorial-design side: at the reference,method_term,H,method_term:factorial,H,Method: established term
+1056,"97.9\% of total log-variance, while the S--N curve source---the only",percentage,H,percentage:97.9\%,H,Verified: aft_anova.json
+1058,$-$0.7\%. This near-zero contribution is specific to the two Waterloo,"percentage,data_source",H,data_source:Waterloo; percentage:0.7\%,H,Verified: aft_anova.json
+1067,caveat. The present factorial design includes five methodological,method_term,H,method_term:factorial,H,Method: established term
+1074,"included, for example, three heats of 42CrMo4 with independently",material_claim,H,material_claim:42CrMo4,H,Material: from standards/data sheets
+1083,does not rely on the factor-level asymmetry of the factorial design.,method_term,H,method_term:factorial,H,Method: established term
+1085,"factor (mean-stress correction, 39.1\%) against the single",percentage,H,percentage:39.1\%,H,Verified: aft_anova.json
+1086,"material-related factor (S--N curve source, $-$0.7\%) yields a ratio of",percentage,H,percentage:0.7\%,H,Verified: aft_anova.json
+1092,Pagliari et al.~\cite{pagliari2025} performed single-tooth bending (STB),citation,?,citation:\cite{pagliari2025},?,Citation: verify description matches source
+1093,fatigue tests on case-carburized AISI~8620 spur gears,material_claim,H,material_claim:case-carburized,H,Material: from standards/data sheets
+1098,high-cycle regime (over-predicting stress by $\sim$10--15\%) but may,percentage,H,percentage:15\%,H,Verified: aft_anova.json
+1105,Bonaiti et al.~\cite{bonaiti2024} analyzed pulsator test data from five,citation,?,citation:\cite{bonaiti2024},?,Citation: verify description matches source
+1112,0.3\% finding. Their study operates on a single methodological axis,percentage,H,percentage:0.3\%,H,Verified: aft_anova.json
+1114,"five simultaneous dimensions, how is the total log-variance partitioned?",novelty_claim,C,novelty_claim:simultaneous,C,Claude: simultaneous-factorial claim; verify scope
+1115,The factorial decomposition provides a quantitative ranking that places,method_term,H,method_term:factorial,H,Method: established term
+1118,bootstrap-quantified confidence. The two studies are complementary:,method_term,H,method_term:bootstrap,H,Method: established term
+1125,Glodez et al.~\cite{glodez2002} developed a computational fatigue,citation,?,citation:\cite{glodez2002},?,Citation: verify description matches source
+1126,model for 42CrMo4 spur gears---the same material and the same,material_claim,H,material_claim:42CrMo4,H,Material: from standards/data sheets
+1131,"among} ISO~6336, AGMA~2001, and FKM introduces large prediction spreads.",standard_claim,H,standard_claim:FKM introduces large prediction spreads,H,Standard: from published specifications
+1133,Vietze et al.~\cite{vietze2024} used the ISO~6336~+~Miner pipeline as the,citation,?,citation:\cite{vietze2024},?,Citation: verify description matches source
+1150,"through-hardened and case-carburized steels, (b)~the stress levels in",material_claim,H,material_claim:case-carburized,H,Material: from standards/data sheets
+1169,that drive how long the gear survives (ANOVA on finite-life,method_term,H,method_term:ANOVA,H,Method: established term
+1175,"limit, the Standard~$\times$~Rz interaction (17.8\%) dwarfs the",percentage,H,percentage:17.8\%,H,Verified: aft_anova.json
+1176,"mean-stress contribution (10.2\%). At 700~N$\cdot$m, well above the",percentage,H,percentage:10.2\%,H,Verified: aft_anova.json
+1178,30.3\%. The factor ranking is therefore an operating-point-dependent,percentage,H,percentage:30.3\%,H,Verified: aft_anova.json
+1185,"results at 700~N$\cdot$m, the only torque level at which the AFT",method_term,H,method_term:AFT,H,Method: established term
+1196,multi-torque AFT extension identified as Phase~2 of the research,method_term,H,method_term:AFT,H,Method: established term
+1200,"the standards community. First, two factors---standard choice and",novelty_claim,C,novelty_claim:First,C,Claude: novelty/gap claim
+1201,mean-stress correction---together account for 74.4\% of total,percentage,H,percentage:74.4\%,H,Verified: aft_anova.json
+1202,"log-variance, while surface roughness contributes a further 23.5\%.",percentage,H,percentage:23.5\%,H,Verified: aft_anova.json
+1208,"conventions across ISO, AGMA, and FKM would leave the dominant",standard_claim,H,standard_claim:FKM would leave the dominant,H,Standard: from published specifications
+1234,\subsection{AFT Versus Ordinary ANOVA: Why Censored Likelihood Matters},method_term,H,method_term:AFT; method_term:ANOVA; method_term:Censored,H,Method: established term
+1235,\label{sec:aft_vs_anova},method_term,H,method_term:anova; method_term:aft,H,Method: established term
+1239,with consequences for the variance decomposition. Table~\ref{tab:aft_vs_anova},method_term,H,method_term:anova; method_term:aft,H,Method: established term
+1240,compares the variance fractions obtained from the AFT censored-likelihood,method_term,H,method_term:AFT; method_term:censored,H,Method: established term
+1241,framework with those from Sobol' first-order sensitivity analysis,"novelty_claim,method_term",C,method_term:Sobol; novelty_claim:first,C,"Claude: ""first-order"" claim; verify against statistical literature"
+1242,"(equivalent to ordinary ANOVA for a balanced factorial design), which",method_term,H,method_term:ANOVA; method_term:factorial,H,Method: established term
+1247,\caption{AFT (censored likelihood) versus Sobol'/ANOVA variance,method_term,H,method_term:AFT; method_term:Sobol; method_term:ANOVA; method_term:censored,H,Method: established term
+1248,decomposition at 700~N$\cdot$m. Sobol' indices are computed on the,method_term,H,method_term:Sobol,H,Method: established term
+1250,$\Delta$ indicates that AFT attributes more variance to that factor.,method_term,H,method_term:AFT,H,Method: established term
+1251,The 500 and 600~N$\cdot$m levels are excluded because the AFT,method_term,H,method_term:AFT,H,Method: established term
+1252,decomposition is not identified at those torque levels.\label{tab:aft_vs_anova}},method_term,H,method_term:anova; method_term:aft,H,Method: established term
+1255,Factor & ANOVA/Sobol' & AFT & $\Delta$ \\,method_term,H,method_term:ANOVA; method_term:Sobol; method_term:AFT,H,Method: established term
+1267,"The comparison reveals a systematic distortion. Sobol'/ANOVA, by",method_term,H,method_term:ANOVA; method_term:Sobol,H,Method: established term
+1268,"discarding 64\% of the dataset, underestimates the three dominant",percentage,H,percentage:64\%,H,Verified: aft_anova.json
+1271,(29.0\% vs.\ $-0.7$\% for AFT) and inflating the interaction term,"percentage,method_term",H,method_term:AFT; percentage:29.0\%,H,Verified: aft_anova.json
+1272,"(27.3\% vs.\ 2.5\%). The AFT framework, by retaining the partial","percentage,method_term",H,percentage:2.5\%; percentage:27.3\%; method_term:AFT,H,Verified: aft_anova.json
+1273,"information in the 92 censored observations, correctly separates the",method_term,H,method_term:censored,H,Method: established term
+1278,"approximately 20\%, AFT is the only variance decomposition method that","percentage,method_term",H,method_term:AFT; percentage:20\%,H,Verified: aft_anova.json
+1286,in this section are derived from the uniform-$Y_{Sa}$ baseline,formula_term,H,formula_term:Y_{Sa},H,Formula: from ISO/AGMA/FKM standards
+1292,"FKM's $K_f$). As demonstrated in \S\ref{sec:constraints}, the","formula_term,standard_claim",H,formula_term:K_f; standard_claim:FKM's $K_f$),H,Formula: from ISO/AGMA/FKM standards
+1293,uniform-$Y_{Sa}$ assumption contributes at most $\pm$3~pp to the,formula_term,H,formula_term:Y_{Sa},H,Formula: from ISO/AGMA/FKM standards
+1297,"to the 42CrMo4, $m_n=3$~mm, $z_1=20$ gear at 700~N$\cdot$m",material_claim,H,material_claim:42CrMo4,H,Material: from standards/data sheets
+1309,"\Delta_{\rm ISO\to FKM}  = 1.87 \pm 0.25\;\text{dex},\qquad",standard_claim,H,standard_claim:FKM}  = 1,H,Standard: from published specifications
+1310,\Delta_{\rm AGMA\to FKM} = 1.21 \pm 0.24\;\text{dex},standard_claim,H,standard_claim:FKM} = 1,H,Standard: from published specifications
+1315,"(ISO~$\to$~AGMA), $0.014$ (ISO~$\to$~FKM), and $0.062$",standard_claim,H,standard_claim:FKM),H,Standard: from published specifications
+1316,(AGMA~$\to$~FKM). The offset between ISO and AGMA is smallest because,standard_claim,H,standard_claim:FKM),H,Standard: from published specifications
+1318,use a power-law dependence on $R_z$); FKM is systematically more,standard_claim,H,standard_claim:FKM is systematically more,H,Standard: from published specifications
+1319,conservative because its $K_{F\sigma}$ roughness penalty is steeper,formula_term,H,formula_term:K_{F,H,Formula: from ISO/AGMA/FKM standards
+1326,"first-order engineering correction formula, valid strictly under the uniform-$Y_{Sa}$ baseline for this specific","formula_term,novelty_claim",C,formula_term:Y_{Sa}; novelty_claim:first,C,"Claude: ""first-order"" claim; verify against statistical literature"
+1332,"N_{f,\,{\rm FKM}}  \approx N_{f,\,{\rm ISO}} \times 10^{-(1.70 + 0.004\,R_z)}",standard_claim,H,standard_claim:FKM}}  \approx N_{f,H,Standard: from published specifications
+1342,"different standard, would obtain under the common $Y_{Sa}$ baseline---without re-running the full",formula_term,H,formula_term:Y_{Sa},H,Formula: from ISO/AGMA/FKM standards
+1343,"calculation. The coefficients are specific to the 42CrMo4, $m_n=3$~mm,",material_claim,H,material_claim:42CrMo4,H,Material: from standards/data sheets
+1356,estimates that follow are specific to the through-hardened 42CrMo4,material_claim,H,material_claim:42CrMo4,H,Material: from standards/data sheets
+1357,gear without residual stresses studied here. In case-carburized,material_claim,H,material_claim:case-carburized,H,Material: from standards/data sheets
+1362,mean-stress correction contribution (39.1\% here) would be,percentage,H,percentage:39.1\%,H,Verified: aft_anova.json
+1393,"& FKM & 4.74 & [2.88, 6.89] \\",standard_claim,H,standard_claim:FKM & 4,H,Standard: from published specifications
+1394,"& AGMA 2001 & 5.65 & [4.07, 7.11] \\",standard_claim,H,standard_claim:AGMA 2001 & 5,H,Standard: from published specifications
+1395,"& ISO 6336 & 6.07 & [4.75, 7.50] \\",standard_claim,H,standard_claim:ISO 6336 & 6,H,Standard: from published specifications
+1409,"& Waterloo \#66 ($\sigma_e=550$) & 5.48 & [3.80, 7.44] \\",data_source,H,data_source:Waterloo,H,Verified: Waterloo SMDIdbase is public
+1410,"& Waterloo \#68 ($\sigma_e=500$) & 5.53 & [2.52, 7.50] \\",data_source,H,data_source:Waterloo,H,Verified: Waterloo SMDIdbase is public
+1419,"The most conservative defensible combination---FKM standard, Goodman",standard_claim,H,standard_claim:FKM standard,H,Standard: from published specifications
+1421,"S--N curve (Waterloo~\#68), and Modified Miner---predicts a median",data_source,H,data_source:Waterloo,H,Verified: Waterloo SMDIdbase is public
+1427,safety factor of $\sim$$1.9 \times 10^4$. This is three to four orders,scientific,C,scientific:1.9 \times 10^4,C,Claude: calculated value; verify against data source
+1434,FKM~+~Goodman generates a predicted life approximately two orders of,standard_claim,H,standard_claim:FKM~+~Goodman generates a predicted life approximately two orders of,H,Standard: from published specifications
+1452,point for safety specification drafting.,method_term,H,method_term:aft,H,Method: established term
+1475,design team is tasked with sizing a through-hardened 42CrMo4 spur,material_claim,H,material_claim:42CrMo4,H,Material: from standards/data sheets
+1483,Table~\ref{tab:anova} provides the quantitative basis for meeting this,method_term,H,method_term:anova,H,Method: established term
+1485,"(39.1\%), size-and-surface factor formulation (35.3\%), and surface roughness",percentage,H,percentage:35.3\%; percentage:39.1\%,H,Verified: aft_anova.json
+1486,grade (23.5\%)---together account for 97.9\% of the total,percentage,H,percentage:23.5\%; percentage:97.9\%,H,Verified: aft_anova.json
+1494,appropriate for ductile 42CrMo4 and the least conservative of,material_claim,H,material_claim:42CrMo4,H,Material: from standards/data sheets
+1496,"method-induced divergence (39.1\% of variance, Table~\ref{tab:anova}).","percentage,method_term",H,method_term:anova; percentage:39.1\%,H,Verified: aft_anova.json
+1500,additional 35.3\% of variance. The sensitivity analysis in,percentage,H,percentage:35.3\%,H,Verified: aft_anova.json
+1501,\S\ref{sec:constraints} confirms that the uniform-$Y_{Sa}$,formula_term,H,formula_term:Y_{Sa},H,Formula: from ISO/AGMA/FKM standards
+1506,calculation pipeline. This addresses the remaining 23.5\% of the,percentage,H,percentage:23.5\%,H,Verified: aft_anova.json
+1511,"After these three decisions are locked into the design specification,",method_term,H,method_term:Aft,H,Method: established term
+1513,"$-$0.7\%; cumulative damage rule, 0.3\%; standard--roughness interaction,",percentage,H,percentage:0.3\%; percentage:0.7\%,H,Verified: aft_anova.json
+1514,2.5\%) contribute less than 12\% of the original total variance. The,percentage,H,percentage:2.5\%; percentage:12\%,H,Verified: aft_anova.json
+1520,through-hardened steel without residual stresses. For case-carburized,material_claim,H,material_claim:case-carburized,H,Material: from standards/data sheets
+1522,"mean-stress correction contribution (39.1\%), shifting the priority","percentage,novelty_claim",C,novelty_claim:prior; percentage:39.1\%,C,Claude: recommendation claim
+1534,\item Stress concentration treatment asymmetry. The analysis,formula_term,H,formula_term:Stress concentration,H,Formula: from ISO/AGMA/FKM standards
+1535,applies ISO~6336 $Y_{Sa} \approx 1.55$ to all three standards to,formula_term,H,formula_term:Y_{Sa},H,Formula: from ISO/AGMA/FKM standards
+1537,and FKM do not use a $Y_{Sa}$-equivalent coefficient in their,"formula_term,standard_claim",H,formula_term:Y_{Sa}; standard_claim:FKM do not use a $Y_{Sa}$-equivalent coefficient in their,H,Formula: from ISO/AGMA/FKM standards
+1539,"through independent factors ($K_s$, $C_f$, $K_d$, $K_{F\sigma}$)",formula_term,H,formula_term:K_{F,H,Formula: from ISO/AGMA/FKM standards
+1542,factorial decomposition interpretable. The three standards differ,method_term,H,method_term:factorial,H,Method: established term
+1544,"concentration treatment (ISO's $Y_{Sa}$, AGMA's $J$, FKM's","formula_term,standard_claim",H,formula_term:Y_{Sa}; standard_claim:FKM's,H,Formula: from ISO/AGMA/FKM standards
+1545,$K_f$) and (ii)~the size-and-surface factor formulations. If both,formula_term,H,formula_term:K_f,H,Formula: from ISO/AGMA/FKM standards
+1546,"dimensions were varied simultaneously, the resulting",novelty_claim,C,novelty_claim:simultaneous,C,Claude: simultaneous-factorial claim; verify scope
+1549,holding the stress concentration baseline constant and varying only,formula_term,H,formula_term:stress concentration,H,Formula: from ISO/AGMA/FKM standards
+1558,ISO stress multiplier ($Y_{Fa} \cdot Y_{Sa} \cdot Y_\varepsilon,formula_term,H,formula_term:Y_{Sa},H,Formula: from ISO/AGMA/FKM standards
+1561,published curves) and with the mid-range of the FKM fatigue notch,standard_claim,H,standard_claim:FKM fatigue notch,H,Standard: from published specifications
+1562,"factor ($K_f \approx 1.3$--1.7, estimated via the Neuber",formula_term,H,formula_term:K_f,H,Formula: from ISO/AGMA/FKM standards
+1563,procedure with FKM-guideline $K_t$ values). The uniform,standard_claim,H,standard_claim:FKM-guideline $K_t$ values),H,Standard: from published specifications
+1564,$Y_{Sa}=1.55$ is therefore a numerically natural common baseline,formula_term,H,formula_term:Y_{Sa},H,Formula: from ISO/AGMA/FKM standards
+1569,joint uncertainty in native $J$ and $K_f$ through the full AFT,"formula_term,method_term",H,method_term:AFT; formula_term:K_f,H,Method: established term
+1571,mean standard-associated variance across all scenarios is 28.9\%,percentage,H,percentage:28.9\%,H,Verified: aft_anova.json
+1572,(baseline 35.3\% under the uniform-$Y_{Sa}$ AFT; mean bias,"formula_term,percentage,method_term",H,method_term:AFT; formula_term:Y_{Sa}; percentage:35.3\%,H,Verified: aft_anova.json
+1577,stress concentration treatment is held constant or varied across,formula_term,H,formula_term:stress concentration,H,Formula: from ISO/AGMA/FKM standards
+1579,"the stress concentration coefficients, drive the divergence.",formula_term,H,formula_term:stress concentration,H,Formula: from ISO/AGMA/FKM standards
+1585,baseline---are themselves a first-order contributor to the total,novelty_claim,C,novelty_claim:first,C,"Claude: ""first-order"" claim; verify against statistical literature"
+1587,"stress concentration treatment along its native dimension, using",formula_term,H,formula_term:stress concentration,H,Formula: from ISO/AGMA/FKM standards
+1588,"FEA-derived FKM $K_f$ and digitized AGMA $J$-factor lookup, is","formula_term,standard_claim",H,standard_claim:FKM $K_f$ and digitized AGMA $J$-factor lookup; formula_term:K_f,H,Formula: from ISO/AGMA/FKM standards
+1595,"chain---for instance, AGMA's geometry factor $J$ or FKM's fatigue",standard_claim,H,standard_claim:FKM's fatigue,H,Standard: from published specifications
+1596,notch factor $K_f$. The reported standard-choice variance (35.3\%),"formula_term,percentage",H,formula_term:K_f; percentage:35.3\%,H,Verified: aft_anova.json
+1601,"contribution of the uniform $Y_{Sa}$ simplification to 2--6~pp, but a",formula_term,H,formula_term:Y_{Sa},H,Formula: from ISO/AGMA/FKM standards
+1610,up to 40~$\mu$m; FKM clamps $K_{F\sigma}$ at a minimum of 0.55;,"formula_term,standard_claim",H,formula_term:K_{F; standard_claim:FKM clamps $K_{F\sigma}$ at a minimum of 0,H,Formula: from ISO/AGMA/FKM standards
+1615,term by $+0.1$~pp (from 2.5\% to 3.1\%) and leaves the standard,percentage,H,percentage:2.5\%; percentage:3.1\%,H,Verified: aft_anova.json
+1622,"of $R_a$ (microinches), whereas ISO~6336 and FKM use $R_z$",standard_claim,H,standard_claim:FKM use $R_z$,H,Standard: from published specifications
+1628,"(from 2.5\% at $R_z/R_a=6$ to 3.7\% at $R_z/R_a=4$), while the",percentage,H,percentage:2.5\%; percentage:3.7\%,H,Verified: aft_anova.json
+1632,\item AFT model assumptions and distributional choice. The,method_term,H,method_term:AFT,H,Method: established term
+1633,log-normal AFT model assumes normally distributed,method_term,H,method_term:AFT; method_term:log-normal,H,Method: established term
+1637,log-normal assumption at a statistically detectable level.,method_term,H,method_term:log-normal,H,Method: established term
+1639,reported in Table~\ref{tab:anova} are conditional on the,method_term,H,method_term:anova,H,Method: established term
+1640,"log-normal specification, and their numerical values may shift",method_term,H,method_term:log-normal,H,Method: established term
+1644,"violation is limited. First, the residual skewness is mild",novelty_claim,C,novelty_claim:First,C,Claude: novelty/gap claim
+1645,($-0.44$) and the bootstrap variance fractions have narrow,method_term,H,method_term:bootstrap,H,Method: established term
+1646,"confidence intervals (Table~\ref{tab:anova}), indicating that the",method_term,H,method_term:anova,H,Method: established term
+1648,"Second, a Weibull-AFT model fitted to the same full-factorial",method_term,H,method_term:AFT; method_term:full-factorial; method_term:Weibull,H,Method: established term
+1650,"\texttt{output/weibull\_aft.json}), confirming that the",method_term,H,method_term:weibull; method_term:aft,H,Method: established term
+1651,log-normal is the better-supported parametric choice for this,method_term,H,method_term:log-normal,H,Method: established term
+1657,"distributional alternatives (log-logistic, Gamma-AFT, Box-Cox",method_term,H,method_term:AFT,H,Method: established term
+1660,The log-normal is retained for three further reasons: (i)~$\log_{10}(N_f)$ is the natural,method_term,H,method_term:log-normal,H,Method: established term
+1662,"full-factorial design, the likelihood-ratio decomposition under",method_term,H,method_term:full-factorial,H,Method: established term
+1663,log-normality is structurally equivalent to first-order Sobol',"novelty_claim,method_term",C,novelty_claim:first; method_term:Sobol; method_term:log-normal,C,"Claude: ""first-order"" claim; verify against statistical literature"
+1665,Weibull- or Gamma-AFT formulations; and (iii)~Sobol' indices,method_term,H,method_term:AFT; method_term:Weibull; method_term:Sobol,H,Method: established term
+1666,"cannot be computed on censored data, so AFT is not merely a",method_term,H,method_term:censored; method_term:AFT,H,Method: established term
+1667,competitor to Sobol' sensitivity analysis---it is the only,method_term,H,method_term:Sobol,H,Method: established term
+1669,present (\texttt{output/sobol\_vs\_aft.json}).,method_term,H,method_term:aft; method_term:sobol,H,Method: established term
+1670,yields a higher AIC than the log-normal specification,method_term,H,method_term:log-normal,H,Method: established term
+1671,"($\Delta\mathrm{AIC} = +39.7$; \texttt{output/weibull\_aft.json}),",method_term,H,method_term:weibull; method_term:aft,H,Method: established term
+1672,confirming that the log-normal is the appropriate lifetime,method_term,H,method_term:log-normal,H,Method: established term
+1673,distribution for this dataset. The log-normal is retained for,method_term,H,method_term:log-normal,H,Method: established term
+1676,"full-factorial design, the likelihood-ratio decomposition under",method_term,H,method_term:full-factorial,H,Method: established term
+1677,log-normality is structurally equivalent to first-order Sobol',"novelty_claim,method_term",C,novelty_claim:first; method_term:Sobol; method_term:log-normal,C,"Claude: ""first-order"" claim; verify against statistical literature"
+1679,Weibull- or Gamma-AFT formulations; and (iii)~Sobol' indices,method_term,H,method_term:AFT; method_term:Weibull; method_term:Sobol,H,Method: established term
+1680,cannot be computed on censored data (they require a fully,method_term,H,method_term:censored,H,Method: established term
+1681,"observed response), so AFT is not merely a competitor to Sobol'",method_term,H,method_term:AFT; method_term:Sobol,H,Method: established term
+1684,(\texttt{output/sobol\_vs\_aft.json}).,method_term,H,method_term:aft; method_term:sobol,H,Method: established term
+1687,interpretable and unlikely to be informative in the sense of,novelty_claim,C,novelty_claim:unlike,C,Claude: novelty/gap claim
+1690,AFT variance decomposition requires a minimum information,method_term,H,method_term:AFT,H,Method: established term
+1691,"content. At 500~N$\cdot$m (130/144 run-out, 90\% censoring),",percentage,H,percentage:90\%,H,Verified: aft_anova.json
+1694,"(92/144 run-out, 64\% censoring), the model is identified but",percentage,H,percentage:64\%,H,Verified: aft_anova.json
+1700,rule; 2~df) are not. This explains why the bootstrap CIs for,method_term,H,method_term:bootstrap,H,Method: established term
+1701,the dominant factors are narrow (Table~\ref{tab:anova}) while,method_term,H,method_term:anova,H,Method: established term
+1703,"signal distinguishable from the 64\% censoring noise floor,",percentage,H,percentage:64\%,H,Verified: aft_anova.json
+1706,I caution that the narrow bootstrap CIs for the dominant factors,method_term,H,method_term:bootstrap,H,Method: established term
+1709,"underlying parameters. At 64\% censoring, the likelihood surface",percentage,H,percentage:64\%,H,Verified: aft_anova.json
+1710,may possess shallow local maxima or flat ridges that bootstrap,method_term,H,method_term:bootstrap,H,Method: established term
+1711,resampling cannot detect because each bootstrap replicate,method_term,H,method_term:bootstrap,H,Method: established term
+1713,"fractions for the three dominant factors (39.1\%, 35.3\%,",percentage,H,percentage:35.3\%; percentage:39.1\%,H,Verified: aft_anova.json
+1714,23.5\%) should therefore be interpreted as the best available,percentage,H,percentage:23.5\%,H,Verified: aft_anova.json
+1715,"point estimates under the log-normal AFT specification, not as",method_term,H,method_term:AFT; method_term:log-normal,H,Method: established term
+1719,the likelihood surface possesses a well-defined global maximum at 64\%,percentage,H,percentage:64\%,H,Verified: aft_anova.json
+1721,(MS $>$ Std $>$ Rz) is robust across all bootstrap replicates,method_term,H,method_term:bootstrap,H,Method: established term
+1723,curve source ($-0.7$\%) and cumulative damage rule (0.3\%) are,percentage,H,percentage:0.3\%,H,Verified: aft_anova.json
+1724,below the noise floor of the 64\%-censored design and should,"percentage,method_term",H,percentage:64\%; method_term:censored,H,Verified: aft_anova.json
+1726,\item Quenched-and-tempered steel only. Different materials,material_claim,H,material_claim:Quenched-and-tempered,H,Material: from standards/data sheets
+1729,"reported 39.1\% mean-stress contribution applies to an idealized,",percentage,H,percentage:39.1\%,H,Verified: aft_anova.json
+1730,residual-stress-free quenched-and-tempered 42CrMo4 gear. In,material_claim,H,material_claim:quenched-and-tempered; material_claim:42CrMo4,H,Material: from standards/data sheets
+1735,residual stresses that partially offset it. The 39.1\% figure,percentage,H,percentage:39.1\%,H,Verified: aft_anova.json
+1739,across roughness grades. In case-carburized gears---the dominant,material_claim,H,material_claim:case-carburized,H,Material: from standards/data sheets
+1757,uninterpretable variance fractions. The bootstrap stability of,method_term,H,method_term:bootstrap,H,Method: established term
+1758,the main effects (Table~\ref{tab:anova}) suggests that unmodeled,method_term,H,method_term:anova,H,Method: established term
+1764,(Standard~$	imes$~$R_z$) contributes only 2.5\% of the total,percentage,H,percentage:2.5\%,H,Verified: aft_anova.json
+1769,most a few percentage points---within the bootstrap confidence,method_term,H,method_term:bootstrap,H,Method: established term
+1784,methodological switches through censored-likelihood variance,method_term,H,method_term:censored,H,Method: established term
+1787,compliant FKM $K_f$ implementation and digitize the AGMA $J$-factor,"formula_term,standard_claim",H,formula_term:K_f; standard_claim:FKM $K_f$ implementation and digitize the AGMA $J$-factor,H,Formula: from ISO/AGMA/FKM standards
+1788,"curves, permitting the first approximation-free, native-formulation",novelty_claim,C,novelty_claim:first,C,Claude: novelty/gap claim
+1791,manuscript). It will also extend the factorial design to,method_term,H,method_term:factorial,H,Method: established term
+1793,expected to rise substantially above the 0.3\% reported here for,percentage,H,percentage:0.3\%,H,Verified: aft_anova.json
+1801,144-combination factorial sweep. The open-source framework released,method_term,H,method_term:factorial,H,Method: established term
+1811,I applied a factorial decomposition methodology to quantify,method_term,H,method_term:factorial,H,Method: established term
+1813,on a single through-hardened 42CrMo4 spur gear at 700~N$\cdot$m.,material_claim,H,material_claim:42CrMo4,H,Material: from standards/data sheets
+1815,simultaneously varies five engineering choices in a full-factorial,"novelty_claim,method_term",C,method_term:full-factorial; novelty_claim:simultaneous,C,Claude: simultaneous-factorial claim; verify scope
+1816,"design, handles right-censored run-out data through AFT censored",method_term,H,method_term:censored; method_term:AFT,H,Method: established term
+1818,attributable fractions with bootstrap-quantified confidence. For a,method_term,H,method_term:bootstrap,H,Method: established term
+1819,quenched-and-tempered 42CrMo4 spur gear under constant-amplitude,material_claim,H,material_claim:quenched-and-tempered; material_claim:42CrMo4,H,Material: from standards/data sheets
+1824,\item Mean-stress correction (39.1\%) and size-and-surface factor,percentage,H,percentage:39.1\%,H,Verified: aft_anova.json
+1825,formulation (35.3\%) together account for 74.4\% of total,percentage,H,percentage:74.4\%; percentage:35.3\%,H,Verified: aft_anova.json
+1826,log-variance. Surface roughness grade (23.5\%) is a clear third,percentage,H,percentage:23.5\%,H,Verified: aft_anova.json
+1827,contributor; the three together account for 97.9\%. The S--N curve,percentage,H,percentage:97.9\%,H,Verified: aft_anova.json
+1828,"source ($-$0.7\%) and cumulative damage rule (0.3\%, constant-amplitude only) are negligible",percentage,H,percentage:0.3\%; percentage:0.7\%,H,Verified: aft_anova.json
+1832,\item The AFT censored-likelihood framework is not merely a statistical,method_term,H,method_term:AFT; method_term:censored,H,Method: established term
+1833,refinement---it is a necessity. Ordinary ANOVA and Sobol' sensitivity,method_term,H,method_term:ANOVA; method_term:Sobol,H,Method: established term
+1835,"(64\% of the dataset), underestimate the mean-stress contribution",percentage,H,percentage:64\%,H,Verified: aft_anova.json
+1836,by 28~pp and misattribute 29\% of variance to the S--N curve,percentage,H,percentage:29\%,H,Verified: aft_anova.json
+1837,source. The log-normal AFT specification is validated against,method_term,H,method_term:AFT; method_term:log-normal,H,Method: established term
+1838,"Weibull-AFT ($\Delta\mathrm{AIC} = +29.7$), confirming it as the",method_term,H,method_term:AFT; method_term:Weibull,H,Method: established term
+1842,is because the two Waterloo datasets share similar fatigue,data_source,H,data_source:Waterloo,H,Verified: Waterloo SMDIdbase is public
+1852,The cumulative damage rule contributes 0.3\% under,percentage,H,percentage:0.3\%,H,Verified: aft_anova.json
+1857,\item Predicted fatigue life spans from $3.3\times10^2$ to,scientific,C,scientific:3.3\times10^2,C,Claude: calculated value; verify against data source
+1858,"$5.8\times10^5$ cycles (3.2~dex). A single gear, assessed",scientific,C,scientific:5.8\times10^5,C,Claude: calculated value; verify against data source
+1860,failing at $3.3\times10^2$ cycles or surviving beyond $10^6$---depending on,scientific,C,scientific:3.3\times10^2,C,Claude: calculated value; verify against data source
+1868,(FKM~+~Goodman~+~as-forged $R_z$) is applying an implicit,standard_claim,H,standard_claim:FKM~+~Goodman~+~as-forged $R_z$) is applying an implicit,H,Standard: from published specifications
+1877,"the AFT analysis code---is released as a reusable, auditable",method_term,H,method_term:AFT,H,Method: established term
+1880,additional gear geometries remains a priority for future work.,novelty_claim,C,novelty_claim:prior,C,Claude: recommendation claim
+1894,"\texttt{fatigue\_models.py}, \texttt{aft\_variance\_decomposition.py},",method_term,H,method_term:aft,H,Method: established term
+1897,(\texttt{output/sweep.json}) and AFT variance decomposition results,method_term,H,method_term:AFT,H,Method: established term
+1898,"(\texttt{output/aft\_anova.json}, 2000 bootstrap draws, RNG seed~42);",method_term,H,method_term:anova; method_term:bootstrap; method_term:aft,H,Method: established term
+1901,executes the entire pipeline (sweep~$\rightarrow$~ANOVA~$\rightarrow$~AFT~$\rightarrow$~multi-torque~$\rightarrow$~figures~$\rightarrow$~audit),method_term,H,method_term:ANOVA; method_term:AFT,H,Method: established term
+1907,publicly accessible University of Waterloo SMDIdbase,data_source,H,data_source:Waterloo; data_source:SMDIdbase,H,Verified: Waterloo SMDIdbase is public
+1908,(\texttt{https://fde.uwaterloo.ca/Fde/Materials/SMDIdbase/Steel/}).,data_source,H,data_source:waterloo; data_source:SMDIdbase,H,Verified: Waterloo SMDIdbase is public
+1916,FKM~7th~ed.) are isolated in \texttt{fatigue\_models.py} and can be,standard_claim,H,standard_claim:FKM~7th~ed,H,Standard: from published specifications
+1917,audited independently. The AFT variance decomposition module,method_term,H,method_term:AFT,H,Method: established term
+1918,(\texttt{aft\_variance\_decomposition.py}) accepts any,method_term,H,method_term:aft,H,Method: established term
+1919,categorical-factor dataset with right-censored observations and is,method_term,H,method_term:censored,H,Method: established term
+1920,"directly applicable to other machine elements (shafts, bearings,",method_term,H,method_term:aft,H,Method: established term
+1923,uniform $Y_{Sa}$ assumption contributes at most $\pm$3~pp to the,formula_term,H,formula_term:Y_{Sa},H,Formula: from ISO/AGMA/FKM standards

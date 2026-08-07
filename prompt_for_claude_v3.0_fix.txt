@@ -1,0 +1,167 @@
+任务：齿轮疲劳 v2.9 → v3.0 全面修正
+
+你是论文修改助手。v2.9 号称"已完成 AFT 更新"，但实际只换了摘要和 Table 1 的数字（且数字来自旧的中间 AFT 运行），Discussion 叙事、多扭矩分析、图注、Bootstrap 全部还是旧 ANOVA 时代的内容。
+
+═══════════════════════════════════════
+真值来源
+═══════════════════════════════════════
+
+唯一真值：/output/aft_anova.json
+
+{
+  "sigma_aft": 0.2247,
+  "anova_table": [
+    {"factor": "mean_stress_method",       "variance_frac_%": 33.5, "delta_logLik": 183.50},
+    {"factor": "size_surface_standard",    "variance_frac_%": 30.3, "delta_logLik": 166.03},
+    {"factor": "rz_level",                 "variance_frac_%": 24.4, "delta_logLik": 133.71},
+    {"factor": "sn_source",                "variance_frac_%": 6.6,  "delta_logLik": 36.24},
+    {"factor": "size_surface_standard x rz_level", "variance_frac_%": 4.0, "delta_logLik": 21.85},
+    {"factor": "damage_method",            "variance_frac_%": 1.1,  "delta_logLik": 5.97}
+  ],
+  "bootstrap": {
+    "n_bootstrap": 50,
+    "noise_floor": {
+      "mean_stress_method":    {"mean": 34.9, "std": 1.0, "ci_95_lower": 33.1, "ci_95_upper": 36.9},
+      "size_surface_standard": {"mean": 31.6, "std": 1.4, "ci_95_lower": 29.0, "ci_95_upper": 33.8},
+      "rz_level":              {"mean": 25.5, "std": 1.0, "ci_95_lower": 23.9, "ci_95_upper": 27.1},
+      "sn_source":             {"mean": 6.7,  "std": 1.1, "ci_95_lower": 4.7,  "ci_95_upper": 8.7},
+      "damage_method":         {"mean": 1.3,  "std": 0.6, "ci_95_lower": 0.3,  "ci_95_upper": 2.4}
+    }
+  }
+}
+
+诊断真值：/output/aft_diagnostics.json
+- shapiro_wilk: W=0.960, p=0.0016
+- levene: mean_stress p=0.52, size_surface p=0.59, rz_level p=0.62
+
+═══════════════════════════════════════
+P0：全篇数字替换（致命）
+═══════════════════════════════════════
+
+当前 v2.9 使用的是旧 AFT 中间值。全部替换为最终 aft_anova.json：
+
+| 位置 | 错误 | 改为 | 说明 |
+|------|------|------|------|
+| 全部 | 33.9% | **33.5%** | 均值应力 |
+| 全部 | 30.7% | **30.3%** | 标准 |
+| 全部 | 24.7% | **24.4%** | 粗糙度 |
+| 全部 | 6.7% | **6.6%** | S-N 曲线 |
+| 全部 | 3.0% | **4.0%** | 交互 |
+| 全部 | 1.1% | **1.1%** | 累积损伤（这个碰巧对） |
+| 全部 | 89.3% | **88.2%** | 三因子合计（33.5+30.3+24.4=88.2） |
+
+逐段替换清单：
+
+【摘要】行 61-65：33.9→33.5, 30.7→30.3, 24.7→24.4, 3.0→4.0, 6.7→6.6, 1.1→1.1
+
+【Table 1】行 342-351：重写整个表格。格式已经炸了（多了四个空列），修复为标准 LaTeX 格式：
+```
+\begin{tabular}{lrrr}
+\toprule
+Factor & $\Delta$logLik & Var.\% & S/N \\
+\midrule
+Mean stress correction      & 183.50 & 33.5 & >10 \\
+Size/surface standard       & 166.03 & 30.3 & >10 \\
+Surface roughness, Rz       & 133.71 & 24.4 & >10 \\
+S--N curve source           &  36.24 &  6.6 &   4 \\
+Standard $\times$ Rz        &  21.85 &  4.0 & --- \\
+Cumulative damage rule      &   5.97 &  1.1 &   2 \\
+\midrule
+\sigma_{\rm AFT}            &        & 0.225 & --- \\
+\bottomrule
+\end{tabular}
+```
+S/N 值：33.5/0.010=3350 → >10；30.3/0.014=2164 → >10；24.4/0.010=2440 → >10；6.6/0.011=600 → >10（不是4！）；1.1/0.006=183 → >10（不是2！）
+等等——需要核对。纸上的 S/N 应该是 bootstrap 给出的。从 JSON：mean_stress_method mean=34.9 std=1.0 → S/N=34.9。size_surface mean=31.6 std=1.4 → S/N=22.6。
+这些都 >10。sn_source mean=6.7 std=1.1 → S/N=6.1。damage_method mean=1.3 std=0.6 → S/N=2.2。
+所以 S/N 列应填：>10, >10, >10, ~6, ---, ~2。之前写 4 和 2 也不对——那些是旧值。
+
+【§3.1 方差分解正文】行 354-382：
+- 行 359：33.9→33.5, 30.7→30.3, 24.7→24.4
+- 行 361：89.3%→88.2%
+- 行 367：3.0%→4.0%
+- 行 366：6.7%→6.6%
+
+【Bootstrap 段】行 476-486：这是重灾区。当前的"bootstrap 均值"列写的其实是点估计值，不是 bootstrap 均值。
+
+改为：
+```
+Bootstrap 95% confidence intervals (50 draws, RNG seed 42) confirm
+that the three-factor ranking is stable under resampling.
+Mean-stress correction (bootstrap mean 34.9%, CI [33.1, 36.9]),
+size-and-surface standard (bootstrap mean 31.6%, CI [29.0, 33.8]),
+and surface roughness (bootstrap mean 25.5%, CI [23.9, 27.1])
+all have S/N ratios well above 10, with narrow confidence intervals.
+The S--N curve source (bootstrap mean 6.7%, CI [4.7, 8.7])
+is clearly distinguishable from zero (S/N ~6), while the cumulative damage
+rule (bootstrap mean 1.3%, CI [0.3, 2.4]) is marginal (S/N ~2).
+```
+
+同时还把全文的"200 draws"改为"50 draws"（JSON: n_bootstrap=50）。
+
+【结论段】行 733-737：更新数字同上。行 738-741 的叙事是对的（AFT 揭示 Rz 被低估）保留。
+
+═══════════════════════════════════════
+P1：多扭矩分析——全部重写或标注
+═══════════════════════════════════════
+
+§3.5 多扭矩段（行 426-463）仍在用旧 ANOVA 数字。这是最棘手的问题——没有对应的 AFT 多扭矩 JSON。
+
+选项（推荐 a）：
+(a) 将整段降级为定性描述。说明"在较低扭矩时标准主导，在接近疲劳极限的高扭矩时均值应力修正主导"，删除数字表格。加一句"The multi-torque comparison was performed under the earlier ANOVA framework; extending it to the AFT censored-likelihood framework is left for future work."
+
+(b) 如果有多扭矩的 sweep 数据可以重跑 AFT，那就跑完再写。
+
+如果选 (a)，删除行 440-451 的数字表格，保留行 454-463 的定性物理解释。
+
+═══════════════════════════════════════
+P2：Discussion 叙事重写
+═══════════════════════════════════════
+
+当前 Discussion 的叙事骨架是错误的——它还在讲"双因子主导"的旧故事。需要重写的段落：
+
+【§4.1 标题和开篇】行 521-538：
+- 标题从 "Two Dominant Factors, Statistically Indistinguishable" → **"Three Co-Equal Factors"**
+- 行 523："two factors account for 62.0%" → **"three factors account for 88.2%"**
+- 行 524-530：重写。旧文说"标准和均值应力不可区分"，现在三个因子量级相同，叙事应强调"没有单一主导因子——三个工程选择并驾齐驱"
+- 保留行 532-538 关于 R=0 下均值应力重要的物理解释（这部分是对的）
+
+【§4.2 表面粗糙度段】行 540-550：
+- 行 542："Surface roughness (8.5%) is a clear third factor but an order of magnitude below the top two" → 重写为 **"Surface roughness (24.4%) is a first-order contributor, comparable in magnitude to the top two factors"**
+- 行 543-550：保留关于三个标准粗糙度惩罚函数的讨论（这是对的）
+
+【Bonaiti 对比段】行 619-620：
+- "31.1% standard, 30.9% mean-stress, 8.5% Rz, 5.0% interaction, <1% each for S-N source and damage rule"
+→ 改为 AFT 数字：**"33.5% mean-stress, 30.3% standard, 24.4% Rz, 4.0% interaction, 6.6% S-N source, 1.1% damage rule"**
+
+【图注】行 501-503：
+- "Two factors account for 62.0% of total log-variance" → **"Three factors account for 88.2% of total log-variance"**
+
+═══════════════════════════════════════
+P3：杂项修复
+═══════════════════════════════════════
+
+1. 行 317-318 重复文本：删除 "recomputing all variance fractions on each draw. The signal-to-noise ratio..." 的重复段
+
+2. 行 314：bootstrap "200 times" → "50 times"
+
+3. 行 324：@source 注释 "anova.json" → "aft_anova.json"
+
+4. 行 726：结论段 "full-factorial ANOVA" → "full-factorial AFT survival analysis"
+
+5. 行 13：文件头注释 "All numbers from output/anova.json" → "output/aft_anova.json"
+
+6. 全文检查：所有 "We" → "I"（单作者论文）
+
+7. 全文检查：所有写 "ANOVA" 但实际指 AFT 的地方要修正。保留旧 ANOVA 的引用仅限于与 AFT 对比时明确标注"ordinary ANOVA"的段落（行 375-382 那段对比是合法的）。
+
+═══════════════════════════════════════
+操作要求
+═══════════════════════════════════════
+
+1. 输入：paper/gear_fatigue_v2.9.tex
+2. 输出：paper/gear_fatigue_v3.0.tex
+3. 每改一处标注释：% v3.0: old → new
+4. P0（全篇数字替换）必须逐行做，不要用全局查找替换——上次金属量就是这么漏的
+5. P2（Discussion 叙事）需要理解上下文后重写段落，不只是换数字
+6. P1（多扭矩）如果选方案(a)，标注 "NOTE: multi-torque comparison not yet ported to AFT — uses legacy ANOVA numbers, qualitative only. See §3.5."

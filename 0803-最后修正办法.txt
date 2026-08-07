@@ -1,0 +1,89 @@
+一、缺陷 1：统一\(Y_{Sa}\)基线、标准方差下限误用（大幅修正，仍有微小残留）
+
+残留小问题Phase2 仅规划完整原生标准复刻，当前仿真仍未完全消除统一\(Y_{Sa}\)人为假设，仅靠敏感性验算间接佐证，无完整全标准原生计算结果；
+
+二、缺陷 3：实验设计失衡，方法 / 材料因子不对称，泛化 “方法不确定性更大”（完整修正）
+该条审稿质疑已全部回应、文字全部重写，不存在逻辑矛盾。
+
+三、缺陷 4：夸大创新、歪曲前人、无试验却提标准修订建议（核心大幅修正，仍少量残留落地性表述）
+少量残留不足
+文中仍保留跨标准换算公式、风险分级表格；虽加大量免责，但仍存在易被工程师直接照搬的定量工具类内容，属于可优化点（建议回复信说明后续试验完成后再形成可用校正公式）。
+
+2 大幅缓解，但仍存在可优化的残留点（返修回复需要主动说明）
+\(Y_{Sa}\)统一基线仅做敏感性验算，未完整实现三套标准原生全套应力计算（Phase2 规划补齐）；
+风险阈值表、跨标准换算公式仍保留，仅靠文字免责，视觉上仍易被读者当作通用工程工具（可在回复信承诺试验完成后删除 / 重制）；
+全文无任何实体齿轮疲劳测试对标，仅靠文献定性对照，缺少定量验证数据。
+
+返修回复对应写作思路（可直接使用）
+To address the four major concerns raised in the previous review, comprehensive revisions have been implemented in Version 4.0:
+
+1.Regarding the unified \(Y_{Sa}\) baseline: Explicit disclaimers are added throughout Methods, Results and Discussion to clarify that standard-related variance fractions are strict lower bounds. Approximate native stress sensitivity analysis for AGMA J and FKM \(K_f\) is supplemented to prove minor bias on the studied gear. Full native standard implementation is scheduled for Phase 2 follow-up research.
+2.Concerning unbalanced factorial design: A dedicated subsection is added to illustrate the structural asymmetry between methodological and material factors. All absolute claims about the universal dominance of method-induced uncertainty are removed and restricted to the current limited material sampling setup. The comparison with Wang’s test data is revised to rule out invalid quantitative comparison due to mismatched stress ranges.
+3.Overclaimed novelty and overreaching standardization suggestions are fully moderated: The origin of AFT-based sensitivity analysis is fairly reviewed, and the novelty is confined to the gear multi-standard uncertainty scenario. All industrial standard revision proposals are marked as hypothetical demonstrations without experimental support. A dedicated constraint subsection highlights the absence of physical fatigue tests as a core limitation, with experimental benchmarks planned in Phase 2.
+4.All quantitative engineering outputs (inter-standard correction formulas, risk spread thresholds) are appended with prominent disclaimers stating they are case-specific demonstration results only, not validated design criteria for practical gear manufacturing. Illustrative design scenarios are rephrased as internal numerical control examples rather than mandatory industrial specifications.
+Minor remaining limitations (incomplete native standard calculation, lack of physical test validation) are clearly stated in the constraints and research roadmap, with concrete follow-up research plans provided to the reviewer.
+
+
+核心结论先讲：没有实验设备，论文完全能正常投稿录用，不用废掉，只需要分层整改 + 回复信策略，把 “无实体试验” 从致命缺陷降级为研究边界 / 阶段局限性这篇论文的核心价值不是 “齿轮疲劳试验对标”，而是一套全新的 AFT 截尾方差分解计算框架，属于纯计算 UQ 方法论类论文，IJF/JMST 大量同类型纯数值仿真论文，完全不需要配套实体试验。
+审稿人真正反感的不是 “没做试验”，而是「纯仿真却到处输出强制行业规范、通用校正公式、风险阈值」，只要删掉 / 弱化落地工程结论，只保留方法论演示，无试验不再是拒稿理由。一、分两类整改：正文彻底弱化工程落地内容（解决最大扣分点）
+
+1. 直接处理：跨标准校正公式、风险阈值两张表、工程设计案例方案 A（稳妥，推荐，不用删图 / 表，只重写标注）
+跨标准换算公式（Eq.correction）
+
+公式前后加两段醒目强限制段（加粗 / 斜体区分）
+
+
+This linear fitting equation is only a numerical fitting result for the specific gear, torque and unified \(Y_{Sa}\) baseline in this case study. It is exclusively used to demonstrate the existence of systematic prediction offsets between standards, and must not be adopted as general engineering conversion formulas for any gear design without experimental recalibration. This equation will be removed or revised after physical test verification in follow-up Phase 2 research.
+
+
+删除原文 “engineering correction coefficient、compensation tool” 等拔高词汇，全程只叫「case fitting curve for demonstration」
+
+风险阈值表 Tab.risk_thresholds
+
+标题重命名：Illustrative conceptual risk stratification (Simulation demonstration only, no industrial applicability)
+表格上方 + 底部双重大段免责注释，直接写明：无试验支撑，所有 dex 限值仅用来展示本框架的分析逻辑，严禁用于产品验收、标准编制；全文所有正文引用这张表时，统一加上 “conceptual demonstration only” 前缀
+
+三段式工程设计案例（锁定标准 / 粗糙度 / 均值应力）
+
+开篇第一句改写：The following numerical control case only demonstrates how this UQ framework interprets uncertainty sources within the closed simulation dataset, and cannot be translated into mandatory design specifications for physical gearbox production.
+把原文 “必须规定、强制锁定” 全部替换为「In this simulation, if we fix these variables artificially, the prediction scatter reduces」，删掉所有面向工厂 / 设计部门的执行建议
+方案 B（极致稳妥，彻底消除审稿人质疑）直接删除：跨标准校正公式、风险阈值整张表格、工业设计管控案例三段；
+只保留一句话概括：This framework can generate quantitative offset and risk classification results for specific gear models after targeted experimental calibration, and relevant case-specific indicators will be supplemented in follow-up experimental research.
+优点：完全不会再有 “拿仿真当行业标准” 的争议，适合想快速降低审稿负面印象。
+
+2. 全文所有 “标准化、行业规范、设计指导” 类语句批量替换表格
+原文违规表述                                                                              |                           替换为纯方法论表述
+Provide actionable guidance for standards committees |   This framework provides a quantitative analysis tool to compare methodological divergence for single numerical examples;  multi-test validation is required before supporting standard revision discussion
+Design protocols for industry                                               |           Conceptual analysis logic demonstrated via simulation, not operable design protocols
+Allow engineers to calculate compensation offsets         |         Show the mathematical offset feature of this decomposition method in this single case
+
+3. 扩充局限性独立小节（Constraints），主动自陈无试验短板在 Constraints 新增完整子小节，主动示弱，大幅降低审稿敌意，直接复制：
+Limitation: Absence of physical gear fatigue tests
+This study belongs to computational uncertainty quantification research, focusing on constructing a censored AFT factorial decomposition methodology rather than calibrating fatigue prediction accuracy via physical tests. All variance fractions, inter-standard offsets and life dispersion data are purely numerical outputs under fixed modeling assumptions (unified \(Y_{Sa}\), single material, single torque, no residual stress). These quantitative values cannot be regarded as validated physical laws or industrial design criteria. Follow-up Phase 2 research will carry out single-tooth bending fatigue tests on matching 42CrMo4 gears to calibrate and revise all case-specific quantitative indicators in this paper. Without experimental calibration, the core contribution of this manuscript is limited to the novel statistical decomposition framework for censored fatigue datasets, rather than engineering design data for gear production.
+
+
+4. 摘要 + 结论全面提纯，删掉所有工程落地描述原摘要 / 结论里：cross-standard correction formulas、risk classification、torque-dependent design protocols 全部删除；
+替换描述：This paper proposes a censored AFT full-factorial decomposition method to quantify method-induced prediction divergence for spur gear fatigue, and analyzes the relative contribution of five common engineering calculation choices under a fixed numerical gear model. All quantitative results are limited to the studied simulation condition and only serve to interpret the internal uncertainty composition of the model.
+
+二、剩余 3 个审稿缺陷配套低成本修改（不用做实验）
+
+缺陷 1：统一\(Y_{Sa}\)基线、标准方差下限问题（v4.0 已经改大半，只补 2 处细节）
+在 Native 应力敏感性分析段落末尾补充一句：A full native calculation pipeline (complete AGMA J, full FKM Kf workflow without approximation) will be developed in Phase 2 to eliminate the unified \(Y_{Sa}\) baseline limitation, and re-calculate standard divergence without artificial stress baseline constraints.
+所有图表注释、表格上标说明保持不动，不用额外仿真，仅在研究路线图强化后续完整原生标准开发计划。
+
+
+缺陷 2：实验设计失衡、方法因子过多（v4.0 已修好，无需改动）当前文稿已经写明设计自由度不对称、不能泛化 “方法不确定性更大”，保留原文段落即可，无额外工作量。缺陷 3：夸大创新、曲解文献（v4.0 已修好，无需改动）已经客观综述 AFT 已有应用，区分前人单变量研究与本文多因子分解创新，文献对比全部改为互补关系，不用调整。三、关键：返修回复信话术（核心兜底，无实验也能说服审稿人）专门针对 “无实体试验却输出工程建议” 这条质疑写完整回复，答辩逻辑清晰，审稿人不会揪着不放：
+Response to Comment: The manuscript lacks physical fatigue tests but proposes industrial risk thresholds and cross-standard correction formulas
+We fully recognize the reviewer’s concern that purely numerical simulation results cannot be directly used as validated industrial design criteria. We have carried out comprehensive revisions to separate methodological demonstration from practical engineering specifications, with three core adjustments:
+
+All case-specific quantitative outputs (inter-standard offset equations, risk spread threshold table, design control cases) are attached with prominent repeated disclaimers, clearly marking them as simulation-only conceptual demonstration results, which are not applicable to physical gear manufacturing without experimental recalibration. We removed all mandatory design and standardization recommendations targeting engineering departments and standards organizations.
+A dedicated subsection about the limitation of missing physical tests is added in the Constraints chapter, which objectively clarifies that all numerical percentages and fitting relations in this paper are constrained by fixed modeling assumptions, and cannot be generalized to actual gear products. We clearly distinguish the paper’s core contribution: a new censored AFT variance decomposition framework for fatigue censored data, rather than experimentally verified gear design data.
+We have supplemented a clear research roadmap, taking physical single-tooth bending fatigue test calibration as the core task of Phase 2 follow-up work. After completing the test campaign, we will re-calibrate or delete all case-specific fitting formulas and risk indicators in this paper.
+This paper falls into the category of computational UQ methodology research, consistent with many purely numerical fatigue uncertainty papers published in International Journal of Fatigue and Journal of Mechanical Science and Technology, which do not require matching physical test campaigns. After the above revisions, the paper no longer overclaims industrial application value without experimental support, and only focuses on the novelty of the statistical analysis framework for gear fatigue methodological uncertainty.
+
+四、总结：没有实验设备完全不用弃稿
+期刊允许纯计算方法论论文（IJF/JMST 大量同类型稿件，只讲算法 / 分解框架，无试验）；
+真正扣分点不是 “没做试验”，是仿真结果强行当行业标准，只要弱化 / 删除所有工程强制落地内容，只保留方法演示，这条质疑直接失效；
+不需要补实验，只靠文字修订 + 回复信自陈局限性、规划后续试验，就能满足大修要求；
+若想进一步降低风险，可选择删掉校正公式、风险表两段定量工程内容，全文彻底只讲统计框架，审稿人不会再拿试验问题为难你。
+

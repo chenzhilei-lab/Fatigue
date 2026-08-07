@@ -1,0 +1,122 @@
+{
+  "description": "AFT model residual diagnostics \u2014 Cox-Snell, Martingale, standardized residuals",
+  "model": {
+    "distribution": "Log-normal AFT with right-censoring (EM estimation)",
+    "n_total": 144,
+    "n_observed": 52,
+    "n_censored": 92,
+    "sigma_aft": 0.2084,
+    "logLik": -26.09
+  },
+  "cox_snell": {
+    "description": "Cox-Snell residuals. Under correct model, should follow Exp(1).",
+    "n": 144,
+    "mean": 0.4477,
+    "mean_target": 1.0,
+    "ks_statistic_vs_exp1": 0.4914,
+    "interpretation": "KS statistic measures departure from Exp(1). Lower is better. Formal test not applied due to censoring; visual inspection of cumulative hazard vs identity line is the primary diagnostic."
+  },
+  "martingale": {
+    "description": "Martingale residuals. M_i = delta_i - r_CS_i. Range (-inf, 1]. Mean ~ 0 for correct model.",
+    "n": 144,
+    "mean": -0.0865,
+    "mean_target": 0.0,
+    "range": [
+      -4.163,
+      0.9975
+    ],
+    "n_extreme_outliers": 7
+  },
+  "standardized_residuals_observed": {
+    "n": 52,
+    "mean": -0.3927,
+    "std": 1.0622,
+    "skewness": -1.2214
+  },
+  "shapiro_wilk": {
+    "statistic": 0.9817,
+    "p_value": 0.599,
+    "normal_at_0.05": true
+  },
+  "levene_test": {
+    "mean_stress_method": {
+      "factor": "Mean-Stress Correction",
+      "levene_stat": 6.9507,
+      "p_value": 0.0006,
+      "homoscedastic": false,
+      "group_sizes": [
+        28,
+        2,
+        8,
+        14
+      ],
+      "group_variances": [
+        0.849,
+        0.0129,
+        3.2461,
+        0.6884
+      ]
+    },
+    "size_surface_standard": {
+      "factor": "Size/Surface Standard",
+      "levene_stat": 6.0512,
+      "p_value": 0.0045,
+      "homoscedastic": false,
+      "group_sizes": [
+        6,
+        14,
+        32
+      ],
+      "group_variances": [
+        0.0485,
+        0.6527,
+        1.5524
+      ]
+    },
+    "rz_level": {
+      "factor": "Surface Roughness Rz",
+      "levene_stat": 2.3595,
+      "p_value": 0.1051,
+      "homoscedastic": true,
+      "group_sizes": [
+        24,
+        8,
+        20
+      ],
+      "group_variances": [
+        1.2843,
+        0.2975,
+        1.3588
+      ]
+    },
+    "sn_source": {
+      "factor": "S-N Curve Source",
+      "levene_stat": 2.6149,
+      "p_value": 0.1122,
+      "homoscedastic": true,
+      "group_sizes": [
+        32,
+        20
+      ],
+      "group_variances": [
+        1.1165,
+        0.6507
+      ]
+    },
+    "damage_method": {
+      "factor": "Cumulative Damage Rule",
+      "levene_stat": 0.0,
+      "p_value": 1.0,
+      "homoscedastic": true,
+      "group_sizes": [
+        26,
+        26
+      ],
+      "group_variances": [
+        1.1666,
+        1.1666
+      ]
+    }
+  },
+  "qq_plot_r_squared": 0.9848
+}

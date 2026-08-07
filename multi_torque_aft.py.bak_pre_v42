@@ -1,0 +1,170 @@
+"""
+multi_torque_aft.py — AFT variance decomposition at 3 torque levels
+====================================================================
+Replaces the old ANOVA-based multi-torque analysis with AFT censored
+likelihood, which naturally handles run-outs (dominant at low torque).
+Output: output/multi_torque_aft.json
+"""
+
+import json, os, itertools, numpy as np
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
+import gear_params
+from fatigue_models import compute_fatigue_life, apply_mean_stress_correction, apply_size_surface_factor, compute_fatigue_life_sn, apply_damage_rule
+from gear_params import RZ_LEVELS, LOAD_SPECTRUM
+from aft_variance_decomposition import em_censored_normal, build_design, extract_arrays, FACTORS, FACTOR_ORDER
+
+SN = ['Waterloo_SMDIdbase_Iter068', 'Waterloo_SMDIdbase_Iter066']
+MEAN = ['Goodman', 'Gerber', 'Morrow', 'SWT']
+DAM = ['Miner_original', 'Miner_modified']
+STD = ['ISO_6336', 'AGMA_2001', 'FKM']
+RZ = list(RZ_LEVELS.keys())
+
+def run_sweep_at_torque(torque):
+    """Run full 144-combination sweep at given torque."""
+    old_torque = gear_params.LOAD['torque_pinion']
+    old_Ft = gear_params.LOAD['tangential_force']
+    old_Ftw = gear_params.LOAD['Ft_per_unit_facewidth']
+    try:
+        gear_params.LOAD['torque_pinion'] = torque
+        Ft = 2 * torque * 1000 / gear_params.GEAR['pitch_diameter_pinion']
+        gear_params.LOAD['tangential_force'] = Ft
+        gear_params.LOAD['Ft_per_unit_facewidth'] = Ft / gear_params.GEAR['face_width']
+
+        results = []
+        for sn, ms, dm, std, rz in itertools.product(SN, MEAN, DAM, STD, RZ):
+            rz_um = RZ_LEVELS[rz]['Rz_um']
+            Nf, diag = compute_fatigue_life(sn, 'Peterson', ms, dm, std, rz_um)
+            entry = {
+                'sn_source': sn, 'mean_stress_method': ms,
+                'damage_method': dm, 'size_surface_standard': std,
+                'rz_level': rz, 'rz_um': rz_um,
+                'sigma_nominal': round(float(diag.get('sigma_nominal', 0)), 2),
+                'sigma_ar': round(float(diag.get('sigma_ar', 0)), 2),
+                'sigma_effective': round(float(diag.get('sigma_effective', 0)), 2),
+            }
+            if np.isfinite(Nf) and Nf > 0:
+                entry['Nf'] = float(Nf)
+                entry['log10_Nf'] = round(float(np.log10(Nf)), 6)
+            else:
+                entry['Nf'] = float('inf')
+                entry['log10_Nf'] = None
+            results.append(entry)
+        return results
+    finally:
+        gear_params.LOAD['torque_pinion'] = old_torque
+        gear_params.LOAD['tangential_force'] = old_Ft
+        gear_params.LOAD['Ft_per_unit_facewidth'] = old_Ftw
+
+
+def build_entries(sweep_results):
+    entries = []
+    for r in sweep_results:
+        e = {k: r[k] for k in ['sn_source','mean_stress_method','damage_method','size_surface_standard','rz_level']}
+        nf = r.get('Nf', float('inf'))
+        ln = r.get('log10_Nf')
+        if isinstance(nf, (int,float)) and np.isfinite(nf) and nf>0 and ln is not None:
+            e['logNf'] = float(ln); e['censored'] = 0
+        else:
+            e['logNf'] = None; e['censored'] = 1
+        entries.append(e)
+    finite_entries = [e['logNf'] for e in entries if e['logNf'] is not None]
+    if not finite_entries:
+        return None  # all run-out, cannot decompose
+    MAX = max(finite_entries)
+    for e in entries:
+        if e['censored'] == 1:
+            e['logNf_lower'] = MAX
+    return entries
+
+
+def run_aft(entries):
+    Y, C, L = extract_arrays(entries)
+    Xf = build_design(entries, FACTOR_ORDER)
+    bf, sf, llf = em_censored_normal(Xf, Y, C, L)
+
+    drops = {}
+    for drop_f in FACTOR_ORDER:
+        rem = [f for f in FACTOR_ORDER if f != drop_f]
+        Xd = build_design(entries, rem)
+        bd, sd, ld = em_censored_normal(Xd, Y, C, L)
+        drops[drop_f] = llf - ld
+
+    ls = FACTORS['size_surface_standard']; lr = FACTORS['rz_level']
+    Xc = []
+    for si in range(1, len(ls)):
+        for rj in range(1, len(lr)):
+            Xc.append(np.array([1.0 if e['size_surface_standard']==ls[si] and e['rz_level']==lr[rj] else 0.0 for e in entries]))
+    Xi = np.column_stack(Xc) if Xc else np.zeros((len(entries),0))
+    Xi -= Xi.mean(axis=0); Xwi = np.column_stack([Xf, Xi])
+    bi, si, lli = em_censored_normal(Xwi, Y, C, L)
+    di = max(0, lli - llf)
+
+    total = sum(drops.values()) + di
+    rows = {}
+    for f in FACTOR_ORDER:
+        rows[f] = round(100 * drops[f] / total, 1)
+    rows['interaction'] = round(100 * di / total, 1)
+
+    return {
+        'n_total': len(entries),
+        'n_finite': int(sum(~C)),
+        'n_censored': int(sum(C)),
+        'sigma_aft': round(float(sf), 4),
+        'logLik': round(float(llf), 2),
+        'factors': rows,
+    }
+
+
+# ============================================================
+print("Running multi-torque AFT...")
+torques = [500, 600, 700]
+results = {}
+
+for T in torques:
+    print(f"\n  T = {T} N·m ...")
+    # Use existing 700 Nm sweep to avoid recomputation
+    if T == 700:
+        with open('output/sweep.json') as f:
+            sweep_data = json.load(f)
+    else:
+        sweep_data = run_sweep_at_torque(T)
+
+    entries = build_entries(sweep_data)
+    if entries is None:
+        print(f"    ALL RUN-OUT — cannot decompose")
+        results[T] = {'n_total': 144, 'n_finite': 0, 'n_censored': 144, 'sigma_aft': None, 'logLik': None,
+                       'factors': {f: None for f in ['mean_stress_method','size_surface_standard','rz_level','sn_source','damage_method','interaction']}}
+        continue
+    r = run_aft(entries)
+    results[T] = r
+
+    top3 = [(f, r['factors'][f]) for f in ['mean_stress_method','size_surface_standard','rz_level']]
+    top3.sort(key=lambda x: -x[1])
+    print(f"    N={r['n_total']}, finite={r['n_finite']}, censored={r['n_censored']}")
+    print(f"    Top 3: {top3[0][0]}={top3[0][1]}%, {top3[1][0]}={top3[1][1]}%, {top3[2][0]}={top3[2][1]}%")
+    print(f"    S-N={r['factors']['sn_source']}%, Damage={r['factors']['damage_method']}%, Int={r['factors']['interaction']}%")
+
+# ============================================================
+print("\n=== Multi-Torque AFT Summary ===")
+print(f"{'T (Nm)':<10s} {'σ_F0':<8s} {'Finite':<8s} {'Cens':<6s} {'MS%':<8s} {'Std%':<8s} {'Rz%':<8s} {'SN%':<8s} {'Dmg%':<8s} {'Int%':<8s}")
+print("-" * 80)
+for T in torques:
+    r = results[T]
+    sigma_F0 = 2*T*1000/60/(30*3) * 2.80 * 1.55 * 0.691  # approximate
+    f = r['factors']
+    print(f"{T:<10d} {sigma_F0:<8.0f} {r['n_finite']:<8d} {r['n_censored']:<6d} "
+          f"{f['mean_stress_method']:<8.1f} {f['size_surface_standard']:<8.1f} "
+          f"{f['rz_level']:<8.1f} {f['sn_source']:<8.1f} "
+          f"{f['damage_method']:<8.1f} {f['interaction']:<8.1f}")
+
+# Save
+output = {
+    'description': 'AFT variance decomposition at 3 torque levels',
+    'torque_levels': list(torques),
+    'results': {str(T): results[T] for T in torques},
+}
+
+with open('output/multi_torque_aft.json', 'w') as f:
+    json.dump(output, f, indent=2)
+print("\nSaved output/multi_torque_aft.json")

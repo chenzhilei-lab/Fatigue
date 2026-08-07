@@ -1,0 +1,142 @@
+﻿Paper Section,Claim/Number,Value in Paper,Source File,Source Key,Match
+Abstract / Table 2,Total factorial combinations (5 factors x 2-4 levels),144,sweep_summary.json,n_combinations,AUTO
+Abstract / Sec 3.6,Run-out (censored) entries,84,sweep_summary.json,n_runouts,AUTO
+Abstract / Sec 3.6,Finite-life (observed) entries,60,sweep_summary.json,n_valid,AUTO
+Sec 3.6,Low-cycle entries (<10^4),9,sweep_summary.json,n_low_cycle,AUTO
+Sec 3.6 / Conclusions,Minimum log10(Nf),3.13,sweep_summary.json,min_log10_Nf,AUTO
+Sec 3.6 / Conclusions,Maximum log10(Nf),5.92,sweep_summary.json,max_log10_Nf,AUTO
+Abstract / Sec 3.6 / Conclusions,log10(Nf) spread (dex),2.79,sweep_summary.json,spread_dex,AUTO
+Table 1 (tab:gear),Normal module (mm),3.0,sweep_summary.json,gear_module_mm,AUTO
+Table 1 (tab:gear),Pinion teeth z1,20,sweep_summary.json,teeth,AUTO
+Table 1 (tab:gear),Material,42CrMo4 / AISI 4140,sweep_summary.json,material,AUTO
+Table 1 / Abstract,Reference input torque (Nm),700,sweep_summary.json,torque_Nm,AUTO
+Table 2 (tab:anova),mean_stress_method variance fraction (%),18.2,aft_anova.json,anova_table[mean_stress_method].variance_frac_%,AUTO
+Table 2 (tab:anova),mean_stress_method delta log-likelihood,324.21,aft_anova.json,anova_table[mean_stress_method].delta_logLik,AUTO
+Table 2 (tab:anova),size_surface_standard variance fraction (%),55.3,aft_anova.json,anova_table[size_surface_standard].variance_frac_%,AUTO
+Table 2 (tab:anova),size_surface_standard delta log-likelihood,985.71,aft_anova.json,anova_table[size_surface_standard].delta_logLik,AUTO
+Table 2 (tab:anova),rz_level variance fraction (%),22.6,aft_anova.json,anova_table[rz_level].variance_frac_%,AUTO
+Table 2 (tab:anova),rz_level delta log-likelihood,403.31,aft_anova.json,anova_table[rz_level].delta_logLik,AUTO
+Table 2 (tab:anova),sn_source variance fraction (%),2.5,aft_anova.json,anova_table[sn_source].variance_frac_%,AUTO
+Table 2 (tab:anova),sn_source delta log-likelihood,43.9,aft_anova.json,anova_table[sn_source].delta_logLik,AUTO
+Table 2 (tab:anova),damage_method variance fraction (%),0.3,aft_anova.json,anova_table[damage_method].variance_frac_%,AUTO
+Table 2 (tab:anova),damage_method delta log-likelihood,5.88,aft_anova.json,anova_table[damage_method].delta_logLik,AUTO
+Table 2 (tab:anova),size_surface_standard x rz_level variance fraction (%),1.2,aft_anova.json,anova_table[size_surface_standard x rz_level].variance_frac_%,AUTO
+Table 2 (tab:anova),size_surface_standard x rz_level delta log-likelihood,20.54,aft_anova.json,anova_table[size_surface_standard x rz_level].delta_logLik,AUTO
+Sec 3.1 / Conclusions,Censored (run-out) count in AFT,84,aft_anova.json,n_censored,AUTO
+Sec 3.1 / Conclusions,Observed (finite) count in AFT,60,aft_anova.json,n_observed,AUTO
+Sec 3.2,AFT log-normal sigma,0.1745,aft_anova.json,sigma_aft,AUTO
+Sec 3.2,Full-model log-likelihood,11.32,aft_anova.json,logLik_full,AUTO
+Abstract / Sec 3.8 / Data Availability,Bootstrap draws,2000,aft_anova.json,bootstrap.n_bootstrap,AUTO
+Data Availability,Bootstrap RNG seed,42,aft_anova.json,bootstrap.rng_seed,AUTO
+Sec 3.8 / Fig 5,mean_stress_method bootstrap mean (%),18.19,aft_anova.json,bootstrap.noise_floor.mean_stress_method.mean,AUTO
+Fig 5,mean_stress_method bootstrap S/N ratio,5.0,aft_anova.json,bootstrap.noise_floor.mean_stress_method.s_n,AUTO
+Sec 3.8 / Fig 5,size_surface_standard bootstrap mean (%),55.65,aft_anova.json,bootstrap.noise_floor.size_surface_standard.mean,AUTO
+Fig 5,size_surface_standard bootstrap S/N ratio,15.0,aft_anova.json,bootstrap.noise_floor.size_surface_standard.s_n,AUTO
+Sec 3.8 / Fig 5,rz_level bootstrap mean (%),22.3,aft_anova.json,bootstrap.noise_floor.rz_level.mean,AUTO
+Fig 5,rz_level bootstrap S/N ratio,8.0,aft_anova.json,bootstrap.noise_floor.rz_level.s_n,AUTO
+Sec 3.8 / Fig 5,sn_source bootstrap mean (%),2.39,aft_anova.json,bootstrap.noise_floor.sn_source.mean,AUTO
+Fig 5,sn_source bootstrap S/N ratio,4.0,aft_anova.json,bootstrap.noise_floor.sn_source.s_n,AUTO
+Sec 3.8 / Fig 5,damage_method bootstrap mean (%),0.35,aft_anova.json,bootstrap.noise_floor.damage_method.mean,AUTO
+Fig 5,damage_method bootstrap S/N ratio,2.0,aft_anova.json,bootstrap.noise_floor.damage_method.s_n,AUTO
+Sec 3.8 / Fig 5,size_surface_standard x rz_level bootstrap mean (%),1.12,aft_anova.json,bootstrap.noise_floor.size_surface_standard x rz_level.mean,AUTO
+Fig 5,size_surface_standard x rz_level bootstrap S/N ratio,4.0,aft_anova.json,bootstrap.noise_floor.size_surface_standard x rz_level.s_n,AUTO
+Sec 3.3 / Diagnostics,Shapiro-Wilk W (observed residuals),0.96,aft_diagnostics.json,shapiro_wilk.statistic,AUTO
+Sec 3.3 / Diagnostics,Shapiro-Wilk p-value,0.056,aft_diagnostics.json,shapiro_wilk.p_value,AUTO
+Sec 3.3 / Fig (diag_qq),QQ-plot R^2,0.97,aft_diagnostics.json,qq_plot_r_squared,AUTO
+Sec 3.3,Cox-Snell residual mean,0.4467,aft_diagnostics.json,cox_snell.mean,AUTO
+Sec 3.3,Cox-Snell KS vs Exp(1),0.51,aft_diagnostics.json,cox_snell.ks_statistic_vs_exp1,AUTO
+Sec 3.3,Martingale residual mean,-0.03,aft_diagnostics.json,martingale.mean,AUTO
+Sec 3.3,Martingale residual range,"[-2.15, 0.99]",aft_diagnostics.json,martingale.range,AUTO
+Sec 3.3,Levene p (mean_stress_method),0.6273,aft_diagnostics.json,levene_test.mean_stress_method.p_value,AUTO
+Sec 3.3,Levene p (size_surface_standard),0.226,aft_diagnostics.json,levene_test.size_surface_standard.p_value,AUTO
+Sec 3.3,Levene p (rz_level),0.0795,aft_diagnostics.json,levene_test.rz_level.p_value,AUTO
+Sec 3.3,Levene p (sn_source),0.5394,aft_diagnostics.json,levene_test.sn_source.p_value,AUTO
+Sec 3.3,Levene p (damage_method),1.0,aft_diagnostics.json,levene_test.damage_method.p_value,AUTO
+Sec 3.9 / Conclusions,Weibull-AFT vs log-normal delta AIC,77.1,weibull_aft.json,delta_AIC_weibull_minus_lognormal,AUTO
+Sec 3.3,Log-normal AFT AIC,12.2,multi_aft_comparison.json,distributions.log_normal.AIC,AUTO
+Sec 3.3,Log-logistic AFT AIC,8.1,multi_aft_comparison.json,distributions.log_logistic.AIC,AUTO
+Sec 3.3,Gamma AFT AIC,1022.1,multi_aft_comparison.json,distributions.gamma.AIC,AUTO
+Table 4 (tab:aft_vs_anova),Sobol' S1 minus AFT (pp): mean_stress_method,-15.6,sobol_vs_aft.json,comparison[mean_stress_method].delta_S1_minus_AFT_pp,AUTO
+Table 4 (tab:aft_vs_anova),Sobol' S1 minus AFT (pp): size_surface_standard,-26.6,sobol_vs_aft.json,comparison[size_surface_standard].delta_S1_minus_AFT_pp,AUTO
+Table 4 (tab:aft_vs_anova),Sobol' S1 minus AFT (pp): rz_level,-7.6,sobol_vs_aft.json,comparison[rz_level].delta_S1_minus_AFT_pp,AUTO
+Table 4 (tab:aft_vs_anova),Sobol' S1 minus AFT (pp): sn_source,0.4,sobol_vs_aft.json,comparison[sn_source].delta_S1_minus_AFT_pp,AUTO
+Table 4 (tab:aft_vs_anova),Sobol' S1 minus AFT (pp): damage_method,0.6,sobol_vs_aft.json,comparison[damage_method].delta_S1_minus_AFT_pp,AUTO
+Fig 1 caption / Sec 2.3,Standard variance at baseline Y_Sa=1.55 (%),55.3,ysa_sensitivity.json,baseline.variance_fractions.size_surface_standard,AUTO
+Fig 1 caption,Max |deviation| of standard share over 0.95-1.15x perturbation (pp),1.1,ysa_sensitivity.json,sensitivity[0.95..1.15],COMPUTED
+Sec 2.3 / Sec 4.6,"Standard share, 108-combo subset, uniform Y_Sa (%)",52.1,native_stress_sensitivity.json,baseline.variance_fractions.size_surface_standard,AUTO
+Sec 2.3 / Sec 4.6,Standard share with native J/Kf (%),64.4,native_stress_sensitivity.json,combined_native.variance_fractions.size_surface_standard,AUTO
+Sec 2.3 / Sec 4.6,Native minus baseline standard share (pp),12.3,native_stress_sensitivity.json,computed,COMPUTED
+Sec 2.3,Gear root stress concentration Kt,1.91,native_stress_sensitivity.json,K_t_gear,AUTO
+Sec 2.3,FKM notch factor Kf (Peterson),1.84,native_stress_sensitivity.json,K_f_peterson,AUTO
+Sec 2.3,FKM notch factor Kf (Neuber),1.75,native_stress_sensitivity.json,K_f_neuber,AUTO
+Sec 2.3,AGMA geometry factor J (midpoint),0.33,native_stress_sensitivity.json,AGMA_J_range.J_midpoint.J,AUTO
+Sec 4.6 / Constraints,Native-chain mean bias of standard share (pp),-7.3,native_bias_propagation.json,mean_bias_pp,AUTO
+Sec 4.6 / Constraints,Native-chain max |bias| (pp),27.7,native_bias_propagation.json,max_abs_bias_pp,AUTO
+Sec 4.6 / Constraints,Native-chain mean standard share (%),48.0,native_bias_propagation.json,native_std_var_mean,AUTO
+Sec 3.7,Finite-life entries at 500 Nm,4,multi_torque_aft.json,results.500.n_finite,AUTO
+Sec 3.7,Censored entries at 500 Nm,140,multi_torque_aft.json,results.500.n_censored,AUTO
+Sec 3.7,Finite-life entries at 600 Nm,16,multi_torque_aft.json,results.600.n_finite,AUTO
+Sec 3.7,Censored entries at 600 Nm,128,multi_torque_aft.json,results.600.n_censored,AUTO
+Sec 3.7,Standard share at 600 Nm (%),40.1,multi_torque_aft.json,results.600.factors.size_surface_standard,AUTO
+Sec 3.7,Roughness share at 600 Nm (%),34.1,multi_torque_aft.json,results.600.factors.rz_level,AUTO
+Sec 3.7,Mean-stress share at 600 Nm (%),17.9,multi_torque_aft.json,results.600.factors.mean_stress_method,AUTO
+Abstract / Sec 2.7 / Fig 2,Monte Carlo simulations,500,simulation_validation.json,simulation.n_sims,AUTO
+Sec 2.7 / Fig 2,Max |bias| of recovered shares (pp),3.4,simulation_validation.json,simulation.per_factor.bias_pp,COMPUTED
+Sec 2.7 / Fig 2,Top-3 rank recovery (%),98,simulation_validation.json,simulation.rank_recovery_top3_order,AUTO
+Sec 2.7 / Fig 2,LR-vs-Sobol pooled R^2,0.9933,simulation_validation.json,sobol_equivalence.pooled_R2_LR_vs_Sobol,AUTO
+Sec 2.7,Bootstrap coverage minimum (%),92,simulation_validation.json,simulation.bootstrap_coverage,COMPUTED
+Sec 2.7,Bootstrap coverage maximum (%),99,simulation_validation.json,simulation.bootstrap_coverage,COMPUTED
+Sec 2.7,Dominant-factor bias at 58% censoring (pp),-7.01,simulation_validation.json,censoring_envelope.0.58.bias_pp_dominant,AUTO
+Sec 4.5 / Fig 7,Constant-amplitude spread (dex),2.79,two_level_variable_amplitude.json,summary.constant_700_Nm.spread_dex,AUTO
+Sec 4.5 / Fig 7,Two-level block spread (dex),4.25,two_level_variable_amplitude.json,summary.two_level_700_800_Nm.spread_dex,AUTO
+Sec 4.5 / Fig 7,Finite entries under block loading,106,two_level_variable_amplitude.json,summary.two_level_700_800_Nm.n_finite,AUTO
+Sec 4.5 / Fig 7,Run-outs under block loading,38,two_level_variable_amplitude.json,summary.two_level_700_800_Nm.n_runout,AUTO
+Sec 4.5 / Fig 7,mean_stress_method share under block loading (%),25.33,two_level_variable_amplitude.json,two_level_shares_%.mean_stress_method,AUTO
+Sec 4.5 / Fig 7,size_surface_standard share under block loading (%),47.38,two_level_variable_amplitude.json,two_level_shares_%.size_surface_standard,AUTO
+Sec 4.5 / Fig 7,sn_source share under block loading (%),4.97,two_level_variable_amplitude.json,two_level_shares_%.sn_source,AUTO
+Sec 4.5 / Fig 7,damage_method share under block loading (%),0.28,two_level_variable_amplitude.json,two_level_shares_%.damage_method,AUTO
+Sec 4.5,Damage-rule pair |log10 diff|,0.155,two_level_variable_amplitude.json,summary.constant_700_Nm.damage_pair_abs_log10_diff.median,AUTO
+Sec 4.7 / Fig 10,Sobol-AFT gap at 600 Nm (pp),40.1,sobol_censoring_gradient.json,points[600].gap_pp,AUTO
+Sec 4.7 / Fig 10,Censoring at 600 Nm (%),88.9,sobol_censoring_gradient.json,points[600].censoring_%,AUTO
+Sec 4.7 / Fig 10,Sobol-AFT gap at 650 Nm (pp),34.0,sobol_censoring_gradient.json,points[650].gap_pp,AUTO
+Sec 4.7 / Fig 10,Censoring at 650 Nm (%),76.4,sobol_censoring_gradient.json,points[650].censoring_%,AUTO
+Sec 4.7 / Fig 10,Sobol-AFT gap at 700 Nm (pp),26.5,sobol_censoring_gradient.json,points[700].gap_pp,AUTO
+Sec 4.7 / Fig 10,Censoring at 700 Nm (%),58.3,sobol_censoring_gradient.json,points[700].censoring_%,AUTO
+Sec 4.7 / Fig 10,Sobol-AFT gap at 750 Nm (pp),12.1,sobol_censoring_gradient.json,points[750].gap_pp,AUTO
+Sec 4.7 / Fig 10,Censoring at 750 Nm (%),41.7,sobol_censoring_gradient.json,points[750].censoring_%,AUTO
+Sec 4.7 / Fig 10,Sobol-AFT gap at 800 Nm (pp),-0.9,sobol_censoring_gradient.json,points[800].gap_pp,AUTO
+Sec 4.7 / Fig 10,Censoring at 800 Nm (%),26.4,sobol_censoring_gradient.json,points[800].censoring_%,AUTO
+Sec 4.2 / Fig 8,"S-N source share, 2 Waterloo curves (%)",2.46,multi_sn_sensitivity.json,summary.baseline_2_curves.sn_source_share_%,AUTO
+Sec 4.2 / Fig 8,"S-N source share, 5 curves (%)",34.74,multi_sn_sensitivity.json,summary.extended_5_curves.sn_source_share_%,AUTO
+Sec 4.2 / Fig 8,S-N share change (pp),32.3,multi_sn_sensitivity.json,summary.change.sn_share_pp,AUTO
+Fig 8 caption / Sec 2.2,Waterloo #68 fatigue strength at 1e6 (MPa),610.52,multi_sn_sensitivity.json,summary.synthetic_curves.Waterloo_SMDIdbase_Iter068.sigma_w_1e6,AUTO
+Fig 8 caption / Sec 2.2,Waterloo #66 fatigue strength at 1e6 (MPa),609.92,multi_sn_sensitivity.json,summary.synthetic_curves.Waterloo_SMDIdbase_Iter066.sigma_w_1e6,AUTO
+Fig 8 caption,Synthetic high-strength 1e6 strength (MPa),747.0,multi_sn_sensitivity.json,summary.synthetic_curves.Synthetic_42CrMo4_HighStrength.sigma_w_1e6,AUTO
+Fig 8 caption,Synthetic classic-500 1e6 strength (MPa),594.9,multi_sn_sensitivity.json,summary.synthetic_curves.Synthetic_42CrMo4_Classic500.sigma_w_1e6,AUTO
+Fig 8 caption,Synthetic classic-560 1e6 strength (MPa),518.0,multi_sn_sensitivity.json,summary.synthetic_curves.Synthetic_42CrMo4_Classic560.sigma_w_1e6,AUTO
+Sec 3.5 / Sec 4.6,Censored entries at K_A=1.0,84,ka_sensitivity.json,results.1.0.n_censored,AUTO
+Sec 3.5 / Sec 4.6,Censored entries at K_A=1.25,20,ka_sensitivity.json,results.1.25.n_censored,AUTO
+Sec 3.5 / Sec 4.6,Censored entries at K_A=1.5,4,ka_sensitivity.json,results.1.5.n_censored,AUTO
+Sec 3.5,S-N share at K_A=1.25 (%),5.1,ka_sensitivity.json,results.1.25.variance_fractions.sn_source,AUTO
+Sec 3.5,S-N share at K_A=1.5 (%),8.9,ka_sensitivity.json,results.1.5.variance_fractions.sn_source,AUTO
+Sec 4.1,Censoring at 1e6 threshold (%),58.3,threshold_sensitivity.json,fatigue_strength_criterion.1000000.0.censoring_rate_%,AUTO
+Sec 4.1,"Censoring at 3e6 threshold, Basquin-only (%)",45.8,threshold_sensitivity.json,basquin_only.bq_3000000.0.censoring_rate_%,AUTO
+Sec 4.1,"Censoring at 5e6 threshold, Basquin-only (%)",40.3,threshold_sensitivity.json,basquin_only.bq_5000000.0.censoring_rate_%,AUTO
+Sec 4.1,"Censoring with no threshold, Basquin-only (%)",0.0,threshold_sensitivity.json,basquin_only.bq_none.censoring_rate_%,AUTO
+Sec 4.3,Wang test gear module (mm),6,benchmark_wang2023.json,wang_gear.m,AUTO
+Sec 4.3,Wang test gear teeth,20,benchmark_wang2023.json,wang_gear.z,AUTO
+Sec 4.3,Wang test gear face width (mm),25,benchmark_wang2023.json,wang_gear.b,AUTO
+Sec 4.3,Wang highest stress level (MPa),292.95,benchmark_wang2023.json,wang_stress_levels_MPa[0],AUTO
+Sec 4.3,Wang lowest stress level (MPa),150.74,benchmark_wang2023.json,wang_stress_levels_MPa[-1],AUTO
+Sec 4.3,Wang fatigue limit upper (MPa),167.23,benchmark_wang2023.json,wang_fatigue_limit_MPa_at_1e7[0],AUTO
+Sec 4.3,Wang fatigue limit lower (MPa),144.1,benchmark_wang2023.json,wang_fatigue_limit_MPa_at_1e7[-1],AUTO
+Sec 4.3,Wang reported life scatter (dex),"0.4-0.6 (Tab. 3, levels I-IV)",benchmark_wang2023.json,wang_reported_scatter_dex,AUTO
+Sec 4.3 / Table 3,"Ulrich et al. 2025 P50 endurance limit, unnotched R=-1 staircase (MPa)",624.5,paper/ref_papers/ulrich2025_42CrMo4_s10010-025-00818-x.pdf,p.7 staircase result,LIT
+Sec 4.3,Ulrich 2025 strength improvement vs conventional QT (%),26-51,paper/ref_papers/ulrich2025_42CrMo4_s10010-025-00818-x.pdf,p.7,LIT
+Sec 4.3 / Table 3,Ulrich 2025 tempering-series UTS range (MPa),1322-1660,paper/ref_papers/ulrich2025_42CrMo4_s10010-025-00818-x.pdf,tempering series,LIT
+Sec 2.2 / Table 3,Waterloo #68 Basquin sigma_f' (MPa),1356.0,multi_sn_sensitivity.json + ref_papers/Iter_068.pdf,synthetic_curves.Waterloo_SMDIdbase_Iter068.sigma_f_prime,LIT+JSON
+Sec 2.2,Waterloo #68 Basquin exponent b,-0.055,multi_sn_sensitivity.json + ref_papers/Iter_068.pdf,synthetic_curves.Waterloo_SMDIdbase_Iter068.b,LIT+JSON
+Sec 2.2,Waterloo #66 Basquin sigma_f' (MPa),1684.0,multi_sn_sensitivity.json + ref_papers/Iter_066.pdf,synthetic_curves.Waterloo_SMDIdbase_Iter066.sigma_f_prime,LIT+JSON
+Sec 2.2,Waterloo #66 Basquin exponent b,-0.07,multi_sn_sensitivity.json + ref_papers/Iter_066.pdf,synthetic_curves.Waterloo_SMDIdbase_Iter066.b,LIT+JSON
+Sec 2.2 / Table 3,Waterloo #68 measured UTS (MPa),1355.7,multi_sn_sensitivity.json + ref_papers/Iter_068.pdf,synthetic_curves.Waterloo_SMDIdbase_Iter068.uts,LIT+JSON
+Sec 2.2 / Table 3,Waterloo #66 measured UTS (MPa),1537.0,multi_sn_sensitivity.json + ref_papers/Iter_066.pdf,synthetic_curves.Waterloo_SMDIdbase_Iter066.uts,LIT+JSON

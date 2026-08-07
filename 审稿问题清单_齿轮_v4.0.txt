@@ -1,0 +1,179 @@
+================================================================================
+审稿问题清单 — 齿轮疲劳 v4.0 代码层+数据层完整审计
+================================================================================
+审计日期: 2026-08-04
+工作目录: D:/Papers/0723-Gear_Fatigue_UQ
+论文文件: paper/gear_fatigue_v4.0.tex (2550行, 33页PDF)
+审计范围: 所有 .py 源码、output/*.json、论文正文数字一致性
+
+================================================================================
+A 节 — 规范值（代码→论文→标准 三方核对）
+================================================================================
+
+A1. 组合数与数据集版本
+    [PASS] 论文 Table 1: 2×3×2×3×3=108 (3-method baseline) ✓
+    [PASS] 论文 Goodman 敏感性: 2×4×2×3×3=144 (4-method) ✓
+    [FAIL] run_sweep.py L2-4 docstring: "972 combinations / 3×3×4×2×3×3=972"
+           实际 3×3×4×2×3×3=648 ≠ 972; 且脚本实际跑 2×4×2×3×3=144
+    [FAIL] sweep_summary.json: torque_Nm=350 (代码用 700 N·m 计算)
+    [FAIL] output/ 目录无 3-method (108组合) 专属 sweep JSON；3-method 分析
+           依赖从 144-combo sweep 中过滤 Goodman 条目
+
+A2. Basquin 参数与疲劳强度 (gear_params.py L70-87)
+    [PASS] σf′/b 来源: Waterloo SMDI PDF Iter_068 (1355.7/−0.055) ✓
+    [PASS] σf′/b 来源: Waterloo SMDI PDF Iter_066 (1684.2/−0.070) ✓
+    [FAIL] 679/626 来源归属: 代码注释写"材料力学性能测试数据表.xlsx (SAE Phase data)"
+           论文 L284-299 称"experimentally measured ... for Waterloo #68/#66"
+           并称"drawn from SMDIdbase"——实际来自本地 Excel，非 SMDIdbase
+    [FAIL] Basquin 自洽性: 按 σa=σf′·(2Nf)^b 计算:
+           Iter68 10^6 处 σa=1355.7×(2e6)^(−0.055)=610.5 MPa ≠ 679 (−10.1%)
+           Iter66 10^6 处 σa=1684.2×(2e6)^(−0.070)=610.0 MPa ≠ 626 (−2.6%)
+           两曲线在 10^6 处几乎重合(差 0.5 MPa)，与论文"53 MPa 差值"矛盾
+    [FAIL] 材料不匹配: 论文/代码 UTS=1000 MPa (~300 HB)，两个 SMDI 数据集
+           实测 UTS=1355/1537 MPa (HRC 38/42)。Goodman/Gerber/Peterson 的
+           uts 参数与 S-N 数据来源材料不一致
+
+A3. 标准公式核实
+    [PASS] ISO σF0 = Ft/(b·mn)·YFa·YSa·Yε·Yβ → 778 MPa ✓
+    [PASS] ISO YRrelT = 1.674−0.529·(Rz+1)^0.1 (Rz≤40) ✓
+    [PASS] ISO Rz>40 cap → 0.907 ✓
+    [PASS] AGMA Cf = 1−0.0058·ln(Rf[μin])·ln(Sut[ksi]) ✓ 结构
+    [PASS] FKM KFσ = 1−0.22·log10(Rz)·log10(2·UTS/400) ✓ 结构
+    [WARN] YFa=3.06−0.013z / YSa=1.58−0.0015z 为线性近似，非标准原公式
+    [WARN] ISO YX: 代码 mn≤10→1.0；标准 §6.2 YX=1.03−0.006·mn (5≤mn≤30)
+    [WARN] FKM Kd: 代码用简化式 1−0.05·log10(10·mn)，非 FKM §4.5 原式
+    [WARN] SWT 实现: σar=√(σmax·σa) 为应力简化版（真 SWT 含 εa·E）
+    [WARN] Miner_modified Dc=0.7 标注"AGMA/FKM 推荐"——待核实出处
+
+A4. AFT 方差分解方法
+    [NOTE] 分母约定: aft_variance_decomposition.py 取 max(0,Δ) ✓
+           ysa_sensitivity.py 主效应不取 max → 三个脚本三种约定
+    [NOTE] "方差占比"实为 ΔlogL 归一化，非经典方差分解
+
+================================================================================
+B 节 — 数字错误（论文值 vs 规范值）
+================================================================================
+
+B1. 论文内部 3-method/4-method 数字混用
+    ┌──────────────────────┬─────────────────┬─────────────────┬──────────────────┐
+    │ 位置                 │ 论文当前值      │ 应使用的规范值  │ 来源             │
+    ├──────────────────────┼─────────────────┼─────────────────┼──────────────────┤
+    │ Table 1 标题         │ 144组合/92 run-out│ 108组合/84 run-out│ 3-method baseline│
+    │ §3.1 "97.9%"         │ 97.9%           │ 95.5%           │ 43.7+26.4+25.4   │
+    │ §3.1 "64% censoring" │ 64%             │ 78%             │ 84/108           │
+    │ §3.4 "23.5%"         │ 23.5%           │ 25.4%           │ Table 1 3-method │
+    │ §3.1 交互项          │ 2.5%            │ 4.5%            │ Table 1 3-method │
+    │ §3.4 "35.3%"         │ 35.3%           │ 43.7%           │ Table 1 3-method │
+    │ §4.5 "97.9%"         │ 97.9%           │ 95.5%           │ 43.7+26.4+25.4   │
+    │ §4.6 "five orders"   │ 5 dex           │ 3.2 dex (~1.6e3x)│ sweep.json       │
+    └──────────────────────┴─────────────────┴─────────────────┴──────────────────┘
+
+B2. 跨JSON版本矛盾
+    [FAIL] multi_torque_aft.json: 700 N·m 处 116有限/28截尾 (旧版, 2025-07-28)
+           正文 sweep.json: 52有限/92截尾 (新版, 2025-07-29)
+    [FAIL] multi_torque_anova.json: 三个扭矩块的 torque 字段全部=700.0
+    [FAIL] sweep_summary.json torque_Nm=350 (代码用 700)
+    [FAIL] aft_anova.json.bak: 28截尾/116有限 (旧版，疲劳强度 fix 前)
+    [FAIL] 3-method 基线无对应 sweep JSON (依赖过滤 144-combo 数据)
+
+B3. 表值不可复现
+    [FAIL] Table 5 中位数 ISO 6.07, Gerber 6.56, P95=7.50:
+           10^6 截尾下 log10(Nf)>6 不可能出现。这些值来自 threshold_sensitivity.json
+           的 bq_none (Basquin-only, spread 6.0 dex)，非论文声称的基线
+    [FAIL] §4.9 "7.22, 4.3 dex, 1.9×10^4": 同上，来自无截尾外推
+    [FAIL] §4.6 "five orders of magnitude": 3.2 dex ≈ 1.6×10³ ≠ 10^5
+    [FAIL] §4.9 "10^2.5" vs "1.9×10^4": 同一比较给出差 ~60 倍的两个值
+
+B4. S-N 参数与疲劳强度矛盾
+    [FAIL] 论文 L284-299: "679/626 MPa, 差 53 MPa"
+           Basquin 计算值: 610.5/610.0 MPa, 差 0.5 MPa
+           代码用 679/626 作 run-out 门槛，门槛与 Basquin 曲线不连续
+    [FAIL] Table 5 σe=550(#66), 500(#68): 与 679/626 矛盾，#68/#66 排序颠倒
+
+B5. run-out 计数与分布
+    [FAIL] §4.5 "25 run-outs from Gerber, 22 ground": sweep.json 实际 Gerber=34, ground=40
+    [FAIL] §3.7 "最长有限寿命=ISO+Gerber+磨削": sweep.json 中 ISO+Gerber+ground 全为 run-out(∞)
+    [FAIL] §3.4 "ISO 在磨削面全部 run-out" 与 §3.7 矛盾
+
+================================================================================
+C 节 — 代码缺陷
+================================================================================
+
+C1. ka_sensitivity.py 死代码
+    L71-74: run-out→finite 分支: 先检查 log10_Nf is None → return inf；
+           后面检查 Nf=="inf" 的分支永远不可达。K_A>1 永远不能把 run-out 转 finite
+    L42-48: 解析 log-scaling 仅在 σeff 线性缩放时精确；Goodman/Gerber/Morrow
+           的 σar 对 σmax 非线性 → 系统低估 K_A 效应
+
+C2. ysa_sensitivity.py 数学错误
+    L83-84: ΔlogNf = log10(factor)/b — 等价于 σeff 线性缩放，仅对 SWT 精确
+           以 Goodman/factor=1.33 为例: 精确 σar 变化 ~1.68×，简化取 1.33×
+           (低估 27%); 寿命差 ~1.9 dex (~70×)，非论文所称"sub-percentage-point"
+
+C3. native_bias_propagation.py 版本混用
+    L42: 硬编码 baseline_std_var_pct=30.1 (旧版 0723 工作进度数字)
+    L48-60: 分母 total = sum(drops.values()) + di (未取 max(0,·))
+            与 aft_variance_decomposition.py (取 max) 不一致
+
+C4. fatigue_models.py 维护问题
+    L58: verbose=True 分支引用未定义变量 Kf/sigma_max → NameError
+    L47-80: compute_Kf/compute_Kt_geometric 自 v2.3 起管线未调用(死代码)
+    L57-63: Kt 计算注 "Dolan & Broghamer 引用错误, 几何估算式"
+
+C5. run_sweep.py 元数据错误
+    L2: "972 combinations" → 实际 3×3×4×2×3×3=648 ≠ 972
+    L35: print "350 N·m" → 实际用 gear_params LOAD 700 N·m
+
+================================================================================
+D 节 — 复现包卫生
+================================================================================
+
+D1. output/ 混合版本
+    - sweep.json (2025-07-29): 4-method, 52/92 截尾 ✓ (当前版)
+    - sweep.json.bak: 4-method, 116/28 截尾 (旧版, 疲劳强度 fix 前)
+    - sweep_v3.4_backup.json: 同 .bak
+    - aft_anova.json: 4-method 分解, 39.1/35.3/23.5 (当前版, 含 Goodman)
+    - aft_anova.json.bak: 旧版 33.9/30.1/24.6
+    - multi_torque_aft.json: 旧版 116/28 (与当前正文矛盾)
+    - sweep_summary.json: torque=350 (与一切矛盾)
+
+D2. 缺失数据
+    - 无 3-method (108 组合) 专属 sweep JSON
+    - 无 3-method AFT 分解 JSON (只在 multi_aft_comparison.json 和
+      native_stress_sensitivity.json 中有旁证, 且数字与 Table 2 不一致)
+    - reproduce.sh 若重跑会输出当前版 sweep, 但 multi_torque 等旧 JSON 不会更新
+
+D3. 标注错误
+    - multi_torque_anova.json 三个扭矩块的 torque 字段全是 700.0
+    - sweep_summary.json torque_Nm=350, speed_rpm=1500
+
+================================================================================
+E 节 — 修正步骤（建议）
+================================================================================
+
+E1. 紧急（数字矛盾）
+    1. 修正 Table 1 标题: 144→108, 92→84, 64%→78%
+    2. 全局替换 97.9%→95.5% (3-method 三主效应和)
+    3. 全局替换 23.5%→25.4%, 35.3%→43.7%, 39.1%→26.4% (上下文明确为3-method处)
+    4. "five orders"→"over three orders (3.2 dex)"
+    5. Table 5 数字: 全部改用 10^6 截尾约定重算
+    6. §4.9 7.22/4.3 dex/1.9×10^4: 标注为"Basquin only, 无截尾"
+    7. 修正 run-out 分布数字: Gerber 34/磨削 40
+
+E2. 代码
+    1. run_sweep.py: 修正 docstring 972→144, print 350→700
+    2. sweep_summary.json: 修正 torque_Nm=700
+    3. ka_sensitivity.py: 修复死代码, 改用完整管线重算
+    4. ysa_sensitivity.py: 改用完整管线重算(同 native_bias_propagation 方法)
+    5. aft_variance_decomposition.py: 确保分母 max(0,Δ) 约定统一
+
+E3. 复现包
+    1. 生成 3-method (108 组合) sweep JSON 和 AFT JSON
+    2. 删除过期 .bak/_backup JSON 或移至 archive/
+    3. 重跑 reproduce.sh 验证输出与论文数字一致
+
+E4. 来源声明
+    1. 论文中明确标注 679/626 来自 SAE Excel (非 SMDIdbase)
+    2. 或改用 Basquin 自洽的疲劳强度 (均 ~610 MPa) 重跑全部分析
+    3. 标注材料 UTS 与 S-N 数据 UTS 不一致的 caveat
+================================================================================

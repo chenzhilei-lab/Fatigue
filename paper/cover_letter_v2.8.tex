@@ -1,0 +1,150 @@
+% ================================================================
+% Cover Letter — gear_fatigue_v2.7
+% Target: International Journal of Fatigue (Elsevier)
+% ================================================================
+\documentclass[12pt,a4paper]{article}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{hyperref}
+
+\begin{document}
+
+\thispagestyle{empty}
+
+\vspace*{1cm}
+\hfill\begin{minipage}{0.45\textwidth}
+\raggedleft
+Zhilei Chen\\
+Guangdong Peizheng College,\\
+Data and Computer Science,\\
+53 Peizheng Rd., Chini Town,\\
+Huadu, Guangzhou,\\
+Guangdong 510830, China\\[4pt]
+\texttt{2604513@peizheng.edu.cn}
+\end{minipage}
+
+\vspace{1cm}
+\noindent The Editor\\
+International Journal of Fatigue\\
+Elsevier
+
+\vspace{0.8cm}
+\noindent\textbf{Date:} 23 July 2026
+
+\vspace{0.3cm}
+\noindent\textbf{Re:} Submission of ``Method-Induced Uncertainty in
+Gear Bending Fatigue: Factorial Variance Decomposition Across Five
+Engineering Choices''
+
+\vspace{0.8cm}
+\noindent Dear Editor,
+
+\vspace{0.3cm}
+I am pleased to submit the above manuscript for consideration for
+publication in the \textit{International Journal of Fatigue}.
+
+\vspace{0.3cm}
+\noindent\textbf{What this paper does.}
+When three engineers compute the bending fatigue life of the same spur
+gear---same geometry, same material, same load---their predictions can differ
+by four orders of magnitude. The divergence comes from methodological choices:
+which standard to use (ISO~6336, AGMA~2001, or FKM), how to correct for mean
+stress, what S--N curve to trust, how to penalize surface roughness. Each
+choice, studied in isolation by prior work, has been shown to matter.
+What has never been done---and what we present here---is to place all
+of these choices into a single controlled factorial experiment and decompose
+the total log-variance into its constituent sources, ranked by magnitude.
+
+Using a full-factorial ANOVA over 144 combinations (5 switches, 116
+finite-life entries), we find that two factors account for 62.0\% of total
+variance: the choice of standard (31.1\%) and the choice of mean-stress
+correction (30.9\%). Surface roughness (8.5\%) and a Standard~$\times$~Rz
+interaction (5.0\%) are secondary. The S--N curve source and cumulative
+damage rule---factors that the literature often treats as consequential---are
+negligible ($<$1\% each). Bootstrap validation with 2000 draws confirms
+stable rankings. A multi-torque comparison reveals that the factor ranking
+is operating-point-dependent, not a universal constant.
+
+All formulas have been verified against the original standards (ISO~6336-3:2019,
+AGMA~2001-D04, FKM~7th ed.). S--N parameters are from the publicly
+accessible Waterloo SMDIdbase. The analysis pipeline is released as an
+open-source, auditable toolkit.
+
+\vspace{0.3cm}
+\noindent\textbf{How this differs from prior work---including recent
+contributions in this journal.}
+We are aware that the \textit{International Journal of Fatigue} has recently
+published important work on standard-to-standard divergence in gear fatigue
+assessment, notably Bonaiti et al.\ (\textit{Int.\ J.\ Fatigue}, Vol.~181, 2024,
+108145), who compared ISO~6336 and AGMA~2001-D04 predictions against pulsator
+test data. That study provides an invaluable experimental benchmark. Our
+manuscript complements and extends it in three ways:
+
+\begin{enumerate}
+  \item \textbf{From binary comparison to factorial decomposition.}
+        Bonaiti et al.\ ask whether ISO and AGMA differ (yes, they do). We
+        ask: across all major methodological switches an engineer faces, how
+        is the total log-variance partitioned---and which switch contributes
+        the most? The factorial framework reveals that mean-stress correction
+        (not examined by Bonaiti et al.) is statistically indistinguishable
+        from standard choice as the largest variance source.
+
+  \item \textbf{From two dimensions to five.} Bonaiti et al.\ examine
+        standard choice and statistical elaboration method. We simultaneously
+        vary five independent choices (standard, mean-stress correction,
+        roughness grade, S--N source, damage rule), capturing interactions
+        that binary comparisons miss.
+
+  \item \textbf{From qualitative conclusion to quantitative ranking.}
+        ``Standards differ'' is a qualitative statement. ``The standard
+        accounts for 31.1\% of variance with a bootstrap S/N ratio of 5,
+        while mean-stress correction accounts for 30.9\% with S/N of 4''
+        is a quantitative one that enables engineering resource allocation:
+        which uncertainty sources warrant the most modeling effort?
+
+  \item \textbf{Bootstrap noise floor.} No prior gear fatigue UQ study has
+        employed bootstrap resampling to distinguish genuine signal from
+        finite-sample fluctuation, making our uncertainty budget a
+        repeatable measurement rather than a one-shot estimate.
+\end{enumerate}
+
+The two studies are complementary, not competing: Bonaiti et al.\ provide
+independent experimental evidence that the standard-choice effect exists; we
+measure its magnitude relative to four other uncertainty sources and provide
+a reusable framework applicable to any mechanical reliability calculation
+where multiple handbooks or methods compete.
+
+\vspace{0.3cm}
+\noindent\textbf{Fit with the journal.}
+The \textit{International Journal of Fatigue} is the natural home for this
+work. The journal has published gear bending fatigue studies (Glodez et al.,
+2002; Bonaiti et al., 2024), cumulative damage surveys (Fatemi \& Yang, 1998),
+and mean-stress methodology papers---each examining one factor in
+isolation. Our manuscript synthesizes these threads within a unified UQ
+framework, and we explicitly cite and build upon the journal's own
+published record. The methodology is not limited to gears: it applies to
+any mechanical component where multiple standards or correction methods
+compete.
+
+\vspace{0.3cm}
+\noindent\textbf{Additional information.}
+This manuscript has not been published previously and is not under
+consideration elsewhere. All authors have approved the submission. The
+authors declare no competing financial interests.
+
+\vspace{0.3cm}
+\noindent\textbf{Use of AI-assisted tools.}
+During the preparation of this work, the author used Claude (Anthropic)
+as a language and analysis assistant for literature search,
+code verification against ISO/AGMA/FKM standards, and manuscript drafting.
+All numerical results were generated by the open-source analysis pipeline
+included with this submission and verified by the \texttt{paper\_check.py}
+audit tool. The author takes full responsibility for the integrity of all
+data, citations, and conclusions presented herein.
+
+\vspace{1cm}
+\noindent Sincerely,
+
+\vspace{1.5cm}
+\noindent Zhilei Chen
+
+\end{document}

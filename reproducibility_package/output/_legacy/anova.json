@@ -1,0 +1,135 @@
+{
+  "n_valid": 116,
+  "n_total": 144,
+  "grand_mean_log10_Nf": 5.460191315478388,
+  "SS_total": 129.2535779459646,
+  "SS_residual": 30.14735579229576,
+  "anova_table": [
+    {
+      "factor": "sn_source",
+      "SS": 0.8719024671227305,
+      "df": 1,
+      "MS": 0.8719024671227305,
+      "F": 2.949978507542802,
+      "p": 0.08891333326594075,
+      "variance_frac_%": 0.67
+    },
+    {
+      "factor": "mean_stress_method",
+      "SS": 39.888134264438534,
+      "df": 3,
+      "MS": 13.296044754812845,
+      "F": 44.985589261446606,
+      "p": 0.0,
+      "variance_frac_%": 30.86
+    },
+    {
+      "factor": "damage_method",
+      "SS": 0.6958438990153257,
+      "df": 1,
+      "MS": 0.6958438990153257,
+      "F": 2.3543052395229087,
+      "p": 0.12803360330923408,
+      "variance_frac_%": 0.54
+    },
+    {
+      "factor": "size_surface_standard",
+      "SS": 40.1649863846966,
+      "df": 2,
+      "MS": 20.0824931923483,
+      "F": 67.94673203621407,
+      "p": 0.0,
+      "variance_frac_%": 31.07
+    },
+    {
+      "factor": "rz_level",
+      "SS": 10.986706596199443,
+      "df": 2,
+      "MS": 5.493353298099722,
+      "F": 18.586108853678088,
+      "p": 1.3104752516479579e-07,
+      "variance_frac_%": 8.5
+    },
+    {
+      "factor": "size_surface_standard \u00d7 rz_level",
+      "SS": 6.498648542196204,
+      "df": 4,
+      "MS": 1.624662135549051,
+      "F": 5.4968514972829645,
+      "p": 0.00047672138420706833,
+      "variance_frac_%": 5.03,
+      "type": "interaction"
+    }
+  ],
+  "interactions": [
+    "size_surface_standard \u00d7 rz_level"
+  ],
+  "bootstrap": {
+    "n_bootstrap": 2000,
+    "rng_seed": 42,
+    "noise_floor": {
+      "sn_source": {
+        "mean": 1.4771014765774844,
+        "std": 1.7793592909561196,
+        "ci_95_lower": 0.0020086267432620378,
+        "ci_95_upper": 6.407827109072111
+      },
+      "mean_stress_method": {
+        "mean": 32.40032784599935,
+        "std": 6.499971745249381,
+        "ci_95_lower": 19.907867759506427,
+        "ci_95_upper": 45.25755717171421
+      },
+      "damage_method": {
+        "mean": 1.3822125863812753,
+        "std": 1.7526422770134475,
+        "ci_95_lower": 0.0016559880113152954,
+        "ci_95_upper": 6.21755963648928
+      },
+      "size_surface_standard": {
+        "mean": 31.638517676552496,
+        "std": 6.571688715854031,
+        "ci_95_lower": 18.94402480792384,
+        "ci_95_upper": 44.249131488028816
+      },
+      "rz_level": {
+        "mean": 9.904211067322343,
+        "std": 4.8308797607273295,
+        "ci_95_lower": 2.2723565537468797,
+        "ci_95_upper": 20.922718126203176
+      },
+      "size_surface_standard \u00d7 rz_level": {
+        "mean": 6.163830812716763,
+        "std": 3.815236373318028,
+        "ci_95_lower": 0.0,
+        "ci_95_upper": 14.028459699430973
+      }
+    }
+  },
+  "factor_levels": {
+    "sn_source": [
+      "Waterloo_SMDIdbase_Iter066",
+      "Waterloo_SMDIdbase_Iter068"
+    ],
+    "mean_stress_method": [
+      "Gerber",
+      "Goodman",
+      "Morrow",
+      "SWT"
+    ],
+    "damage_method": [
+      "Miner_modified",
+      "Miner_original"
+    ],
+    "size_surface_standard": [
+      "AGMA_2001",
+      "FKM",
+      "ISO_6336"
+    ],
+    "rz_level": [
+      "as_forged_Rz50",
+      "ground_Rz4",
+      "machined_Rz15"
+    ]
+  }
+}

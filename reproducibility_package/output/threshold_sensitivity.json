@@ -1,0 +1,165 @@
+{
+  "description": "Run-out threshold sensitivity analysis \u2014 with and without fatigue strength criterion",
+  "thresholds_tested": [
+    {
+      "value": 1000000.0,
+      "label": "10^6 cycles (baseline: Waterloo fatigue strength)"
+    },
+    {
+      "value": 3000000.0,
+      "label": "3\u00d710^6 cycles (ISO 6336 knee-point recommendation)"
+    },
+    {
+      "value": 5000000.0,
+      "label": "5\u00d710^6 cycles (AGMA 2001 knee-point recommendation)"
+    },
+    {
+      "value": "none",
+      "label": "No threshold (all Basquin-predicted Nf as observed)"
+    }
+  ],
+  "fatigue_strength_criterion": {
+    "1000000.0": {
+      "n_total": 144,
+      "n_censored": 84,
+      "n_observed": 60,
+      "censoring_rate_%": 58.3,
+      "sigma": 0.1745,
+      "logLik": 11.32,
+      "variance_fractions": {
+        "mean_stress_method": 18.2,
+        "size_surface_standard": 55.3,
+        "rz_level": 22.6,
+        "sn_source": 2.5,
+        "damage_method": 0.3,
+        "interaction": 1.2
+      },
+      "spread_dex": 2.79
+    },
+    "3000000.0": {
+      "n_total": 144,
+      "n_censored": 84,
+      "n_observed": 60,
+      "censoring_rate_%": 58.3,
+      "sigma": 0.1745,
+      "logLik": 11.32,
+      "variance_fractions": {
+        "mean_stress_method": 18.2,
+        "size_surface_standard": 55.3,
+        "rz_level": 22.6,
+        "sn_source": 2.5,
+        "damage_method": 0.3,
+        "interaction": 1.2
+      },
+      "spread_dex": 2.79
+    },
+    "5000000.0": {
+      "n_total": 144,
+      "n_censored": 84,
+      "n_observed": 60,
+      "censoring_rate_%": 58.3,
+      "sigma": 0.1745,
+      "logLik": 11.32,
+      "variance_fractions": {
+        "mean_stress_method": 18.2,
+        "size_surface_standard": 55.3,
+        "rz_level": 22.6,
+        "sn_source": 2.5,
+        "damage_method": 0.3,
+        "interaction": 1.2
+      },
+      "spread_dex": 2.79
+    },
+    "none": {
+      "n_total": 144,
+      "n_censored": 84,
+      "n_observed": 60,
+      "censoring_rate_%": 58.3,
+      "sigma": 0.1745,
+      "logLik": 11.32,
+      "variance_fractions": {
+        "mean_stress_method": 18.2,
+        "size_surface_standard": 55.3,
+        "rz_level": 22.6,
+        "sn_source": 2.5,
+        "damage_method": 0.3,
+        "interaction": 1.2
+      },
+      "spread_dex": 2.79
+    }
+  },
+  "basquin_only": {
+    "bq_1000000.0": {
+      "n_total": 144,
+      "n_censored": 84,
+      "n_observed": 60,
+      "censoring_rate_%": 58.3,
+      "sigma": 0.1749,
+      "logLik": 12.52,
+      "variance_fractions": {
+        "mean_stress_method": 18.0,
+        "size_surface_standard": 54.9,
+        "rz_level": 23.3,
+        "sn_source": 2.6,
+        "damage_method": 0.0,
+        "interaction": 1.2
+      },
+      "spread_dex": 2.64
+    },
+    "bq_3000000.0": {
+      "n_total": 144,
+      "n_censored": 66,
+      "n_observed": 78,
+      "censoring_rate_%": 45.8,
+      "sigma": 0.1815,
+      "logLik": 20.5,
+      "variance_fractions": {
+        "mean_stress_method": 20.0,
+        "size_surface_standard": 54.8,
+        "rz_level": 22.4,
+        "sn_source": 1.7,
+        "damage_method": 0.0,
+        "interaction": 1.0
+      },
+      "spread_dex": 3.1
+    },
+    "bq_5000000.0": {
+      "n_total": 144,
+      "n_censored": 58,
+      "n_observed": 86,
+      "censoring_rate_%": 40.3,
+      "sigma": 0.1877,
+      "logLik": 17.19,
+      "variance_fractions": {
+        "mean_stress_method": 21.0,
+        "size_surface_standard": 54.1,
+        "rz_level": 22.8,
+        "sn_source": 1.2,
+        "damage_method": 0.0,
+        "interaction": 0.9
+      },
+      "spread_dex": 3.36
+    },
+    "bq_none": {
+      "n_total": 144,
+      "n_censored": 0,
+      "n_observed": 144,
+      "censoring_rate_%": 0.0,
+      "sigma": 0.2396,
+      "logLik": 1.44,
+      "variance_fractions": {
+        "mean_stress_method": 32.6,
+        "size_surface_standard": 45.9,
+        "rz_level": 19.7,
+        "sn_source": 0.3,
+        "damage_method": 0.0,
+        "interaction": 1.5
+      },
+      "spread_dex": 6.01
+    }
+  },
+  "summary": {
+    "with_fatigue_strength": "Threshold choice irrelevant: all finite-life Nf < 1e6; run-out driven by fatigue strength criterion",
+    "basquin_only": "Without fatigue strength, Basquin predicts finite life for all entries; threshold choice determines censoring rate and affects variance fractions"
+  }
+}

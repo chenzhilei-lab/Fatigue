@@ -1,0 +1,915 @@
+
+⚠ Codex could not find bubblewrap on PATH. Install bubblewrap with your OS package manager. See the sandbox prerequisites:
+  https://developers.openai.com/codex/concepts/sandboxing#prerequisites. Codex will use the bundled bubblewrap in the meantime.
+
+╭──────────────────────────────────────────────────────╮
+│ >_ OpenAI Codex (v0.147.0-alpha.4)                   │
+│                                                      │
+│ model:     deepseek-v4-flash high   /model to change │
+│ directory: /mnt/d/Papers                             │
+╰──────────────────────────────────────────────────────╯
+
+  Tip: New Build faster with Codex.
+
+
+› 你好。可以聊聊吗
+
+
+• 你好！当然可以。想聊点什么？是随便聊聊，还是有什么具体的想法、问题想一起探讨？我在这儿听着。
+
+
+› 读 "D:\Papers\0723-Gear_Fatigue_UQ\paper\gear_fatigue_v4.0.pdf" ，从齿轮期刊 IFJ 审稿人的角度，看看这篇论文是否存在任何矛盾、虚假、不一致等问
+  题。
+
+
+• 好的，我来先找到并读取这篇 PDF，然后以疲劳期刊审稿人的角度仔细检查。
+
+• Explored
+  └ List paper
+
+• Ran which pdftotext pdfinfo mutool python3
+  └
+    thread 'main' (3639) panicked at linux-sandbox/src/launcher.rs:43:13:
+    bubblewrap is unavailable: no system bwrap was found on PATH and no bundled codex-resources/bwrap binary was found next to the Codex executable
+    note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+• 沙箱启动器似乎出了问题，我改用非沙箱方式运行命令。
+
+✔ You approved codex to always run commands that start with ls -la /mnt/d/Papers/0723-Gear_Fatigue_UQ/paper/
+
+• Explored
+  └ List paper
+
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+• 文件找到了。我注意到目录里已有一个提取好的 gear_fatigue_v4.0.txt，但我还是直接从 PDF 本身提取文本，确保读的是 PDF 里的内容。
+
+• Updated Plan
+  └ □ 提取 PDF 全文并通读
+    □ 核对模型、公式、材料参数与数值的一致性
+    □ 核对图表、引用、正文声明之间的交叉一致性
+    □ 以审稿人角度汇总矛盾、虚假、不一致问题并给出报告
+
+✔ You approved codex to always run commands that start with which pdftotext pdfinfo; pdfinfo "/mnt/d/Papers/0723-Gear_Fatigue_UQ/paper/ge...
+
+• Ran which pdftotext pdfinfo; pdfinfo "/mnt/d/Papers/0723-Gear_Fatigue_UQ/paper/gear_fatigue_v4.0.pdf" 2>/dev/null | head -30
+  └ Title:
+    Subject:
+    … +18 lines (ctrl + t to view transcript)
+    Optimized:       no
+    PDF version:     1.5
+
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+• PDF 共 33 页。现在提取全文并逐段通读。
+
+✔ You approved codex to always run commands that start with pdftotext -layout /mnt/d/Papers/0723-Gear_Fatigue_UQ/paper/gear_fatigue_v4.0....
+
+• Ran pdftotext -layout "/mnt/d/Papers/0723-Gear_Fatigue_UQ/paper/gear_fatigue_v4.0.pdf" /tmp/gf_v4.txt && wc -l /tmp/gf_v4.txt
+  └ 1887 /tmp/gf_v4.txt
+
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+• 提取成功（1887 行）。开始逐段通读。
+
+✔ You approved codex to always run commands that start with sed
+
+• Explored
+  └ Read gf_v4.txt
+
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+• 继续通读第二段（方法、结果部分）。
+
+• Explored
+  └ Read gf_v4.txt
+
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+• 继续读取后半部分（结果与讨论）。
+
+• Explored
+  └ Read gf_v4.txt
+
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+• 继续读取最后的讨论与结论部分。
+
+• Explored
+  └ Read gf_v4.txt
+
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+• 继续读取结尾部分。
+
+• Explored
+  └ Read gf_v4.txt
+
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+• 全文已读完。现在我做一些数值交叉验证（Basquin 公式、表格一致性），并检查源码/代码包是否存在以便进一步核对。
+
+• Running python3 -c "
+  │ import math
+  │ # Basquin: sigma_a = sigmaf*(2*Nf)**b, i.e., at Nf=1e6: sigmaf*(2e6)**b
+  │ … +24 lines
+
+✔ You approved codex to run python3 -c " ... this time
+
+✔ You approved codex to always run commands that start with rg -n "0\\.246|0\\.208|78%|64%|2\\.5%|4\\.5%|679|626|550|500|10\\"'^'"\\{2\\....
+
+• Ran python3 -c "
+  │ import math
+  │ # Basquin: sigma_a = sigmaf*(2*Nf)**b, i.e., at Nf=1e6: sigmaf*(2e6)**b
+  │ … +24 lines
+  └ #68 sf= 1356 b= -0.055 -> at 1e6 (2N convention): 610.5  (N convention): 634.2
+    #66 sf= 1684 b= -0.07 -> at 1e6 (2N convention): 609.9  (N convention): 640.2
+    … +16 lines (ctrl + t to view transcript)
+    Rz/6 at 50: 8.333333333333334
+    10^2.95= 891.2509381337459
+
+• Explored
+  └ Search 0\.246|0\.208|78%|64%|2\.5%|4\.5%|679|626|550|500|10\^\{2\.5\}|4\.3 dex|3\.2 dex|five orders|two orders in gear_fatigue_v4.0.tex
+
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+• rg 不可用，改用 grep。同时检查代码包是否存在。
+
+✔ You approved codex to always run commands that start with grep -nE "0\\.246|0\\.208|78%|64%|2\\.5%|4\\.5%|679|626|550|500|five orders|t...
+
+✔ You approved codex to always run commands that start with find /mnt/d/Papers/0723-Gear_Fatigue_UQ -maxdepth 3 -type f "\\(" -name '*.py...
+
+• Explored
+  └ Search 0\.246|0\.208|78%|64%|2\.5%|4\.5%|679|626|550|500|five orders|two orders|3\.2 dex|4\.3 dex|10\^\{2\.5\} in gear_fatigue_v4.0.tex
+    Search *.py in 0723-Gear_Fatigue_UQ
+
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+• 代码包和数据输出都存在，这太好了——可以直接用论文声称的“可复现包”来核对其中的关键数值。先看核心模型代码和参数。
+
+◦ Running ls -la "/mnt/d/Papers/0723-Gear_Fatigue_UQ/output/" | head -40; echo; wc -c "/mnt/d/Papers/0723-Gear_Fatigue_UQ/output/sweep.json" "/mnt/
+  │ d/Papers/0723-Gear_Fatigue_UQ/output/aft_anova.json" "/mnt/d/Papers/0723-Gear_Fatigue_UQ/output/multi_torque_aft.json" "/mnt/d/
+  │ Papers/0723-Gear_Fatigue_UQ/output/multi_torque_anova.json" "/mnt/d/Papers/0723-Gear_Fatigue_UQ/output/threshold_sensitivity.json" "/mnt/
+  │ … +3 lines
+
+✔ You approved codex to always run commands that start with ls -la /mnt/d/Papers/0723-Gear_Fatigue_UQ/output/
+
+• Explored
+  └ Read fatigue_models.py
+
+• Ran ls -la "/mnt/d/Papers/0723-Gear_Fatigue_UQ/output/" | head -40; echo; wc -c "/mnt/d/Papers/0723-Gear_Fatigue_UQ/output/sweep.json" "/mnt/d/
+  │ Papers/0723-Gear_Fatigue_UQ/output/aft_anova.json" "/mnt/d/Papers/0723-Gear_Fatigue_UQ/output/multi_torque_aft.json" "/mnt/d/
+  │ Papers/0723-Gear_Fatigue_UQ/output/multi_torque_anova.json" "/mnt/d/Papers/0723-Gear_Fatigue_UQ/output/threshold_sensitivity.json" "/mnt/d/
+  │ … +3 lines
+  └ total 1748
+    drwxrwxrwx 1 ray76 ray76    512 Aug  3 21:50 .
+    … +43 lines (ctrl + t to view transcript)
+      327 /mnt/d/Papers/0723-Gear_Fatigue_UQ/output/sweep_summary.json
+    75588 total
+
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+• 代码里已经有一些值得注意的地方（比如 Kt 的注释承认它是“校准的工程估计”而非公开公式）。继续读参数文件和尺寸/表面因子实现。
+
+• Explored
+  └ Read gear_params.py, fatigue_models.py
+
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+• 参数文件与代码暴露了几个重要疑点（例如代码中“10^6 疲劳强度”实际来自一个本地 Excel“SAE Phase data”，而非 Waterloo 数据库；Basquin 参数与 679/626
+  MPa 无法互相自洽）。现在直接查看所有小型的输出 JSON，核对论文声称的数字。
+
+✔ You approved codex to always run commands that start with for f in aft_anova.json sweep_summary.json multi_torque_aft.json multi_torque...
+
+• Ran for f in aft_anova.json sweep_summary.json multi_torque_aft.json multi_torque_anova.json threshold_sensitivity.json sobol_vs_aft.json
+  │ multi_aft_comparison.json native_stress_sensitivity.json ka_sensitivity.json weibull_aft.json; do echo "===== $f ====="; cat "/mnt/d/
+  │ Papers/0723-Gear_Fatigue_UQ/output/$f"; echo; done
+  └ {
+      "description": "Log-normal vs Weibull AFT distribution comparison (72-combo subset, 700 Nm)",
+    … +21 lines (ctrl + t to view transcript)
+    the likelihood-ratio decomposition under log-normality is equivalent to Sobol first-order indices for balanced factorial designs."
+    }
+
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+• 数据输出揭示了重大问题：论文正文与它自己的 output/*.json 之间有多处直接矛盾（例如 700 N·m 处的截尾数：主分析 92 个 vs 多扭矩文件 28 个；600 N·m
+  处论文说“无法分解”，但输出文件里明明有完整分解）。现在检查 sweep 数据本身与生成脚本。
+
+• Explored
+  └ Read run_sweep.py, multi_torque_aft.py
+
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+• 脚本与输出揭示了多个版本错配。现在直接分析 sweep.json（144 组合主数据），核对论文中的具体数值声明（最小/最大寿命、极端组合、截尾计数等）。
+
+✔ You approved codex to run python3 -c " ... this time
+
+• Ran python3 -c "
+  │ import json
+  │ d=json.load(open('/mnt/d/Papers/0723-Gear_Fatigue_UQ/output/sweep.json'))
+  │ … +46 lines
+  └ entries: 144
+    finite: 52 runout: 92
+    … +17 lines (ctrl + t to view transcript)
+    sigma_eff range: 435.21691606861174 929.9582651137732
+    sigma_nominal: {777.7}
+
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+• 数据核对已确认多处硬伤。再验证两件事：(1) 用当前代码在内存中重算 500/600/700 N·m 的截尾数；(2) 查 Table 5 中 σe=550/500 的来源。
+
+◦ Running python3 -c "
+  │ import sys, itertools, numpy as np
+  │ sys.path.insert(0,'/mnt/d/Papers/0723-Gear_Fatigue_UQ')
+  │ … +20 lines
+
+✔ You approved codex to run python3 -c " ... this time
+
+• Ran python3 -c "
+  │ import sys, itertools, numpy as np
+  │ sys.path.insert(0,'/mnt/d/Papers/0723-Gear_Fatigue_UQ')
+  │ … +20 lines
+  └ 500 Nm -> finite: 0 runout: 144
+    600 Nm -> finite: 10 runout: 134
+    700 Nm -> finite: 52 runout: 92
+
+✔ You approved codex to always run commands that start with grep -rn "550\\|500" /mnt/d/Papers/0723-Gear_Fatigue_UQ/gear_params.py
+
+• Ran grep -rn "550\|500" "/mnt/d/Papers/0723-Gear_Fatigue_UQ/gear_params.py" | head; echo ---; grep -rn "sigma_e\|sigma_e_1e6\|endurance" "/mnt/d/
+  │ Papers/0723-Gear_Fatigue_UQ" --include=*.py -l | head; echo ---; find "/mnt/d/Papers/0723-Gear_Fatigue_UQ" -name "*.xlsx" -o -name "*.xls" |
+  │ head
+  └ /mnt/d/Papers/0723-Gear_Fatigue_UQ/benchmark_wang2023.py
+    /mnt/d/Papers/0723-Gear_Fatigue_UQ/fatigue_models.py
+    … +8 lines (ctrl + t to view transcript)
+    ---
+    /mnt/d/Papers/0723-Gear_Fatigue_UQ/paper/ref_papers/材料力学性能测试数据表.xlsx
+
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+• 当前代码完全复现了论文 §3.6 的截尾数（500→0 有限、600→10、700→52），说明正文数字与代码一致，但随附的 output 数据文件是旧版本，与正文矛盾。现在看
+  Table 5 的完整内容、reproduce.sh，并渲染关键 PDF 页面确认表格。
+
+✔ You approved codex to always run commands that start with cat
+
+• Explored
+  └ Read gear_fatigue_v4.0.tex, reproduce.sh
+
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+• Table 5 的中位数（如 ISO 6.07、Gerber 6.56、P95=7.50）在“10^6 截尾”框架下根本不可能出现——这指向它用的是“无阈值 Basquin 外推”数据。验证一下，并渲
+  染关键 PDF 页面。
+
+◦ Running python3 -c "
+  │ import sys,itertools,numpy as np
+  │ sys.path.insert(0,'/mnt/d/Papers/0723-Gear_Fatigue_UQ')
+  │ … +34 lines
+
+✔ You approved codex to run python3 -c " ... this time
+
+• Ran python3 -c "
+  │ import sys,itertools,numpy as np
+  │ sys.path.insert(0,'/mnt/d/Papers/0723-Gear_Fatigue_UQ')
+  │ … +34 lines
+  └ Basquin-only (no fatigue-strength criterion):
+    min/max log10: 2.5221813336212633 8.672677682473159
+    … +8 lines (ctrl + t to view transcript)
+    ISO+Gerber+ground+#68+Miner log10: 8.672677682473159
+    ISO+Gerber+ground+#66+Miner log10: 8.09377457476643
+
+✔ You approved codex to always run commands that start with pdftoppm -png -r 110 -f 32 -l 32 /mnt/d/Papers/0723-Gear_Fatigue_UQ/paper/gea...
+
+• Ran pdftoppm -png -r 110 -f 32 -l 32 "/mnt/d/Papers/0723-Gear_Fatigue_UQ/paper/gear_fatigue_v4.0.pdf" /tmp/pg32 && pdftoppm -png -r 110 -f 33 -l
+  │ 33 "/mnt/d/Papers/0723-Gear_Fatigue_UQ/paper/gear_fatigue_v4.0.pdf" /tmp/pg33 && pdftoppm -png -r 110 -f 25 -l 26 "/mnt/d/
+  │ Papers/0723-Gear_Fatigue_UQ/paper/gear_fatigue_v4.0.pdf" /tmp/pg2526 && ls /tmp/pg*.png
+  └ /tmp/pg2526-25.png
+    /tmp/pg2526-26.png
+    /tmp/pg32-32.png
+    /tmp/pg33-33.png
+
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+• Basquin-only 计算证实 Table 5/§4.9 的数字来自“无截尾外推”情景，与论文自身截尾框架矛盾。现在查看渲染出的 PDF 页面确认表格与重复段落。
+
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+• 我无法直接查看图片，改用逐页文本提取与 tex 源码交叉核对。
+
+◦ Running grep -n "log-normal is retained for three" "/mnt/d/Papers/0723-Gear_Fatigue_UQ/paper/gear_fatigue_v4.0.tex"; echo ---; grep -n "78%\|64%"
+  │ "/mnt/d/Papers/0723-Gear_Fatigue_UQ/paper/gear_fatigue_v4.0.tex" | head -30; echo ---; grep -n "7%\|within ±\|±7" "/mnt/d/
+  │ Papers/0723-Gear_Fatigue_UQ/paper/gear_fatigue_v4.0.tex" | head; echo ---; grep -n "1\.3–1\.7\|2\.6–3\.3\|2–6 pp\|±3 pp\|0\.1 pp" "/mnt/
+  │ … +1 lines
+
+✔ You approved codex to always run commands that start with grep -n 'log-normal is retained for three' /mnt/d/Papers/0723-Gear_Fatigue_UQ...
+
+✔ You approved codex to always run commands that start with pdftotext -layout -f 32 -l 33 /mnt/d/Papers/0723-Gear_Fatigue_UQ/paper/gear_f...
+
+• Ran grep -n "log-normal is retained for three" "/mnt/d/Papers/0723-Gear_Fatigue_UQ/paper/gear_fatigue_v4.0.tex"; echo ---; grep -n "78%\|64%" "/
+  │ mnt/d/Papers/0723-Gear_Fatigue_UQ/paper/gear_fatigue_v4.0.tex" | head -30; echo ---; grep -n "7%\|within ±\|±7" "/mnt/d/
+  │ Papers/0723-Gear_Fatigue_UQ/paper/gear_fatigue_v4.0.tex" | head; echo ---; grep -n "1\.3–1\.7\|2\.6–3\.3\|2–6 pp\|±3 pp\|0\.1 pp" "/mnt/d/
+  │ … +1 lines
+  └ 2057:        roughness) is unchanged. The log-normal is retained for three
+    ---
+    ---
+    ---
+
+• Ran pdftotext -layout -f 32 -l 33 "/mnt/d/Papers/0723-Gear_Fatigue_UQ/paper/gear_fatigue_v4.0.pdf" - | sed -n '1,200p'
+  └  [5] Fatemi A., Yang L. Cumulative fatigue
+         damage and life prediction theories: a
+    … +111 lines (ctrl + t to view transcript)
+                                                     33
+
+
+
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+• 核对 tex 中 §4.12.5 的重复段落与 ±7% 等表述（LaTeX 特殊字符需换写法）。
+
+✔ You approved codex to always run commands that start with grep -nE "pm 7|pm7|1\\.3.{0,4}1\\.7|2\\.6.{0,4}3\\.3|2-6|2--6|\\\\+0\\\\.1|0\...
+
+• Explored
+  └ Read gear_fatigue_v4.0.tex
+    Search pm 7|pm7|1\.3.{0,4}1\.7|2\.6.{0,4}3\.3|2-6|2--6|\\+0\\.1|0\\.1 pp|\\+0\\.3|30\.3|4\.3~dex|3\.2~dex|five orders|two orders|10\^\\{2\\.5
+    in
+           gear_fatigue_v4.0.tex
+
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+• 核心矛盾已全部确认。最后补几项核对：诊断输出、§3.4 的中位数、正文的编辑残留，以及外部引用验证。
+
+• Explored
+  └ Read aft_diagnostics.json
+
+• Running python3 -c "
+  │ import json,numpy as np
+  │ d=json.load(open('/mnt/d/Papers/0723-Gear_Fatigue_UQ/output/sweep.json'))
+  │ … +36 lines
+
+✔ You approved codex to run python3 -c " ... this time
+
+• Ran python3 -c "
+  │ import json,numpy as np
+  │ d=json.load(open('/mnt/d/Papers/0723-Gear_Fatigue_UQ/output/sweep.json'))
+  │ … +36 lines
+  └ censored-at-6 medians (ISO,FKM by RZ):
+      ground_Rz4 ISO 6.0 AGMA 6.0 FKM 6.0
+    … +6 lines (ctrl + t to view transcript)
+    paper claims: Rz50: ISO 4.94, FKM 3.86, ISO-AGMA gap 0.4dex; Rz4: FKM median 4.58 (6 finite entries)
+    FKM ground finite count: 6
+
+✔ You approved codex to always run commands that start with grep -nE "ordering\\.\\),|simultaneous full-factorial|correction factors in t...
+
+• Explored
+  └ Search ordering\.\),|simultaneous full-factorial|correction factors in the correction|a addressed|is a addressed|approx 20%|approximately 20%
+  in
+           gear_fatigue_v4.0.tex
+
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+• 补充核对正文中的疑似重复词组与引用，并做外部引用验证。
+
+✔ You approved codex to always run commands that start with grep -n simultaneous /mnt/d/Papers/0723-Gear_Fatigue_UQ/paper/gear_fatigue_v4...
+
+• Ran grep -n "simultaneous" "/mnt/d/Papers/0723-Gear_Fatigue_UQ/paper/gear_fatigue_v4.0.tex" | head; echo ---; grep -n "correction factors" "/mnt/
+  │ d/Papers/0723-Gear_Fatigue_UQ/paper/gear_fatigue_v4.0.tex" | head; echo ---; grep -n "Du et al\|106575\|Du\." "/mnt/d/
+  │ Papers/0723-Gear_Fatigue_UQ/paper/gear_fatigue_v4.0.tex" | head; echo ---; grep -n "risk classifications" "/mnt/d/
+  │ … +1 lines
+  └ 111:requires a framework that (i)~simultaneously varies all major
+    134:across multiple simultaneous methodological choices.
+    … +14 lines (ctrl + t to view transcript)
+    ---
+    1476:the correction factors in this section, and the risk classifications
+
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+• 最后做外部引用与数据的交叉验证（Du 2022 引用、Waterloo 数据库数值），并查看参考文献 [6] 的完整 URL。
+
+• Searching the web
+
+• Searched the web for Int J Fatigue 155 106575 2022 Du Sobol cyclic plasticity uncertainty ...
+
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+• 再确认两点：KA 敏感性脚本如何重算、参考文献 [6] 的完整 URL；并最终验算 Basquin 一致性。
+
+• Explored
+  └ Read ka_sensitivity.py
+
+✔ You approved codex to always run commands that start with grep -n "SMDIdbase\\|fde.uwaterloo" /mnt/d/Papers/0723-Gear_Fatigue_UQ/paper/...
+
+• Ran grep -n "SMDIdbase\|fde.uwaterloo" "/mnt/d/Papers/0723-Gear_Fatigue_UQ/paper/gear_fatigue_v4.0.tex" | head; echo ---; python3 -c "
+  │ import math
+  │ sf68,b68=1356.0,-0.055; sf66,b66=1684.0,-0.070
+  │ … +4 lines
+  └ 42:source (Waterloo SMDIdbase), mean-stress correction (Goodman, Gerber,
+    209:%           Waterloo SMDIdbase (S-N parameters §2.2.1)
+    … +7 lines (ctrl + t to view transcript)
+    Basquin at 1e6 cycles: #68 = 610.5 MPa, #66 = 609.9 MPa
+    reported: 679 and 626 MPa; difference reported 53 MPa; computed difference 0.6 MPa
+
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+• 核对完毕，证据链完整。更新计划并汇总审稿意见。
+
+• Updated Plan
+  └ ✔ 提取 PDF 全文并通读
+    ✔ 核对模型、公式、材料参数与数值的一致性
+    ✔ 核对图表、引用、正文声明之间的交叉一致性
+    □ 以审稿人角度汇总矛盾、虚假、不一致问题并给出报告
+
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+• 以下是审稿意见（以 International Journal of Fatigue 审稿人视角，基于对 PDF 全文、其 LaTeX 源码以及随附复现包（gear_params.py、fatigue_models.py、
+  output/*.json、reproduce.sh）的交叉核对）。
+
+  文件：0723-Gear_Fatigue_UQ/paper/gear_fatigue_v4.0.pdf
+
+  # 总体评价
+
+  这篇文章框架有趣（用截尾似然 AFT 做方法学选择的全因子方差分解），但当前版本的内部一致性严重不足：正文、表格、以及随附的代码/输出数据三者之间存在
+  大量互相矛盾的数字。其中一部分属于"数字混用版本"（3 方法基线与 4 方法数据集的结果混在一起引用），一部分是数字无法由论文给出的公式复现，还有一部分
+  是论文声称的结论与它自己随附的 output/*.json 直接冲突。以 IFJ 的标准，这些问题在送审前必须逐项解决；目前状态建议 Major Revision（接近 Reject-and-
+  Resubmit），除非作者能统一数据版本并逐条更正。
+
+  # 一、最严重的数字冲突（速查）
+
+   位置                         论文写法                                                   实际数据/复现结果
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   §3.1 与 Table 2              基线为"3 方法、108 组合、84 个 run-out"；表注又称"144      Table 2 标题是 4 方法数据集（144 组合），行内容是 3 方
+                                组合、92 个 run-out"                                       法基线（108 组合）——表内自相矛盾；且 3×3×2×3×3=162，不
+                                                                                           等于 108
+  ───────────────────────────  ─────────────────────────────────────────────────────────  ─────────────────────────────────────────────────────────
+   §3.1 / §2.7.1 / Table 2      AFT 尺度参数 σ=0.208 / σ=0.246                             3 方法基线 σ=0.246；4 方法模型
+                                                                                           σ=0.2084（multi_aft_comparison.json、aft_anova.json）。
+                                                                                           同一"模型"出现两个 σ
+  ───────────────────────────  ─────────────────────────────────────────────────────────  ─────────────────────────────────────────────────────────
+   §3.1、§3.4、§4.10            表面粗糙度 25.4%（Table 2）与 23.5%（4 方法）混用；标准    23.5/35.3/39.1 是含 Goodman 的 4 方法结果（Table 3/
+                                43.7% 与 35.3% 混用；均值应力 26.4% 与 39.1% 混用          aft_anova.json）；Table 2 是 43.7/26.4/25.4。多个段落把
+                                                                                           Table 3 数字标成"Table 2"（§2.5、§3.3、§4.10 等）
+  ───────────────────────────  ─────────────────────────────────────────────────────────  ─────────────────────────────────────────────────────────
+   §3.1 / Table 2 vs Table 4    交互项 2.5%（§3.1 正文）                                   Table 2/3 的 3 方法基线交互=4.5%；2.5% 是 4 方法（Table
+                                                                                           4/aft_anova.json）
+  ───────────────────────────  ─────────────────────────────────────────────────────────  ─────────────────────────────────────────────────────────
+   §3.1 / §3.5 / §4.12          基线"64% 截尾"                                             3 方法基线截尾率=84/108=78%（Table 2 表注自己写的是
+                                                                                           78%）；64% 是 144 组合数据集的
+  ───────────────────────────  ─────────────────────────────────────────────────────────  ─────────────────────────────────────────────────────────
+   §2.2.1、§3.5、§3.7、结论     两条 S–N 曲线 10^6 疲劳强度 679/626 MPa，差 53 MPa         按论文给出的 Basquin 参数 σf′(2Nf)^b 计算，10^6 处为
+                                                                                           610.5 与 609.9 MPa（相差 0.6 MPa）。679/626 与
+                                                                                           σf′=1356/1684、b=−0.055/−0.070 互不相容
+  ───────────────────────────  ─────────────────────────────────────────────────────────  ─────────────────────────────────────────────────────────
+   Table 5                      S–N 曲线 σe=550（#66）、500（#68）                         与全文 679/626 完全矛盾，且 #68/#66 的高低排序相反；
+                                                                                           §4.9 据此称 #68 为"低耐久曲线"，与 §2.2.1（#68=679 >
+                                                                                           #66=626）冲突
+  ───────────────────────────  ─────────────────────────────────────────────────────────  ─────────────────────────────────────────────────────────
+   §3.7 / §4.9                  最长寿命=ISO 6336+Gerber+磨削；最短=10^2.95≈890 周；"仍    sweep.json 中 ISO+Gerber+ground 是 run-out（∞）；实际最
+                                产生有限寿命"组合中位数 7.22                               短=10^2.522（333 周，即 FKM+Goodman+as-forged+#68）；有
+                                                                                           限寿命最大=5.76（AGMA+SWT+machined+#66）。7.22 在任何
+                                                                                           shipped 数据中不存在（10^6 截尾下不可能 >6）
+  ───────────────────────────  ─────────────────────────────────────────────────────────  ─────────────────────────────────────────────────────────
+   §4.6 vs Fig.4                "相差五个数量级"                                           3.2 dex（约 1.7×10^3 倍），图 4 自己的数据即如此
+  ───────────────────────────  ─────────────────────────────────────────────────────────  ─────────────────────────────────────────────────────────
+   §4.9 vs 结论                 保守/不保守组合隐含安全系数 1.9×10^4 vs "约 10^2.5"        同一比较给出相差约 60 倍的两个数值
+  ───────────────────────────  ─────────────────────────────────────────────────────────  ─────────────────────────────────────────────────────────
+   §3.6 vs §4.12.7              500 N·m "全部 144 组合 run-out、零有限寿命" vs "130/144    当前代码重算=144 个全部 run-out（0 有限）；但随附
+                                run-out（90%）"                                            multi_torque_aft.json 是 14 有限/130 截尾。正文两处互相
+                                                                                           矛盾，且都不完全对得上 shipped 数据
+  ───────────────────────────  ─────────────────────────────────────────────────────────  ─────────────────────────────────────────────────────────
+   §4.5                         "92 个 run-out 中 25 个来自 Gerber，22 个为磨削面"         sweep.json 实际：Gerber=34，磨削=40
+  ───────────────────────────  ─────────────────────────────────────────────────────────  ─────────────────────────────────────────────────────────
+   §2.2、§4.4、Fig.5            "三个因子合计 97.9%"                                       3 方法基线三主效应合计 95.5%；97.9% 是 4 方法结果
+                                                                                           （39.1+35.3+23.5）
+
+  # 二、正文与随附复现包之间的矛盾
+
+  论文在 Data and Code Availability 中声明"reproduce.sh 可复现本文所有数值"，但 shipped 的 output/ 是混合版本，与正文多处冲突：
+
+  - multi_torque_aft.json（2025-07-28 生成）在 700 N·m 给出 116 有限/28 截尾，而主分析 aft_anova.json/sweep.json（07-29）为 52 有限/92 截尾——同一扭
+    矩两种截尾计数。600 N·m 处 shipped 文件有完整 AFT 分解（60 有限），而正文 Table 4 说"500/600 N·m 处 AFT 不可识别"。
+
+  - multi_torque_anova.json 的三个扭矩块的 "torque" 字段全部为 700.0（500/600 块也写 700），属明显的元数据 bug。
+  - sweep_summary.json 的扭矩字段写 350 N·m（实际按 gear_params.py 用 700 N·m 计算），run_sweep.py 的 docstring 还写着"972 combinations / 6
+    switches"。
+
+  - §4.12.5 引用 output/multi_aft_comparison.json 的 log-normal 分解（标准 45.7%、均值应力 27.6%、粗糙度 26.5%），并称之为"与 Table 2 一致"，但
+    Table 2 是 43.7/26.4/25.4——同一模型同一数据集两个结果。
+
+  # 三、公式与"可验证性"问题
+
+  1. Basquin 参数与疲劳强度不自洽（§2.2.1）。按论文 Eq.(1) 与给出的 σf′、b，10^6 周处两条曲线都约 610 MPa；论文反复使用的 679/626 MPa（及"53 MPa 差
+     异"）无法从这些参数导出。作者必须说明 679/626 的出处（代码注释显示它们来自本地文件"材料力学性能测试数据表.xlsx (SAE Phase data)"，而不是论文声
+     称的 Waterloo SMDIdbase）——这是数据来源声明与代码/正文的冲突。
+
+  2. Table 5 与截尾框架不相容。Table 5 的中位数（ISO 6.07、Gerber 6.56、P95=7.50）在"10^6 截尾"框架下不可能出现；这些值只可能来自"Basquin-only 无阈
+     值外推"情景（threshold_sensitivity.json 的 bq_none，spread 6.0 dex）。§4.9 的 7.22、4.3 dex、1.9×10^4 均属此列，但 §4.9 把这段表述为基于 Table
+     5 的基线结果。
+
+  3. KA 敏感性分析有方法缺陷（ka_sensitivity.py）。脚本对 KA=1.25/1.5 只对有限寿命条目做解析缩放；run-out 条目一律保持 run-out（代码里"was run-out
+     but now finite"分支直接 return inf，是死代码），所以三个 KA 水平截尾数恒为 92。这与正文"把工作点推到耐久极限之上"的物理描述矛盾，也会系统低估
+     KA 对排名的影响。
+
+  4. "native stress chain"校验的表述夸大。代码注释明确承认 Kt 是"calibrated engineering estimator, not a published formula"（原 Dolan & Broghamer
+     引用被作者自己标注为错误），Kf(Neuber) 的 a′ 是"calibrated"值；正文却把这一校验描述为"Peterson/Neuber 计算"。同时 §2.3/§4.12.1 声称 ISO
+     YSa=1.55、AGMA 1/J≈3.03、FKM Kf≈1.84"互相在 ±7% 以内"——但 1/J 与 YSa 相差约 95%、Kf 比 YSa 高 19%，"±7%"与同页的"Kf/YSa≈1.19（19%）"直接矛盾。
+     Kf 取值在文中还有 1.84（Peterson）/1.75（Neuber）与"1.3–1.7"两套数字。
+
+  5. 诊断统计与结论不符：Cox-Snell 残差 KS=0.49（n=144 时临界值约 0.11），均值 0.45 对目标 1.0，被描述为"acceptable agreement"，在统计学上站不住；
+     §3.2/Fig.1 的 R²=0.966 与 aft_diagnostics.json 的 qq_plot_r_squared=0.9848 不一致；标准化残差偏度 −1.22 未报告。另外 bootstrap 的 95% CI（如均
+     值应力 [33.3, 43.7]）不包含 Table 2 的点估计 26.4%，说明 bootstrap 验证的是 4 方法模型而非被当作主结果的 Table 2——§3.8/Fig.3 却说它"确认 Table
+     2 的方差分数稳健"。
+
+  6. 模型选择矛盾：log-logistic 的 AIC 比 log-normal 低 9.4，被称作"modestly better"，但论文随后以"结构等价于 Sobol'"为由保留 log-normal，且主分析
+     的 log-normal 分解在 §4.12.5 与 Table 2 中又是两套数字。
+
+  # 四、其他正文矛盾与编辑问题
+
+  - §3.3 同一小节先说"contradicts the common assumption that mean-stress effects are negligible at R=0"，又说"does not contradict the traditional
+    engineering view that mean-stress effects are minor at R=0"。
+
+  - §3.4 称 ISO 在磨削面"全部 run-out"，§3.7 又称"最长有限寿命=ISO+Gerber+磨削"——自相矛盾。
+  - §4.12 内部：YSa 基线偏差"−0.1 pp"（§2.3/native_stress_sensitivity.json）vs "±3 pp"（§4.10）vs "2–6 pp"（§4.12.2）；ISO 封顶影响"+0.1
+    pp"（§3.4）vs "+0.3 pp"（§4.12.3/数据可用性）；交互项 2.5%（§3.1）vs 3.0%（bootstrap）vs 4.5%（§4.10/§4.12.3）。
+
+  - §3.1 的"3×3×2×3×3=108"算术错误（应为 2×3×2×3×3）。
+  - §4.7 有一句残句"…correct factor ordering.), which in practice requires…"；§3.5 有"is a addressed"；引言有"a simultaneous full-factorial
+    simultaneous"；§4.6 有"the correction factors in the correction factors"。
+
+  - §4.12.5 整段"log-normal is retained for three (further) reasons…"及随后的 Levene 检验段落几乎原样重复了两遍。
+  - 参考文献 [6] 的 URL 在 PDF 中被截断（止于 …/SMDIdbase/Steel/）；Du et al. (2022) 的文章号应为 Int. J. Fatigue 155: 106578，文中写 106575（外部
+  - 结论 6 声称"所有疲劳公式均经原始标准核实"，与代码注释（"simplified"、"engineering approximation"、"not a published formula"）冲突，属无法支撑的
+    声明。
+
+  # 五、审稿建议
+
+  1. 先统一数据集版本：明确主分析到底是 3 方法（108）还是 4 方法（144）；Table 2 的标题、脚注、§3.1 必须一致；全文中 26.4/43.7/25.4 与
+     39.1/35.3/23.5 两套数字不得混用。
+
+  2. 重新核算并公开 S–N 参数来源：给出 σf′/b 与 10^6 疲劳强度的出处，并解释 679/626 与 Basquin 计算（约 610/610 MPa）的矛盾；Table 5 的 σe=550/500
+     需要更正或删除。
+
+  3. 重跑并重新打包全部 output：确保 reproduce.sh 输出的所有 json 与正文数字一致（尤其是 multi_torque、KA、threshold 结果）；修复
+     multi_torque_anova.json 的扭矩元数据。
+
+  4. 规范 Table 5/§4.9 的统计口径：中位数/百分位必须在同一截尾约定下计算，不能在 10^6 截尾框架里出现 7.22 这类值；"3.2 dex"与"five
+     orders"、"10^2.5"与"1.9×10^4"必须统一。
+
+  5. 修正确诊统计表述（KS=0.49 不能叫 acceptable；R² 统一）并补做真正的模型验证。
+  6. 修正引用与文字问题后，作者应提供逐条修改说明（response letter），否则按 IFJ 惯例建议拒稿重投。
+
+  需要我进一步做的话，我可以：(a) 把以上问题整理成一份带行号/章节号的正式审稿意见表（可直接作为 response 模板）；或 (b) 尝试逐项跑通 reproduce.sh
+  以确认哪些数值能复现、哪些不能。
+
+─ Worked for 19m 29s ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+› 这个发现我已经全部记录。你也把它写进一个 txt 文档。 我们后续继续修正它。
+
+
+• 好的，我把所有发现整理成一份结构化的审稿问题清单文档，方便后续逐条修订和跟踪。
+
+• Added 0723-Gear_Fatigue_UQ/paper/审稿问题清单_v4.0.txt (+334 -0)
+      1 +======================================================================
+      2 +审稿问题清单 —— gear_fatigue_v4.0.pdf
+      3 +======================================================================
+      4 +文档用途：记录以 International Journal of Fatigue 审稿人角度发现的
+      5 +矛盾 / 不一致 / 疑似虚假问题，供后续逐条修正与跟踪。
+      6 +核对依据：PDF 全文、LaTeX 源码（gear_fatigue_v4.0.tex）、随附复现包
+      7 +（gear_params.py、fatigue_models.py、ka_sensitivity.py、run_sweep.py、
+      8 +multi_torque_aft.py、output/*.json、reproduce.sh），以及独立数值复算。
+      9 +状态图例：[ ] 未处理   [~] 处理中   [x] 已修正（修正后在括号内注明版本）
+     10 +
+     11 +----------------------------------------------------------------------
+     12 +A. 数字版本混用（3 方法基线 vs 4 方法数据集）
+     13 +----------------------------------------------------------------------
+     14 +背景：Table 2 行内容是"3 方法（Gerber/Morrow/SWT；108 组合）"的分解
+     15 +（43.7 / 26.4 / 25.4 / 4.5，σ=0.246）；Table 3/4 及 aft_anova.json 是
+     16 +"4 方法（含 Goodman；144 组合）"的分解（39.1 / 35.3 / 23.5 / 2.5，
+     17 +σ=0.2084）。全文多处把两套数字混用并互标为"Table 2"。
+     18 +
+     19 +[ ] A1  Table 2 表内自相矛盾
+     20 +      - 标题/表头："(2×4×2×3×3 = 144 combinations; 92 run-outs)"
+     21 +      - 行内容：3 方法基线（43.7/26.4/25.4/4.5），脚注"Gerber, Morrow,
+     22 +        SWT only"且称"78% censoring rate of the 3-method design"
+     23 +      - §3.1 正文又称"3 方法基线、108 组合、84 run-outs"
+     24 +      -> 标题、脚注、正文三者需统一（并核对 108 组合数据集的截尾数）。
+     25 +
+     26 +[ ] A2  AFT 尺度参数 σ 两处不同
+     27 +      - §2.7.1 与 Table 2：σ = 0.246（3 方法基线，与
+     28 +        output/multi_aft_comparison.json、native_stress_sensitivity.json 一致）
+     29 +      - §3.1：σ = 0.208（4 方法模型，与 output/aft_anova.json 一致）
+     30 +      -> 同一处描述必须用同一模型的值。
+     31 +
+     32 +[ ] A3  交互项（Standard × Rz）三个值
+     33 +      - Table 2 / Table 3 基线列 / native_stress_sensitivity.json：4.5%
+     34 +      - Table 4 / aft_anova.json / §3.9 / §4.7：2.5%（4 方法）
+     35 +      - §3.1 正文描述 3 方法基线时写"2.5%"（应为 4.5%）
+     36 +      - bootstrap 均值 3.0%（4 方法）
+     37 +      -> §3.1 正文需改为 4.5%，或明确 2.5% 属 4 方法。
+     38 +
+     39 +[ ] A4  S–N 曲线源与损伤法则的方差分数
+     40 +      - §3.1 正文：S–N = −0.7%，damage = 0.3%（均为 4 方法值）
+     41 +      - 3 方法基线输出：sn_source = 0.0，damage = 0.1%
+     42 +        （native_stress_sensitivity.json、multi_aft_comparison.json）
+     43 +      - Table 2 表注：damage ∆logL = 0.1（<0.1%）
+     44 +      -> §3.1 / §3.5 需与 Table 2 统一。
+     45 +
+     46 +[ ] A5  "Table 2" 误标（实际引用的是 Table 3 的 4 方法数字）
+     47 +      - §2.5："differ by 0.3–0.4 pp from Table 2 (39.1%, 35.3%, 23.5%)"
+     48 +      - §3.3："the 39.1% mean-stress variance fraction reported in Table 2"
+     49 +      - §4.10："(39.1% of variance, Table 2)"、"removes an additional
+     50 +        35.3%"、"23.5% of the dominant triad"
+     51 +      - §4.12.2："reported standard-choice variance (35.3%)"
+     52 +      -> 全部应为 Table 3（4 方法），或改写为引用 4 方法结果。
+     53 +
+     54 +[ ] A6  表面粗糙度方差：23.5% vs 25.4%
+     55 +      - §3.4："Surface roughness contributes 23.5% of variance"
+     56 +        （23.5% 是 4 方法值；Table 2 的 3 方法基线为 25.4%）
+     57 +      -> 按讨论对象统一。
+     58 +
+     59 +[ ] A7  "三个因子合计 97.9%"的归属
+     60 +      - §2.2、§4.4、Fig.5 图注均称三主效应合计 97.9%
+     61 +      - 3 方法基线三主效应 = 43.7+26.4+25.4 = 95.5%
+     62 +      - 97.9% 仅对 4 方法成立（39.1+35.3+23.5）
+     63 +      -> 需注明该数字属含 Goodman 的 4 方法情景，或改用 95.5%。
+     64 +
+     65 +[ ] A8  截尾率 64% vs 78% 的混用
+     66 +      - 3 方法基线：84/108 = 77.8%（Table 2 表注正确写 78%）
+     67 +      - §3.5、§4.12.7 末尾、§4.12.8 在讨论 3 方法基线时写"64%"
+     68 +        （64% 是 144 组合数据集的 92/144）
+     69 +      - §2.7.1 "92 of 144 combinations are run-outs"（正确，指 144）
+     70 +      -> 明确每个数字对应的数据集。
+     71 +
+     72 +----------------------------------------------------------------------
+     73 +B. S–N 曲线参数与疲劳强度不自洽
+     74 +----------------------------------------------------------------------
+     75 +[ ] B1  Basquin 参数与"10^6 疲劳强度"互斥
+     76 +      - 论文（§2.2.1 等）：#68 σf′=1356, b=−0.055, σ(10^6)=679 MPa；
+     77 +        #66 σf′=1684, b=−0.070, σ(10^6)=626 MPa
+     78 +      - 按 Eq.(1) σa=σf′(2Nf)^b 复算：10^6 处 #68=610.5 MPa、
+     79 +        #66=609.9 MPa（相差 0.6 MPa，而非 53 MPa）
+     80 +      - 影响：§2.2.1"53 MPa 差异导致相似 run-out 阈值"的论证基础失效；
+     81 +        680/626 与 610/610 必须二选一并说明来源。
+     82 +
+     83 +[ ] B2  Table 5 的 σe 与全文矛盾
+     84 +      - Table 5：Waterloo #66 (σe=550)、#68 (σe=500)
+     85 +      - 全文（§2.2.1/§3.5/§3.7/§4.11/结论）：#68=679 > #66=626
+     86 +      - 且两者高低排序相反：#68 在 Table 5 中反而更低
+     87 +      - §4.9 据此称 #68 为"lower-endurance curve"，与 §2.2.1 冲突
+     88 +      -> 统一 σe 取值与排序。
+     89 +
+     90 +[ ] B3  数据来源声明与代码冲突
+     91 +      - 论文声明疲劳强度 679/626 来自 Waterloo SMDIdbase（免费公开）
+     92 +      - gear_params.py 注释：σf′/b 来自 SMDIdbase PDF；10^6 疲劳强度
+     93 +        来自本地文件"材料力学性能测试数据表.xlsx (SAE Phase data)"
+     94 +      - 复现包中未包含该 xlsx（实际在 paper/ref_papers/ 下）
+     95 +      -> 需在论文中如实说明来源，并在复现包中附上数据或链接。
+     96 +
+     97 +----------------------------------------------------------------------
+     98 +C. 寿命跨度与极端组合（数据可复现性问题）
+     99 +----------------------------------------------------------------------
+    100 +[ ] C1  §3.7 "最长有限寿命"错误
+    101 +      - 论文："the longest to ISO 6336 with Gerber correction applied
+    102 +        to a ground surface"
+    103 +      - sweep.json：ISO+Gerber+ground 是 run-out（∞）；有限寿命最大为
+    104 +        AGMA+SWT+machined+#66+Miner（log10=5.76）
+    105 +      - 且与 §3.4"Rz=4 µm 时 ISO 全部 run-out"自相矛盾
+    106 +
+    107 +[ ] C2  §4.9 最保守组合寿命错误
+    108 +      - 论文："FKM+Goodman+as-forged+#68+Modified Miner 预测中位寿命
+    109 +        约 10^2.95 ≈ 890 周"
+    110 +      - sweep.json 实际：该组合 log10(Nf)=2.522 → 333 周
+    111 +      - Fig.4 自己的最小值也是 3.3×10^2（333 周）
+    112 +
+    113 +[ ] C3  §4.9 "最不保守组合中位 log10(Nf)=7.22"不存在
+    114 +      - ISO+Morrow+ground 在基线框架下为 run-out（σeff < 626）
+    115 +      - 全部 144 组合有限寿命最大仅 5.76；10^6 截尾下中位数不可能 >6
+    116 +      - 7.22 疑似来自 Basquin-only 无阈值外推情景（threshold_sensitivity
+    117 +        的 bq_none，spread=6.0 dex），与 §4.9 的表述框架不符
+    118 +
+    119 +[ ] C4  寿命量级表述前后矛盾（需统一为 3.2 dex）
+    120 +      - Fig.4 / §3.7 / 结论：3.2 dex（3.3×10^2 ~ 5.8×10^5）
+    121 +      - §4.1 / §4.9 末段："two orders of magnitude"
+    122 +      - §4.6："five orders of magnitude"
+    123 +      - §4.9：保守 vs 不保守组合 4.3 dex、隐含安全系数 ~1.9×10^4
+    124 +      - 结论 5：同一比较"approximately 10^2.5"
+    125 +      -> 同一组比较只能有一个数值。
+    126 +
+    127 +----------------------------------------------------------------------
+    128 +D. 扭矩依赖性（§3.6 / §4.5 / §4.12.7 / Table 4）
+    129 +----------------------------------------------------------------------
+    130 +[ ] D1  500 N·m 截尾数自相矛盾
+    131 +      - §3.6："all 144 combinations predict run-out... zero finite-life
+    132 +        observations"（当前代码重算 = 144 全部 run-out，此说法正确）
+    133 +      - §4.12.7："At 500 N·m (130/144 run-out, 90% censoring)"
+    134 +      - shipped multi_torque_aft.json：n_finite=14, n_censored=130
+    135 +      -> 三处需统一（以当前代码重算为准：0 有限 / 144 截尾）。
+    136 +
+    137 +[ ] D2  600 N·m 截尾数与"不可识别"矛盾
+    138 +      - §3.6："only 10 of 144... (134/144 censored)"（当前代码重算一致）
+    139 +      - §3.6 同时称 AFT 分解 underdetermined / NaN（与 10 个有限观测一致）
+    140 +      - shipped multi_torque_aft.json：n_finite=60, n_censored=84，
+    141 +        且给出完整分解（MS 34.7 / Std 32.7 / Rz 22.8 / S–N 8.3）
+    142 +      - Table 4 图注："500 and 600 N·m excluded because AFT not identified"
+    143 +      -> shipped 输出为旧版本，与正文/当前代码冲突；需要重跑替换。
+    144 +
+    145 +[ ] D3  §4.5 的数字出处不明
+    146 +      - "Standard × Rz interaction (17.8%) ... mean-stress (10.2%)"
+    147 +        与 multi_torque_anova.json 600 块一致（该文件为旧数据集，
+    148 +        且其 600 块 n_valid=60，与 §3.6 的 10 个有限观测矛盾）
+    149 +      - "At 700 N·m ... mean-stress correction rises to 30.3%"：
+    150 +        与 Table 2（26.4%）、Table 3（39.1%）、aft_anova.json
+    151 +        （39.1%）、multi_torque_anova.json 700 块（30.9%）均不一致
+    152 +      -> 30.3% 需给出明确出处或删除；§4.5 需注明所用框架
+    153 +        （ANOVA vs AFT）与数据集。
+    154 +
+    155 +[ ] D4  multi_torque_anova.json 元数据 bug
+    156 +      - "500"/"600"/"700" 三个块的 "torque" 字段全部 = 700.0
+    157 +      - 随附文件与正文声明"reproduce.sh 复现全部数值"不符
+    158 +
+    159 +----------------------------------------------------------------------
+    160 +E. 随附复现包（output/*.json）与正文不一致
+    161 +----------------------------------------------------------------------
+    162 +[ ] E1  700 N·m 截尾数两个版本
+    163 +      - 主分析（sweep.json / aft_anova.json / threshold_sensitivity.json /
+    164 +        ka_sensitivity.json）：52 有限 / 92 截尾（与正文一致）
+    165 +      - multi_torque_aft.json：116 有限 / 28 截尾（旧版本）
+    166 +      -> 重跑多扭矩分析并替换输出。
+    167 +
+    168 +[ ] E2  sweep_summary.json 扭矩字段 = 350 N·m（实际按 700 计算）
+    169 +      - run_sweep.py 的 docstring 还写"972 combinations / 6 switches"
+    170 +      -> 更新元数据与注释。
+    171 +
+    172 +[ ] E3  §4.12.5 引用的 log-normal 分解与 Table 2 不同
+    173 +      - §4.12.5 / multi_aft_comparison.json：Std 45.7、MS 27.6、
+    174 +        Rz 26.5（无交互项）
+    175 +      - Table 2 / native_stress_sensitivity.json：Std 43.7、MS 26.4、
+    176 +        Rz 25.4、交互 4.5（含交互项）
+    177 +      - 两者都自称"3 方法 log-normal 结果"，需说明差异原因
+    178 +        （是否因交互项是否纳入模型），并统一呈现。
+    179 +
+    180 +[ ] E4  "reproduce.sh 复现本文所有数值"声明不成立
+    181 +      - 至少 multi_torque、KA（截尾数恒 92）、Table 5/§4.9 的数字
+    182 +        与随附数据或当前代码不一致
+    183 +      -> 全面重跑、更新全部 output，并加一个自动一致性检查脚本。
+    184 +
+    185 +----------------------------------------------------------------------
+    186 +F. 统计 / 方法学问题
+    187 +----------------------------------------------------------------------
+    188 +[ ] F1  Bootstrap CI 与 Table 2 点估计互斥
+    189 +      - §3.8 / aft_anova.json（4 方法 bootstrap）：
+    190 +        MS 均值 38.6，CI [33.3, 43.7]；Std 35.0，CI [30.8, 39.9]
+    191 +      - Table 2（3 方法）：MS 26.4，Std 43.7 —— 均落在 CI 之外
+    192 +      - Fig.3 图注却称 bootstrap"确认 Table 2 的方差分数稳健"
+    193 +      -> 要么对 3 方法基线做 bootstrap，要么如实说明 bootstrap
+    194 +        仅验证 4 方法模型。
+    195 +
+    196 +[ ] F2  Cox-Snell 诊断被错误描述为"可接受"
+    197 +      - aft_diagnostics.json：mean=0.4477（目标 1.0）、
+    198 +        KS vs Exp(1)=0.4914（n=144 时临界值约 0.11）
+    199 +      - §3.2 / §4.12.5："acceptable agreement (KS=0.49)"
+    200 +      -> 该拟合偏差明显，不能称 acceptable；需解释或改进模型。
+    201 +
+    202 +[ ] F3  诊断数字不一致
+    203 +      - §3.2 / Fig.1：R²=0.966；aft_diagnostics.json：
+    204 +        qq_plot_r_squared=0.9848
+    205 +      - 标准化残差偏度 −1.22（JSON 有，论文未报告）
+    206 +      -> 统一 R² 并考虑报告偏度。
+    207 +
+    208 +[ ] F4  KA 敏感性分析实现缺陷（ka_sensitivity.py）
+    209 +      - 只对有限寿命条目做解析缩放；run-out 条目永远保持 run-out
+    210 +        （"was run-out but now finite-life"分支返回 inf，为死代码）
+    211 +      - 结果：KA=1.0/1.25/1.5 三个水平截尾数恒为 92
+    212 +      - 与正文"At higher KA... pushing the operating point further
+    213 +        above the endurance limit"的物理描述矛盾
+    214 +      - ka_sensitivity.json 的 method 字段称"Full 144-combination
+    215 +        sweep recomputed"，与实际实现不符
+    216 +      -> 需真正重算（允许 run-out → finite 转换），或如实说明近似。
+    217 +
+    218 +[ ] F5  "native stress chain"校验的表述夸大
+    219 +      - 代码注释自认：Kt 为"calibrated engineering estimator, not a
+    220 +        published formula"（原 Dolan & Broghamer 引用为错误）；
+    221 +        Neuber a′="calibrated"值
+    222 +      - 论文却把该校验描述为"Peterson/Neuber 计算"
+    223 +      - Kf 数值两套：Peterson 1.84 / Neuber 1.75（native_stress_sensitivity
+    224 +        .json）vs §4.12.1 "Kf ≈ 1.3–1.7"
+    225 +      - 1/J 两套：3.03（J=0.33，§2.3）vs "2.6–3.3"（§4.12.1）
+    226 +      -> 统一数值并如实说明 Kt/Kf 的近似性质。
+    227 +
+    228 +[ ] F6  "±7%"与"19%"矛盾
+    229 +      - §2.3 / §4.12.1：YSa=1.55、1/J≈3.03、Kf≈1.84"互相在 ±7% 以内"
+    230 +      - 同一节又写"Kf/YSa ≈ 1.19，a 19% increase"
+    231 +      - 1/J 与 YSa 原始值相差约 95%（只有归一化到 YFa·Yε 后才接近）
+    232 +      -> 需明确比较口径，不能同时保留 ±7% 与 19%。
+    233 +
+    234 +[ ] F7  YSa 基线偏差的三种说法
+    235 +      - §2.3 / native_stress_sensitivity.json：−0.1 pp
+    236 +      - §4.10："at most ±3 pp"
+    237 +      - §4.12.2："2–6 pp"
+    238 +      -> 统一为一种（以重算结果为准）。
+    239 +
+    240 +[ ] F8  ISO Rz 封顶影响：+0.1 pp vs +0.3 pp
+    241 +      - §3.4："(+0.1 pp on the interaction term)"
+    242 +      - §4.12.3 / Data availability："+0.3 pp"
+    243 +      -> 统一。
+    244 +
+    245 +[ ] F9  模型选择表述问题
+    246 +      - §4.12.5：log-logistic AIC 比 log-normal 低 9.4（通常认为
+    247 +        差异显著），被称作"modestly better"，且主分析仍用 log-normal
+    248 +        （理由为 Sobol' 等价性）——需更透明地讨论这一取舍
+    249 +      - §3.2 的 Weibull 对比（∆AIC=+29.7）基于 72 组合子集，而
+    250 +        log-logistic/Gamma 对比基于 108 组合基线——两个对比的数据集
+    251 +        不同，论文未明确说明口径差异
+    252 +
+    253 +[ ] F10 结论 6"所有公式均经原始标准核实"无法支撑
+    254 +      - 代码注释存在"simplified"（FKM Kd）、"engineering approximation"
+    255 +        （Kt）等字样
+    256 +      -> 删除或弱化该声明。
+    257 +
+    258 +----------------------------------------------------------------------
+    259 +G. 正文矛盾与编辑问题
+    260 +----------------------------------------------------------------------
+    261 +[ ] G1  §3.3 自相矛盾
+    262 +      - 前句："contradicts the common assumption that mean-stress
+    263 +        effects are negligible for gear bending at R=0"
+    264 +      - 后句："This finding does not contradict the traditional
+    265 +        engineering view that mean-stress effects are minor at R=0"
+    266 +      -> 二选一并统一措辞。
+    267 +
+    268 +[ ] G2  §3.4 与 §3.7 冲突
+    269 +      - §3.4："at Rz=4 µm (ground), ISO entries are entirely run-out"
+    270 +      - §3.7："the longest [finite life] to ISO 6336 with Gerber
+    271 +        correction applied to a ground surface"
+    272 +      -> 以 sweep.json 为准（ISO+ground 全部 run-out），修正 §3.7。
+    273 +
+    274 +[ ] G3  §3.1 算术错误
+    275 +      - "3 × 3 × 2 × 3 × 3 = 108 combinations"（实际 = 162；
+    276 +        108 应为 2×3×2×3×3）
+    277 +
+    278 +[ ] G4  §4.9 措辞与框架矛盾
+    279 +      - "least conservative combination that still produces
+    280 +        finite-life predictions for some S–N curves"——但该组合在
+    281 +        基线框架下对两条曲线都是 run-out；"有限寿命"仅在不设阈值
+    282 +        的外推情景下成立
+    283 +
+    284 +[ ] G5  残句与重复词组
+    285 +      - §4.7："...preserves the correct factor ordering.), which in
+    286 +        practice requires..."（编辑残留）
+    287 +      - §3.5："framework is a addressed in Phase 2"
+    288 +      - 引言："a simultaneous full-factorial simultaneous variance
+    289 +        decomposition"
+    290 +      - §4.6："the correction factors in the correction factors in
+    291 +        this section"
+    292 +
+    293 +[ ] G6  §4.12.5 整段重复
+    294 +      - "The log-normal is retained for three further reasons: (i)...
+    295 +        (iii)..." 之后紧接着几乎逐字重复的
+    296 +        "The log-normal is retained for three reasons: (i)... (iii)..."
+    297 +      - 其后 Levene 检验段落亦重复两遍
+    298 +      -> 删除其中一个版本。
+    299 +
+    300 +[ ] G7  参考文献问题
+    301 +      - [6] SMDIdbase URL 在 PDF 中截断（止于 .../SMDIdbase/Steel/）
+    302 +      - Du et al. (2022, Int. J. Fatigue 155: 106575)：外部检索显示
+    303 +        正确文章号为 106578（"Implementation of Sobol's sensitivity
+    304 +        analysis to cyclic plasticity model with parameter
+    305 +        uncertainty"，Du, Li, Luo）
+    306 +      - §4.3 与 §4.4 中 Wang et al. 的试验描述几乎逐字重复两遍
+    319 +[ ] H4  重跑全部多扭矩/KA/threshold/Table 5 分析，更新 output/*.json，
+    320 +        修复元数据 bug，删除 30.3%、17.8%/10.2% 等无出处数字
+    321 +        （D1–D4、E1–E2、F4）。
+    322 +[ ] H5  重做 3 方法基线的 bootstrap（或明确 bootstrap 仅验证 4 方法），
+    323 +        修正 Cox-Snell/KS 与 R² 的表述（F1–F3）。
+    324 +[ ] H6  统一 native stress-chain 的数值与口径（±7% vs 19%、Kf 取值、
+    325 +        1/J 范围、YSa 偏差、Rz 封顶影响）（F5–F8）。
+    326 +[ ] H7  修正正文自相矛盾与编辑问题（G1–G6），更新参考文献
+    327 +        （[6] URL、Du et al. 文章号）（G7）。
+    328 +[ ] H8  全文重读一遍，确认"所有数字均可由随附复现包重新生成"，
+    329 +        再考虑投稿。
+    330 +
+    331 +======================================================================
+    332 +（本清单由 2026-08-04 全面核对生成；核对范围：v4.0 PDF 全文、
+    333 + tex 源码、复现包代码与输出。后续修正时请在对应条目打勾并注明版本。）
+    334 +======================================================================
+
+✔ You approved codex to always run commands that start with ls -la '/mnt/d/Papers/0723-Gear_Fatigue_UQ/paper/审稿问题清单_v4.0.txt'
+
+• Explored
+  └ List 审稿问题清单_v4.0.txt
+
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+• 已写入文档：0723-Gear_Fatigue_UQ/paper/审稿问题清单_v4.0.txt（334 行，与 PDF 同目录，方便你后续边改边对照）。
+
+  文档结构：
+
+  - A. 数字版本混用（A1–A8）：Table 2 自相矛盾、σ 0.246/0.208、交互项 2.5/4.5/3.0、"Table 2" 误标、97.9% 归属、64%/78% 截尾率等。
+  - B. S–N 参数不自洽（B1–B3）：679/626 与 Basquin 复算（约 610/610 MPa）互斥、Table 5 的 σe=550/500、数据来源声明冲突。
+  - C. 寿命跨度与极端组合（C1–C4）："890 周"应为 333 周、"7.22"不存在、3.2 dex 与 five orders/10^2.5 等量级矛盾。
+  - D. 扭矩依赖性（D1–D4）：500/600 N·m 截尾数三处不一致、30.3% 无出处。
+  - E. 随附复现包不一致（E1–E4）：multi_torque 旧数据、扭矩元数据 bug、"复现所有数值"声明不成立。
+  - F. 统计/方法学（F1–F10）：bootstrap CI 不含点估计、KS=0.49 被称"可接受"、KA 敏感性死代码、±7% vs 19%、Kf/1/J 两套数值等。
+  - G. 正文矛盾与编辑（G1–G7）：§3.3 自相矛盾、§3.4 vs §3.7、残句重复段、引用 [6] URL 截断、Du et al. 文章号 106575→106578。
+  - H. 后续修正清单（H1–H8）：按优先级排列的待办，每条可打勾跟踪（[ ]/[~]/[x]）。
+
+  每条都标注了问题位置、论文原话/数值、以及我核对到的实际数据出处，方便你直接对着改。接下来想从哪条开始？我建议先做 H1（统一 3 方法/4 方法数据
+  集），因为大部分数字冲突都源于这个根因。

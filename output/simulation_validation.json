@@ -1,0 +1,128 @@
+{
+  "description": "Monte Carlo validation of drop-one-factor LR variance decomposition on a balanced full-factorial log-normal AFT model",
+  "generative_model": {
+    "n_design": 144,
+    "n_factors": 5,
+    "sigma_true": 0.1745,
+    "total_explained_variance_dex2": 0.9,
+    "censoring_threshold_log10Nf": 6.0,
+    "target_censoring_fraction": 0.3,
+    "mu_true": 5.48,
+    "true_variance_shares_%": {
+      "mean_stress_method": 40.0,
+      "size_surface_standard": 30.0,
+      "rz_level": 20.0,
+      "sn_source": 5.0,
+      "damage_method": 5.0,
+      "interaction": 0.0
+    },
+    "true_sobol_first_order_%": {
+      "mean_stress_method": 40.0,
+      "size_surface_standard": 30.0,
+      "rz_level": 20.0,
+      "sn_source": 5.0,
+      "damage_method": 5.0
+    }
+  },
+  "simulation": {
+    "n_sims": 500,
+    "n_completed": 500,
+    "n_skipped": 0,
+    "bootstrap_B": 100,
+    "rng_seed": 42,
+    "per_factor": {
+      "mean_stress_method": {
+        "true_%": 40.0,
+        "mean_recovered_%": 36.6,
+        "bias_pp": -3.4,
+        "rmse_pp": 3.72,
+        "empirical_95%_interval": [
+          33.8,
+          39.5
+        ]
+      },
+      "size_surface_standard": {
+        "true_%": 30.0,
+        "mean_recovered_%": 31.5,
+        "bias_pp": 1.49,
+        "rmse_pp": 2.09,
+        "empirical_95%_interval": [
+          28.7,
+          34.5
+        ]
+      },
+      "rz_level": {
+        "true_%": 20.0,
+        "mean_recovered_%": 21.1,
+        "bias_pp": 1.13,
+        "rmse_pp": 1.79,
+        "empirical_95%_interval": [
+          18.5,
+          23.9
+        ]
+      },
+      "sn_source": {
+        "true_%": 5.0,
+        "mean_recovered_%": 5.3,
+        "bias_pp": 0.33,
+        "rmse_pp": 0.9,
+        "empirical_95%_interval": [
+          3.9,
+          7.0
+        ]
+      },
+      "damage_method": {
+        "true_%": 5.0,
+        "mean_recovered_%": 5.3,
+        "bias_pp": 0.31,
+        "rmse_pp": 0.87,
+        "empirical_95%_interval": [
+          3.8,
+          7.0
+        ]
+      }
+    },
+    "rank_recovery_exact_order": 0.5,
+    "rank_recovery_top3_order": 0.982,
+    "mean_spearman_rho": 0.973,
+    "bootstrap_coverage": {
+      "mean_stress_method": 0.92,
+      "size_surface_standard": 0.987,
+      "rz_level": 0.96,
+      "sn_source": 0.953,
+      "damage_method": 0.94
+    },
+    "bootstrap_coverage_n_sims": 150
+  },
+  "sobol_equivalence": {
+    "n_sims": 500,
+    "pooled_R2_LR_vs_Sobol": 0.9933,
+    "note": "Sobol' first-order indices computed on the deterministic model output eta; LR fractions from AFT on complete data (no censoring)."
+  },
+  "censoring_envelope": {
+    "0.15": {
+      "bias_pp_dominant": -1.46,
+      "max_abs_bias_pp": 1.46,
+      "rmse_pp_dominant": 2.08,
+      "top3_rank_recovery": 1.0
+    },
+    "0.3": {
+      "bias_pp_dominant": -3.19,
+      "max_abs_bias_pp": 3.19,
+      "rmse_pp_dominant": 3.51,
+      "top3_rank_recovery": 0.983
+    },
+    "0.45": {
+      "bias_pp_dominant": -5.23,
+      "max_abs_bias_pp": 5.23,
+      "rmse_pp_dominant": 5.47,
+      "top3_rank_recovery": 0.803
+    },
+    "0.58": {
+      "bias_pp_dominant": -7.01,
+      "max_abs_bias_pp": 7.01,
+      "rmse_pp_dominant": 7.18,
+      "top3_rank_recovery": 0.527
+    }
+  }
+}

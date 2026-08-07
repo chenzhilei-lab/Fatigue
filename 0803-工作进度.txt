@@ -1,0 +1,59 @@
+============================================================
+0803 工作进度 — v4.0 JMST 投稿准备
+============================================================
+
+一、v3.7 → v4.0 版本变更审计
+
+  v3.7 已知问题及修复（全部携带至 v4.0）：
+  - Bonaiti knee 修正: 1-2e6 → <5e5
+  - 编造 Wang benchmark (2.1-3.3 dex) 删除 → 诚实披露：所有144组合预测run-out
+  - 编造 Bonaiti damage-rule claim 删除
+  - 4 条未引用文献修复
+  - Shapiro-Wilk W 修正: 0.983 → 0.982 (真值: 0.9817)
+
+  v4.0 新增：
+  - 双栏 JMST 格式 + 双盲匿名化
+  - 摘要缩短 (~900字符)
+  - 残差诊断：Cox-Snell + Martingale + Q-Q + Levene
+  - Y_Sa 不对称量化：ysa_sensitivity.py (合理范围 +2.1pp)
+  - K_A 载荷系数敏感性：ka_sensitivity.py (1.0/1.25/1.5)
+  - Factor-Level Dependence 新节（Discussion §Factor-Level Dependence）
+  - 变量选择论证（Methods §2.2）
+  - 绝对化声称删除："the first to"、"No prior"、"All authors"
+
+二、DB 审稿人五项强制整改闭合
+
+  ① AFT→删失 ✅ (v2.9)
+  ② 残差诊断 ✅ Cox-Snell + Martingale + Q-Q + Shapiro-Wilk + Levene
+  ③ Y_Sa 量化 ✅ ysa_sensitivity.py
+  ④ K_A 敏感性 ✅ ka_sensitivity.py
+  ⑤ 声称限定 ✅ 全文扫描，零"the first"/"No prior"
+
+三、严重关切修复
+
+  1. 循环论证/范畴错误 → Discussion 新增 Factor-Level Dependence 节
+                      → Conclusions #1/#3 重写
+                      → Abstract 加 "and factor levels" 限定
+  2. 虚假 Wang 引用 → "2.1-3.3 dex" 三处全部删除
+                    → §sec:method_dominates 重写（诚实：无法定量对比）
+                    → 五文献综述末段重写（methodology-demonstration case study）
+
+四、投稿文件清单
+
+  paper/
+  ├── gear_fatigue_v4.0.tex           ← 正文（双栏,匿名,28pp）
+  ├── gear_fatigue_v4.0.pdf           ← 编译PDF
+  ├── gear_fatigue_v4.0_title_page.tex ← 标题页
+  ├── cover_letter_v4.0.tex           ← 投稿信
+  └── gear_fatigue_v3.7.*             ← IJF版本保留
+
+  新增脚本:
+  ├── aft_residual_diagnostics.py     ← Cox-Snell + Martingale 诊断
+  ├── ysa_sensitivity.py              ← Y_Sa 不对称量化
+  └── ka_sensitivity.py               ← K_A 载荷敏感性
+
+五、待确认
+
+  - Springer svjour3 模板：如 JMST 编辑部要求，需迁移
+  - 图片格式：如要求 .eps，需转换
+  - 推荐审稿人邮箱：确认 Bonaiti/Pagliari/Concli

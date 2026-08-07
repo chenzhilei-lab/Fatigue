@@ -1,0 +1,51 @@
+{
+  "design": "144-combination chain at 5 torque levels; AFT incl. Std x Rz interaction vs Sobol' S1 (finite entries only)",
+  "reference_anchor": "at 700 N*m (58% censoring) the gap reproduces Table 4's ~26.6 pp",
+  "points": [
+    {
+      "torque_Nm": 600.0,
+      "censoring_%": 88.9,
+      "n_finite": 16,
+      "aft_standard_share_%": 40.1,
+      "sobol_standard_share_%": 0.0,
+      "gap_pp": 40.1,
+      "logLik_full": -10.83
+    },
+    {
+      "torque_Nm": 650.0,
+      "censoring_%": 76.4,
+      "n_finite": 34,
+      "aft_standard_share_%": 50.4,
+      "sobol_standard_share_%": 16.4,
+      "gap_pp": 34.0,
+      "logLik_full": 7.22
+    },
+    {
+      "torque_Nm": 700.0,
+      "censoring_%": 58.3,
+      "n_finite": 60,
+      "aft_standard_share_%": 55.3,
+      "sobol_standard_share_%": 28.7,
+      "gap_pp": 26.5,
+      "logLik_full": 11.32
+    },
+    {
+      "torque_Nm": 750.0,
+      "censoring_%": 41.7,
+      "n_finite": 84,
+      "aft_standard_share_%": 52.6,
+      "sobol_standard_share_%": 40.4,
+      "gap_pp": 12.1,
+      "logLik_full": 15.84
+    },
+    {
+      "torque_Nm": 800.0,
+      "censoring_%": 26.4,
+      "n_finite": 106,
+      "aft_standard_share_%": 47.0,
+      "sobol_standard_share_%": 47.9,
+      "gap_pp": -0.9,
+      "logLik_full": 1.96
+    }
+  ]
+}

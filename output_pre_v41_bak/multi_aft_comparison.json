@@ -1,0 +1,35 @@
+{
+  "description": "Multi-distribution AFT comparison for 3-method baseline",
+  "distributions": {
+    "log_normal": {
+      "sigma": 0.246,
+      "logLik": -21.59,
+      "AIC": 63.2
+    },
+    "log_logistic": {
+      "sigma": 0.201,
+      "logLik": -16.9,
+      "AIC": 53.8
+    },
+    "gamma": {
+      "sigma": 0.6639,
+      "logLik": -302.22,
+      "AIC": 624.4
+    }
+  },
+  "best_model": "log-logistic",
+  "log_normal_decomposition": {
+    "mean_stress_method": 27.6,
+    "size_surface_standard": 45.7,
+    "rz_level": 26.5,
+    "sn_source": 0.0,
+    "damage_method": 0.1
+  },
+  "log_logistic_decomposition": {
+    "mean_stress_method": 26.3,
+    "size_surface_standard": 46.9,
+    "rz_level": 26.4,
+    "sn_source": 0.0,
+    "damage_method": 0.4
+  }
+}

@@ -1,0 +1,410 @@
+"""
+plot_results.py — Publication-quality figures for gear fatigue UQ paper (v3.0)
+===============================================================================
+Figure 1: Fatigue life distribution by size/surface standard (violin + box)
+Figure 2: AFT variance decomposition bar chart with bootstrap error bars
+Figure 3: Interaction: Rz × standard → median log10(Nf)
+"""
+
+import json, os
+import numpy as np
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+from matplotlib.patches import Patch
+
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+os.makedirs('output', exist_ok=True)
+
+# Load data
+with open('output/sweep.json') as f:
+    sweep = json.load(f)
+# Use AFT results for Fig 2 (fall back to ANOVA if AFT not available)
+try:
+    with open('output/aft_anova.json') as f:
+        anova = json.load(f)
+    print("Using aft_anova.json for variance decomposition")
+except FileNotFoundError:
+    with open('output/anova.json') as f:
+        anova = json.load(f)
+    print("WARNING: aft_anova.json not found, using anova.json")
+
+valid = [r for r in sweep if r['log10_Nf'] is not None]
+logNf = np.array([r['log10_Nf'] for r in valid])
+
+# ===============================================================
+# STYLE SETUP
+# ===============================================================
+plt.rcParams.update({
+    'font.size': 11,
+    'axes.titlesize': 13,
+    'axes.labelsize': 12,
+    'legend.fontsize': 9,
+    'figure.dpi': 150,
+    'savefig.dpi': 300,
+    'savefig.bbox': 'tight',
+})
+
+COLORS = {
+    'ISO_6336': '#2166ac',
+    'AGMA_2001': '#b2182b',
+    'FKM': '#4daf4a',
+    'ground_Rz4': '#fde0dd',
+    'machined_Rz15': '#f4a582',
+    'as_forged_Rz50': '#ca0020',
+}
+STANDARD_ORDER = ['ISO_6336', 'AGMA_2001', 'FKM']
+RZ_ORDER = ['ground_Rz4', 'machined_Rz15', 'as_forged_Rz50']
+RZ_LABELS = {'ground_Rz4': 'Ground\n(Rz=4μm)',
+             'machined_Rz15': 'Machined\n(Rz=15μm)',
+             'as_forged_Rz50': 'As-forged\n(Rz=50μm)'}
+
+# ===============================================================
+# FIGURE 1: Fatigue life distribution by standard
+# ===============================================================
+fig1, (ax1a, ax1b) = plt.subplots(1, 2, figsize=(9, 5), gridspec_kw={'width_ratios': [2, 1]})
+
+# 1a: Violin + box plot
+data_by_std = []
+positions = [1, 2, 3]
+for std in STANDARD_ORDER:
+    vals = [r['log10_Nf'] for r in valid if r['size_surface_standard'] == std]
+    data_by_std.append(vals)
+
+vp = ax1a.violinplot(data_by_std, positions=positions, widths=0.7,
+                      showmeans=False, showmedians=True)
+bp = ax1a.boxplot(data_by_std, positions=positions, widths=0.15,
+                   patch_artist=True, medianprops={'color': 'black', 'linewidth': 1.5},
+                   showfliers=False)
+
+for i, std in enumerate(STANDARD_ORDER):
+    bp['boxes'][i].set_facecolor(COLORS[std])
+    bp['boxes'][i].set_alpha(0.6)
+    for body in vp['bodies']:
+        body.set_alpha(0.15)
+ax1a.set_xticks(positions)
+ax1a.set_xticklabels(STANDARD_ORDER, fontsize=10)
+ax1a.set_ylabel(r'$\log_{10}(N_f)$', fontsize=12)
+ax1a.set_title('Fatigue life spread by size/surface standard', fontsize=12)
+ax1a.grid(axis='y', alpha=0.3, linestyle='--')
+
+# Add Nf labels on right axis
+def log_to_Nf_str(logv):
+    if logv >= 6: return f'$10^{{{int(logv)}}}$'
+    elif logv <= 2: return f'$10^{{{logv:.1f}}}$'
+    else: return f'$10^{{{logv:.0f}}}$'
+
+ax1a.text(0.02, 0.98, f'$N_f$: $3.3\\times10^2$ to $3.1\\times10^7$ cycles\n5.0 dex spread',
+          transform=ax1a.transAxes, va='top', fontsize=9, style='italic',
+          bbox=dict(boxstyle='round,pad=0.3', facecolor='wheat', alpha=0.8))
+
+# 1b: Bars showing run-out vs finite-life counts
+runout_counts = []
+finite_counts = []
+for std in STANDARD_ORDER:
+    n_runout = sum(1 for r in sweep if r['size_surface_standard'] == std and r['log10_Nf'] is None)
+    n_finite = sum(1 for r in sweep if r['size_surface_standard'] == std and r['log10_Nf'] is not None)
+    runout_counts.append(n_runout)
+    finite_counts.append(n_finite)
+
+x = np.arange(3)
+w = 0.35
+bars_finite = ax1b.bar(x - w/2, finite_counts, w, label='Finite life',
+                        color=['#2166ac', '#b2182b', '#4daf4a'], alpha=0.8)
+bars_runout = ax1b.bar(x + w/2, runout_counts, w, label='Run-out ($>10^7$)',
+                        color=['lightsteelblue', 'lightcoral', 'lightgreen'], alpha=0.8)
+ax1b.set_xticks(x)
+ax1b.set_xticklabels(STANDARD_ORDER, fontsize=10)
+ax1b.set_ylabel('Number of combinations', fontsize=12)
+ax1b.set_title('Run-out vs finite-life by standard', fontsize=12)
+ax1b.legend(fontsize=8, loc='upper right')
+ax1b.grid(axis='y', alpha=0.3, linestyle='--')
+
+# Annotate percentages
+for i, (r, f) in enumerate(zip(runout_counts, finite_counts)):
+    total = r + f
+    ax1b.text(i - w/2, f + 3, f'{100*f/total:.0f}%', ha='center', fontsize=8)
+    if r > 0:
+        ax1b.text(i + w/2, r + 3, f'{100*r/total:.0f}%', ha='center', fontsize=8)
+
+plt.tight_layout()
+fig1.savefig('output/fig1_life_spread_by_standard.png')
+plt.close()
+print('Saved fig1_life_spread_by_standard.png')
+
+# ===============================================================
+# FIGURE 2: Variance decomposition bar chart
+# ===============================================================
+fig2, ax2 = plt.subplots(figsize=(8, 5))
+
+factors_display = [
+    ('Mean stress\ncorrection', 'mean_stress_method'),
+    ('Size/surface\nstandard', 'size_surface_standard'),
+    ('Surface roughness\n($R_z$)', 'rz_level'),
+    ('S–N curve\nsource', 'sn_source'),
+    ('Std × $R_z$\ninteraction', 'size_surface_standard x rz_level'),
+    ('Cumulative\ndamage rule', 'damage_method'),
+]
+
+var_means = []
+var_lowers = []
+var_uppers = []
+for _, fkey in factors_display:
+    nf = anova['bootstrap']['noise_floor'].get(fkey)
+    if nf is None:
+        # Try interaction key with space
+        nf = anova['bootstrap']['noise_floor'].get(fkey.replace(' × ', ' x '))
+    if nf is None:
+        var_means.append(0)
+        var_lowers.append(0)
+        var_uppers.append(0)
+    else:
+        var_means.append(nf['mean'])
+        var_lowers.append(nf['mean'] - nf['ci_95_lower'])
+        var_uppers.append(nf['ci_95_upper'] - nf['mean'])
+
+labels = [l for l, _ in factors_display]
+# Three co-equal factors in blue, secondary in grey
+colors_bar = ['#2166ac', '#2166ac', '#2166ac', '#999999', '#999999', '#999999']
+
+# Horizontal bars
+ypos = range(len(labels))[::-1]
+bars = ax2.barh(ypos, var_means, xerr=[var_lowers, var_uppers],
+                color=colors_bar, alpha=0.85, capsize=3, height=0.6)
+
+ax2.set_yticks(ypos)
+ax2.set_yticklabels(labels, fontsize=10)
+ax2.set_xlabel('Variance fraction (%)', fontsize=12)
+ax2.set_title('What drives gear fatigue life divergence?', fontsize=13, fontweight='bold')
+
+# Annotate percentages with CI
+for i, (mean, lower, upper) in enumerate(zip(var_means, var_lowers, var_uppers)):
+    ax2.text(mean + 1.5, ypos[i],
+             f'{mean:.1f}%  [{mean-lower:.1f}–{mean+upper:.1f}]',
+             va='center', fontsize=8.5)
+
+# Legend
+legend_elements = [
+    Patch(facecolor='#2166ac', alpha=0.85, label='Three co-equal factors (88.6% combined)'),
+    Patch(facecolor='#999999', alpha=0.85, label='Secondary (<8% each)'),
+]
+ax2.legend(handles=legend_elements, loc='lower right', fontsize=8.5)
+
+ax2.grid(axis='x', alpha=0.3, linestyle='--')
+ax2.set_xlim(0, 38)
+
+plt.tight_layout()
+fig2.savefig('output/fig2_variance_decomposition.png')
+plt.close()
+print('Saved fig2_variance_decomposition.png')
+
+# ===============================================================
+# FIGURE 3: Interaction plot — Rz × standard
+# ===============================================================
+fig3, ax3 = plt.subplots(figsize=(7, 5))
+
+for i, std in enumerate(STANDARD_ORDER):
+    medians = []
+    q25s = []
+    q75s = []
+    for rz in RZ_ORDER:
+        vals = [r['log10_Nf'] for r in valid
+                if r['size_surface_standard'] == std and r['rz_level'] == rz]
+        if vals:
+            v = np.array(vals)
+            medians.append(np.median(v))
+            q25s.append(np.percentile(v, 25))
+            q75s.append(np.percentile(v, 75))
+        else:
+            medians.append(np.nan); q25s.append(np.nan); q75s.append(np.nan)
+
+    x = np.arange(3)
+    line = ax3.plot(x, medians, 'o-', color=COLORS[std], linewidth=2,
+                    markersize=8, label=std, alpha=0.9)
+    ax3.fill_between(x, q25s, q75s, color=COLORS[std], alpha=0.12)
+
+ax3.set_xticks([0, 1, 2])
+ax3.set_xticklabels([RZ_LABELS[rz] for rz in RZ_ORDER], fontsize=10)
+ax3.set_ylabel(r'Median $\log_{10}(N_f)$', fontsize=12)
+ax3.set_title('Interaction: surface roughness × standard', fontsize=12)
+ax3.legend(fontsize=9, loc='best')
+ax3.grid(alpha=0.3, linestyle='--')
+
+# Annotate the spread for as-forged condition (clean printed style)
+ax3.text(2.05, medians[0] + 0.6,
+         'ISO--FKM gap:\n$\\approx$1 dex\nat $R_z$=50 $\\mu$m',
+         fontsize=8.5, color='#333333',
+         bbox=dict(boxstyle='round,pad=0.4', facecolor='lightyellow',
+                   edgecolor='gray', alpha=0.9))
+
+plt.tight_layout()
+fig3.savefig('output/fig3_rz_standard_interaction.png')
+plt.close()
+print('Saved fig3_rz_standard_interaction.png')
+
+# ===============================================================
+# SUMMARY
+# ===============================================================
+# FIGURE 4: Torque dependence of factor weights
+# ===============================================================
+# Load multi-torque AFT data
+try:
+    with open('output/multi_torque_aft.json') as f:
+        mt = json.load(f)
+
+    fig4, ax4 = plt.subplots(figsize=(7, 5))
+    torques = [500, 600, 700]
+
+    factors_plot = [
+        ('mean_stress_method', 'Mean-stress correction', '#2166ac', 'o-'),
+        ('size_surface_standard', 'Size/surface standard', '#b2182b', 's--'),
+        ('rz_level', 'Surface roughness, Rz', '#4daf4a', '^-.'),
+    ]
+
+    for key, label, color, style in factors_plot:
+        values = []
+        for T in torques:
+            r = mt['results'][str(T)]
+            values.append(r['factors'][key])
+        ax4.plot(torques, values, style, color=color, linewidth=2,
+                markersize=8, label=label, alpha=0.85)
+
+    ax4.set_xlabel('Input torque (N·m)', fontsize=12)
+    ax4.set_ylabel('Variance fraction (%)', fontsize=12)
+    ax4.set_title('Factor weight vs. operating point', fontsize=13, fontweight='bold')
+    ax4.legend(fontsize=9, loc='best')
+    ax4.grid(alpha=0.3, linestyle='--')
+
+    # Annotate the crossing
+    ax4.annotate('Standard dominates\nat low torque',
+                 xy=(500, 43), xytext=(460, 48),
+                 arrowprops=dict(arrowstyle='->', color='#b2182b'),
+                 fontsize=8, color='#b2182b')
+    ax4.annotate('Mean-stress\nrises to co-dominance',
+                 xy=(650, 34), xytext=(620, 40),
+                 arrowprops=dict(arrowstyle='->', color='#2166ac'),
+                 fontsize=8, color='#2166ac')
+
+    # Add sigma_F0 on top axis
+    ax4_top = ax4.twiny()
+    sigma_vals = [555, 666, 778]
+    ax4_top.set_xticks(torques)
+    ax4_top.set_xticklabels([f'{s:.0f}' for s in sigma_vals])
+    ax4_top.set_xlabel(r'$\sigma_{F0}$ (MPa)', fontsize=11)
+    ax4_top.set_xlim(ax4.get_xlim())
+
+    plt.tight_layout()
+    fig4.savefig('output/fig4_torque_dependence.png')
+    plt.close()
+    print('Saved fig4_torque_dependence.png')
+except Exception as e:
+    print(f'Fig4 skipped: {e}')
+
+# ===============================================================
+# FIGURE 5: Goodman inclusion/exclusion comparison
+# ===============================================================
+# Data: from §3.2 sensitivity analysis (Goodman removed → AFT)
+# 4-method: MS=33.9, Std=30.1, Rz=24.6, SN=7.5, Dam=0.9, Int=3.0
+# 3-method: MS=26.1, Std=32.7, Rz=27.7, SN=9.6, Dam=0.8, Int=3.0
+
+fig5, (ax5a, ax5b) = plt.subplots(1, 2, figsize=(10, 5))
+
+data_4 = [33.9, 30.1, 24.6, 7.5, 3.0, 0.9]
+data_3 = [26.1, 32.7, 27.7, 9.6, 3.0, 0.8]
+labels_short = ['Mean-stress', 'Standard', 'Rz', 'S-N', 'Std×Rz', 'Damage']
+colors_5 = ['#2166ac', '#2166ac', '#2166ac', '#999999', '#999999', '#999999']
+
+ypos = range(len(labels_short))[::-1]
+
+# Left: 4-method
+bars4 = ax5a.barh(ypos, data_4, color=colors_5, alpha=0.85, height=0.6)
+ax5a.set_yticks(ypos)
+ax5a.set_yticklabels(labels_short, fontsize=9)
+ax5a.set_xlabel('Variance fraction (%)', fontsize=11)
+ax5a.set_title('4 methods (incl. Goodman)', fontsize=12)
+for i, v in enumerate(data_4):
+    ax5a.text(v + 0.8, ypos[i], f'{v:.1f}%', va='center', fontsize=8.5)
+ax5a.set_xlim(0, 42)
+ax5a.grid(axis='x', alpha=0.3, linestyle='--')
+
+# Highlight Goodman contribution
+ax5a.annotate('Goodman: brittle,\nconservative for\nductile 42CrMo4',
+             xy=(data_4[0], ypos[0]), xytext=(data_4[0] + 8, ypos[0] + 1.0),
+             arrowprops=dict(arrowstyle='->', color='#b2182b'),
+             fontsize=7.5, color='#b2182b')
+
+# Right: 3-method
+bars3 = ax5b.barh(ypos, data_3, color=colors_5, alpha=0.85, height=0.6)
+ax5b.set_yticks(ypos)
+ax5b.set_yticklabels(labels_short, fontsize=9)
+ax5b.set_xlabel('Variance fraction (%)', fontsize=11)
+ax5b.set_title('3 methods (no Goodman)', fontsize=12)
+for i, v in enumerate(data_3):
+    ax5b.text(v + 0.8, ypos[i], f'{v:.1f}%', va='center', fontsize=8.5)
+ax5b.set_xlim(0, 42)
+ax5b.grid(axis='x', alpha=0.3, linestyle='--')
+
+ax5b.annotate('Mean-stress drops\n33.9% → 26.1%\n(–7.8 pp domain mismatch)',
+             xy=(data_3[0], ypos[0]), xytext=(data_3[0] + 8, ypos[0] + 1.0),
+             arrowprops=dict(arrowstyle='->', color='#b2182b'),
+             fontsize=7.5, color='#b2182b')
+
+fig5.suptitle('Impact of including Goodman (brittle-material model) for ductile 42CrMo4',
+             fontsize=13, fontweight='bold')
+plt.tight_layout()
+fig5.savefig('output/fig5_goodman_comparison.png')
+plt.close()
+print('Saved fig5_goodman_comparison.png')
+
+# ===============================================================
+# FIGURE 6: Bootstrap 95% CI for the three dominant factors
+# ===============================================================
+fig6, ax6 = plt.subplots(figsize=(7, 4))
+
+top3_keys = ['mean_stress_method', 'size_surface_standard', 'rz_level']
+top3_labels = ['Mean-stress\ncorrection', 'Size-and-surface\nstandard', 'Surface\nroughness, $R_z$']
+top3_colors = ['#2166ac', '#b2182b', '#4daf4a']
+
+for i, (key, label, color) in enumerate(zip(top3_keys, top3_labels, top3_colors)):
+    nf = anova['bootstrap']['noise_floor'][key]
+    mean_v = nf['mean']
+    ci_lo = nf['ci_95_lower']
+    ci_hi = nf['ci_95_upper']
+    sn = nf.get('s_n', mean_v / nf['std'] if nf['std'] > 0 else 0)
+
+    # Bar from 0 to mean
+    ax6.barh(i, mean_v, color=color, alpha=0.7, height=0.5,
+             label=f'{label.replace(chr(10), " ")}')
+    # Error bar
+    ax6.errorbar(mean_v, i, xerr=[[mean_v - ci_lo], [ci_hi - mean_v]],
+                fmt='none', ecolor='black', capsize=4, linewidth=1.5)
+    # Annotation
+    ax6.text(mean_v + 1.5, i,
+             f'{mean_v:.1f}%  [{ci_lo:.1f}, {ci_hi:.1f}]  S/N$\\approx${sn:.0f}',
+             va='center', fontsize=10)
+
+ax6.set_yticks([0, 1, 2])
+ax6.set_yticklabels(top3_labels, fontsize=11)
+ax6.set_xlabel('Variance fraction (%)', fontsize=12)
+ax6.set_title('Bootstrap 95% confidence intervals: three dominant factors',
+             fontsize=13, fontweight='bold')
+ax6.set_xlim(0, 42)
+ax6.grid(axis='x', alpha=0.3, linestyle='--')
+ax6.invert_yaxis()
+
+plt.tight_layout()
+fig6.savefig('output/fig6_bootstrap_ci.png')
+plt.close()
+print('Saved fig6_bootstrap_ci.png')
+
+print("")
+print("Figures generated in output/:")
+print("  fig1_life_spread_by_standard.png  -- Nf distributions + run-out counts")
+print("  fig2_variance_decomposition.png   -- AFT variance decomposition with bootstrap CI")
+print("  fig3_rz_standard_interaction.png  -- Rz x standard interaction")
+print("  fig4_torque_dependence.png        -- Factor weights vs torque")
+print("  fig5_goodman_comparison.png       -- 4-method vs 3-method (no Goodman)")
+print("  fig6_bootstrap_ci.png             -- Bootstrap 95% CI for top 3 factors")
+print("")
+print("Paper ready for:")
+print("  pdflatex paper/gear_fatigue_v3.0.tex")

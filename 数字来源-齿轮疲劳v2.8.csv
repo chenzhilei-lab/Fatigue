@@ -1,0 +1,38 @@
+﻿Paper Section,Claim/Number,Value in Paper,Source File,Source Key,Match?
+§2.1/Table 1,n_combinations,144,sweep_summary.json,n_combinations,AUTO
+§2.1,n_runouts,28,sweep_summary.json,n_runouts,AUTO
+§3.6,min_log10_Nf,2.52,sweep_summary.json,min_log10_Nf,AUTO
+§3.6,max_log10_Nf,7.50,sweep_summary.json,max_log10_Nf,AUTO
+§3.6,spread_dex,5.0,sweep_summary.json,spread_dex,AUTO
+Table 1,Size/surface standard var%,31.1,anova.json,size_surface_standard.variance_frac_%,OK
+Table 1,Mean stress correction var%,30.9,anova.json,mean_stress_method.variance_frac_%,OK
+Table 1,Surface roughness var%,8.5,anova.json,rz_level.variance_frac_%,OK
+Table 1,StandardxRz interaction var%,5.0,anova.json,size_surface_standard x rz_level.variance_frac_%,OK
+Table 1,S-N curve source var%,0.7,anova.json,sn_source.variance_frac_%,OK
+Table 1,Damage rule var%,0.5,anova.json,damage_method.variance_frac_%,OK
+Table 1,Residual var%,23.3,anova.json,SS_residual/SS_total = 30.147/129.254,OK
+§3.7/Abstract,Bootstrap n,2000,anova.json,bootstrap.n_bootstrap,OK
+§3.7,Standard bootstrap mean,31.6%,anova.json,size_surface_standard boot mean,OK
+§3.7,Standard CI,"[18.9, 44.2]",anova.json,size_surface_standard CI95,OK
+§3.7,Mean-stress bootstrap mean,32.4%,anova.json,mean_stress_method boot mean,OK
+§3.7,Mean-stress CI,"[19.9, 45.3]",anova.json,mean_stress_method CI95,OK
+§3.7,Rz bootstrap mean,9.9%,anova.json,rz_level boot mean,OK
+§3.7,Interaction bootstrap mean,6.2%,anova.json,size_surface_standard x rz_level boot mean,OK
+§3.5 (600 Nm),n_valid,60,multi_torque_anova.json,600.n_valid,OK
+§3.5 (600 Nm),sn_source var%,7.9,multi_torque_anova.json,600.sn_source,OK
+§3.5 (600 Nm),mean_stress_method var%,10.2,multi_torque_anova.json,600.mean_stress_method,OK
+§3.5 (600 Nm),damage_method var%,1.1,multi_torque_anova.json,600.damage_method,OK
+§3.5 (600 Nm),size_surface_standard var%,36.0,multi_torque_anova.json,600.size_surface_standard,OK
+§3.5 (600 Nm),rz_level var%,5.8,multi_torque_anova.json,600.rz_level,OK
+§3.5 (600 Nm),standard_x_rz var%,17.8,multi_torque_anova.json,600.standard_x_rz,OK
+§3.5 (700 Nm),n_valid,116,multi_torque_anova.json,700.n_valid,OK
+§3.5 (700 Nm),sn_source var%,0.7,multi_torque_anova.json,700.sn_source,OK
+§3.5 (700 Nm),mean_stress_method var%,30.9,multi_torque_anova.json,700.mean_stress_method,OK
+§3.5 (700 Nm),damage_method var%,0.5,multi_torque_anova.json,700.damage_method,OK
+§3.5 (700 Nm),size_surface_standard var%,31.1,multi_torque_anova.json,700.size_surface_standard,OK
+§3.5 (700 Nm),rz_level var%,8.5,multi_torque_anova.json,700.rz_level,OK
+§3.5 (700 Nm),standard_x_rz var%,5.0,multi_torque_anova.json,700.standard_x_rz,OK
+§2.1/Table 1,Module,3.0 mm,gear_params.py,module_mn,AUTO
+§2.1/Table 1,Torque,700 Nm,gear_params.py,torque_Nm,AUTO
+§2.1/Table 1,Material,42CrMo4/AISI 4140,gear_params.py,material,AUTO
+§2.1/Table 1,UTS,1000 MPa,gear_params.py,uts_MPa,AUTO

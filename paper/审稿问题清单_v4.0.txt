@@ -1,0 +1,451 @@
+======================================================================
+审稿问题清单 —— gear_fatigue_v4.0.pdf
+======================================================================
+文档用途：记录以 International Journal of Fatigue 审稿人角度发现的
+矛盾 / 不一致 / 疑似虚假问题，供后续逐条修正与跟踪。
+核对依据：PDF 全文、LaTeX 源码（gear_fatigue_v4.0.tex）、随附复现包
+（gear_params.py、fatigue_models.py、ka_sensitivity.py、run_sweep.py、
+multi_torque_aft.py、output/*.json、reproduce.sh），以及独立数值复算。
+状态图例：[ ] 未处理   [~] 处理中   [x] 已修正（修正后在括号内注明版本）
+
+----------------------------------------------------------------------
+A. 数字版本混用（3 方法基线 vs 4 方法数据集）
+----------------------------------------------------------------------
+背景：Table 2 行内容是"3 方法（Gerber/Morrow/SWT；108 组合）"的分解
+（43.7 / 26.4 / 25.4 / 4.5，σ=0.246）；Table 3/4 及 aft_anova.json 是
+"4 方法（含 Goodman；144 组合）"的分解（39.1 / 35.3 / 23.5 / 2.5，
+σ=0.2084）。全文多处把两套数字混用并互标为"Table 2"。
+
+[x] A1  Table 2 表内自相矛盾   ← v4.1 已修复（统一为 4 方法 144 组合，标题/脚注/正文一致）
+      - 标题/表头："(2×4×2×3×3 = 144 combinations; 92 run-outs)"
+      - 行内容：3 方法基线（43.7/26.4/25.4/4.5），脚注"Gerber, Morrow,
+        SWT only"且称"78% censoring rate of the 3-method design"
+      - §3.1 正文又称"3 方法基线、108 组合、84 run-outs"
+      -> 标题、脚注、正文三者需统一（并核对 108 组合数据集的截尾数）。
+
+[x] A2  AFT 尺度参数 σ 两处不同   ← v4.1 已修复（σ=0.175；3 方法基线处明确标注）
+      - §2.7.1 与 Table 2：σ = 0.246（3 方法基线，与
+        output/multi_aft_comparison.json、native_stress_sensitivity.json 一致）
+      - §3.1：σ = 0.208（4 方法模型，与 output/aft_anova.json 一致）
+      -> 同一处描述必须用同一模型的值。
+
+[x] A3  交互项（Standard × Rz）三个值   ← v4.1 已修复（统一 6.7%）
+      - Table 2 / Table 3 基线列 / native_stress_sensitivity.json：4.5%
+      - Table 4 / aft_anova.json / §3.9 / §4.7：2.5%（4 方法）
+      - §3.1 正文描述 3 方法基线时写"2.5%"（应为 4.5%）
+      - bootstrap 均值 3.0%（4 方法）
+      -> §3.1 正文需改为 4.5%，或明确 2.5% 属 4 方法。
+
+[x] A4  S–N 曲线源与损伤法则的方差分数   ← v4.1 已修复（S-N 6.4% / Dmg 1.1%）
+      - §3.1 正文：S–N = −0.7%，damage = 0.3%（均为 4 方法值）
+      - 3 方法基线输出：sn_source = 0.0，damage = 0.1%
+        （native_stress_sensitivity.json、multi_aft_comparison.json）
+      - Table 2 表注：damage ∆logL = 0.1（<0.1%）
+      -> §3.1 / §3.5 需与 Table 2 统一。
+
+[x] A5  "Table 2" 误标（实际引用的是 Table 3 的 4 方法数字）   ← v4.1 已修复（引用全部指向正确表格）
+      - §2.5："differ by 0.3–0.4 pp from Table 2 (39.1%, 35.3%, 23.5%)"
+      - §3.3："the 39.1% mean-stress variance fraction reported in Table 2"
+      - §4.10："(39.1% of variance, Table 2)"、"removes an additional
+        35.3%"、"23.5% of the dominant triad"
+      - §4.12.2："reported standard-choice variance (35.3%)"
+      -> 全部应为 Table 3（4 方法），或改写为引用 4 方法结果。
+
+[x] A6  表面粗糙度方差：23.5% vs 25.4%   ← v4.1 已修复（统一 22.7%）
+      - §3.4："Surface roughness contributes 23.5% of variance"
+        （23.5% 是 4 方法值；Table 2 的 3 方法基线为 25.4%）
+      -> 按讨论对象统一。
+
+[x] A7  "三个因子合计 97.9%"的归属   ← v4.1 已修复
+      - §2.2、§4.4、Fig.5 图注均称三主效应合计 97.9%
+      - 3 方法基线三主效应 = 43.7+26.4+25.4 = 95.5%
+      - 97.9% 仅对 4 方法成立（39.1+35.3+23.5）
+      -> 需注明该数字属含 Goodman 的 4 方法情景，或改用 95.5%。
+
+[x] A8  截尾率 64% vs 78% 的混用   ← v4.1 已修复（统一 58% = 84/144）
+      - 3 方法基线：84/108 = 77.8%（Table 2 表注正确写 78%）
+      - §3.5、§4.12.7 末尾、§4.12.8 在讨论 3 方法基线时写"64%"
+        （64% 是 144 组合数据集的 92/144）
+      - §2.7.1 "92 of 144 combinations are run-outs"（正确，指 144）
+      -> 明确每个数字对应的数据集。
+
+----------------------------------------------------------------------
+B. S–N 曲线参数与疲劳强度不自洽
+----------------------------------------------------------------------
+[x] B1  Basquin 参数与"10^6 疲劳强度"互斥   ← v4.1 已修复
+      - 论文（§2.2.1 等）：#68 σf′=1356, b=−0.055, σ(10^6)=679 MPa；
+        #66 σf′=1684, b=−0.070, σ(10^6)=626 MPa
+      - 按 Eq.(1) σa=σf′(2Nf)^b 复算：10^6 处 #68=610.5 MPa、
+        #66=609.9 MPa（相差 0.6 MPa，而非 53 MPa）
+      - 影响：§2.2.1"53 MPa 差异导致相似 run-out 阈值"的论证基础失效；
+        680/626 与 610/610 必须二选一并说明来源。
+
+[x] B2  Table 5 的 σe 与全文矛盾   ← v4.1 已修复
+      - Table 5：Waterloo #66 (σe=550)、#68 (σe=500)
+      - 全文（§2.2.1/§3.5/§3.7/§4.11/结论）：#68=679 > #66=626
+      - 且两者高低排序相反：#68 在 Table 5 中反而更低
+      - §4.9 据此称 #68 为"lower-endurance curve"，与 §2.2.1 冲突
+      -> 统一 σe 取值与排序。
+
+[x] B3  数据来源声明与代码冲突   ← v4.1 已修复
+      - 论文声明疲劳强度 679/626 来自 Waterloo SMDIdbase（免费公开）
+      - gear_params.py 注释：σf′/b 来自 SMDIdbase PDF；10^6 疲劳强度
+        来自本地文件"材料力学性能测试数据表.xlsx (SAE Phase data)"
+      - 复现包中未包含该 xlsx（实际在 paper/ref_papers/ 下）
+      -> 需在论文中如实说明来源，并在复现包中附上数据或链接。
+
+----------------------------------------------------------------------
+C. 寿命跨度与极端组合（数据可复现性问题）
+----------------------------------------------------------------------
+[x] C1  §3.7 "最长有限寿命"错误   ← v4.1 已修复
+      - 论文："the longest to ISO 6336 with Gerber correction applied
+        to a ground surface"
+      - sweep.json：ISO+Gerber+ground 是 run-out（∞）；有限寿命最大为
+        AGMA+SWT+machined+#66+Miner（log10=5.76）
+      - 且与 §3.4"Rz=4 µm 时 ISO 全部 run-out"自相矛盾
+
+[x] C2  §4.9 最保守组合寿命错误   ← v4.1 已修复
+      - 论文："FKM+Goodman+as-forged+#68+Modified Miner 预测中位寿命
+        约 10^2.95 ≈ 890 周"
+      - sweep.json 实际：该组合 log10(Nf)=2.522 → 333 周
+      - Fig.4 自己的最小值也是 3.3×10^2（333 周）
+
+[x] C3  §4.9 "最不保守组合中位 log10(Nf)=7.22"不存在   ← v4.1 已修复
+      - ISO+Morrow+ground 在基线框架下为 run-out（σeff < 626）
+      - 全部 144 组合有限寿命最大仅 5.76；10^6 截尾下中位数不可能 >6
+      - 7.22 疑似来自 Basquin-only 无阈值外推情景（threshold_sensitivity
+        的 bq_none，spread=6.0 dex），与 §4.9 的表述框架不符
+
+[x] C4  寿命量级表述前后矛盾（需统一为 3.2 dex）   ← v4.1 已修复
+      - Fig.4 / §3.7 / 结论：3.2 dex（3.3×10^2 ~ 5.8×10^5）
+      - §4.1 / §4.9 末段："two orders of magnitude"
+      - §4.6："five orders of magnitude"
+      - §4.9：保守 vs 不保守组合 4.3 dex、隐含安全系数 ~1.9×10^4
+      - 结论 5：同一比较"approximately 10^2.5"
+      -> 同一组比较只能有一个数值。
+
+----------------------------------------------------------------------
+D. 扭矩依赖性（§3.6 / §4.5 / §4.12.7 / Table 4）
+----------------------------------------------------------------------
+[x] D1  500 N·m 截尾数自相矛盾   ← v4.1 已修复（统一 4 finite / 140 censored）
+      - §3.6："all 144 combinations predict run-out... zero finite-life
+        observations"（当前代码重算 = 144 全部 run-out，此说法正确）
+      - §4.12.7："At 500 N·m (130/144 run-out, 90% censoring)"
+      - shipped multi_torque_aft.json：n_finite=14, n_censored=130
+      -> 三处需统一（以当前代码重算为准：0 有限 / 144 截尾）。
+
+[x] D2  600 N·m 截尾数与"不可识别"矛盾   ← v4.1 已修复（16 finite / 128 censored；AFT 不可识别已如实说明）
+      - §3.6："only 10 of 144... (134/144 censored)"（当前代码重算一致）
+      - §3.6 同时称 AFT 分解 underdetermined / NaN（与 10 个有限观测一致）
+      - shipped multi_torque_aft.json：n_finite=60, n_censored=84，
+        且给出完整分解（MS 34.7 / Std 32.7 / Rz 22.8 / S–N 8.3）
+      - Table 4 图注："500 and 600 N·m excluded because AFT not identified"
+      -> shipped 输出为旧版本，与正文/当前代码冲突；需要重跑替换。
+
+[x] D3  §4.5 的数字出处不明   ← v4.1 已修复（30.3%/17.8%/10.2% 已删除；600 N·m 段重写为定性表述）
+      - "Standard × Rz interaction (17.8%) ... mean-stress (10.2%)"
+        与 multi_torque_anova.json 600 块一致（该文件为旧数据集，
+        且其 600 块 n_valid=60，与 §3.6 的 10 个有限观测矛盾）
+      - "At 700 N·m ... mean-stress correction rises to 30.3%"：
+        与 Table 2（26.4%）、Table 3（39.1%）、aft_anova.json
+        （39.1%）、multi_torque_anova.json 700 块（30.9%）均不一致
+      -> 30.3% 需给出明确出处或删除；§4.5 需注明所用框架
+        （ANOVA vs AFT）与数据集。
+
+[x] D4  multi_torque_anova.json 元数据 bug   ← v4.1 已修复（旧文件移入 output/_legacy/，论文不再引用其数值）
+      - "500"/"600"/"700" 三个块的 "torque" 字段全部 = 700.0
+      - 随附文件与正文声明"reproduce.sh 复现全部数值"不符
+
+----------------------------------------------------------------------
+E. 随附复现包（output/*.json）与正文不一致
+----------------------------------------------------------------------
+[x] E1  700 N·m 截尾数两个版本   ← v4.1 已修复
+      - 主分析（sweep.json / aft_anova.json / threshold_sensitivity.json /
+        ka_sensitivity.json）：52 有限 / 92 截尾（与正文一致）
+      - multi_torque_aft.json：116 有限 / 28 截尾（旧版本）
+      -> 重跑多扭矩分析并替换输出。
+
+[x] E2  sweep_summary.json 扭矩字段 = 350 N·m（实际按 700 计算）   ← v4.1 已修复
+      - run_sweep.py 的 docstring 还写"972 combinations / 6 switches"
+      -> 更新元数据与注释。
+
+[x] E3  §4.12.5 引用的 log-normal 分解与 Table 2 不同   ← v4.1 已修复（明确标注 3 方法基线数据集，与 4 方法 Table 2 区分）
+      - §4.12.5 / multi_aft_comparison.json：Std 45.7、MS 27.6、
+        Rz 26.5（无交互项）
+      - Table 2 / native_stress_sensitivity.json：Std 43.7、MS 26.4、
+        Rz 25.4、交互 4.5（含交互项）
+      - 两者都自称"3 方法 log-normal 结果"，需说明差异原因
+        （是否因交互项是否纳入模型），并统一呈现。
+
+[x] E4  "reproduce.sh 复现本文所有数值"声明不成立   ← v4.1 已修复（reproduce.sh 10 步覆盖全管线；paper_check 自动一致性检查 PASS）
+      - 至少 multi_torque、KA（截尾数恒 92）、Table 5/§4.9 的数字
+        与随附数据或当前代码不一致
+      -> 全面重跑、更新全部 output，并加一个自动一致性检查脚本。
+
+----------------------------------------------------------------------
+F. 统计 / 方法学问题
+----------------------------------------------------------------------
+[x] F1  Bootstrap CI 与 Table 2 点估计互斥   ← v4.1 已修复（正文明确 bootstrap 均值与点估计差异及其收敛性，二者支持同一排序）
+      - §3.8 / aft_anova.json（4 方法 bootstrap）：
+        MS 均值 38.6，CI [33.3, 43.7]；Std 35.0，CI [30.8, 39.9]
+      - Table 2（3 方法）：MS 26.4，Std 43.7 —— 均落在 CI 之外
+      - Fig.3 图注却称 bootstrap"确认 Table 2 的方差分数稳健"
+      -> 要么对 3 方法基线做 bootstrap，要么如实说明 bootstrap
+        仅验证 4 方法模型。
+
+[x] F2  Cox-Snell 诊断被错误描述为"可接受"   ← v4.1 已修复
+      - aft_diagnostics.json：mean=0.4477（目标 1.0）、
+        KS vs Exp(1)=0.4914（n=144 时临界值约 0.11）
+      - §3.2 / §4.12.5："acceptable agreement (KS=0.49)"
+      -> 该拟合偏差明显，不能称 acceptable；需解释或改进模型。
+
+[x] F3  诊断数字不一致   ← v4.1 已修复
+      - §3.2 / Fig.1：R²=0.966；aft_diagnostics.json：
+        qq_plot_r_squared=0.9848
+      - 标准化残差偏度 −1.22（JSON 有，论文未报告）
+      -> 统一 R² 并考虑报告偏度。
+
+[x] F4  KA 敏感性分析实现缺陷（ka_sensitivity.py）   ← v4.1 已修复
+      - 只对有限寿命条目做解析缩放；run-out 条目永远保持 run-out
+        （"was run-out but now finite-life"分支返回 inf，为死代码）
+      - 结果：KA=1.0/1.25/1.5 三个水平截尾数恒为 92
+      - 与正文"At higher KA... pushing the operating point further
+        above the endurance limit"的物理描述矛盾
+      - ka_sensitivity.json 的 method 字段称"Full 144-combination
+        sweep recomputed"，与实际实现不符
+      -> 需真正重算（允许 run-out → finite 转换），或如实说明近似。
+
+[x] F5  "native stress chain"校验的表述夸大   ← v4.1 已修复
+      - 代码注释自认：Kt 为"calibrated engineering estimator, not a
+        published formula"（原 Dolan & Broghamer 引用为错误）；
+        Neuber a′="calibrated"值
+      - 论文却把该校验描述为"Peterson/Neuber 计算"
+      - Kf 数值两套：Peterson 1.84 / Neuber 1.75（native_stress_sensitivity
+        .json）vs §4.12.1 "Kf ≈ 1.3–1.7"
+      - 1/J 两套：3.03（J=0.33，§2.3）vs "2.6–3.3"（§4.12.1）
+      -> 统一数值并如实说明 Kt/Kf 的近似性质。
+
+[x] F6  "±7%"与"19%"矛盾   ← v4.1 已修复（±7% 表述已删除，仅保留 19% 及统一口径）
+      - §2.3 / §4.12.1：YSa=1.55、1/J≈3.03、Kf≈1.84"互相在 ±7% 以内"
+      - 同一节又写"Kf/YSa ≈ 1.19，a 19% increase"
+      - 1/J 与 YSa 原始值相差约 95%（只有归一化到 YFa·Yε 后才接近）
+      -> 需明确比较口径，不能同时保留 ±7% 与 19%。
+
+[x] F7  YSa 基线偏差的三种说法   ← v4.1 已修复（统一为 −2 到 +3 pp：单点 +3.1 pp、多变量传播均值 −2.3 pp）
+      - §2.3 / native_stress_sensitivity.json：−0.1 pp
+      - §4.10："at most ±3 pp"
+      - §4.12.2："2–6 pp"
+      -> 统一为一种（以重算结果为准）。
+
+[x] F8  ISO Rz 封顶影响：+0.1 pp vs +0.3 pp   ← v4.1 已修复
+      - §3.4："(+0.1 pp on the interaction term)"
+      - §4.12.3 / Data availability："+0.3 pp"
+      -> 统一。
+
+[x] F9  模型选择表述问题   ← v4.1 已修复（log-logistic "modestly better" 后保留 log-normal 的三点理由；两对比数据集口径已注明）
+      - §4.12.5：log-logistic AIC 比 log-normal 低 9.4（通常认为
+        差异显著），被称作"modestly better"，且主分析仍用 log-normal
+        （理由为 Sobol' 等价性）——需更透明地讨论这一取舍
+      - §3.2 的 Weibull 对比（∆AIC=+29.7）基于 72 组合子集，而
+        log-logistic/Gamma 对比基于 108 组合基线——两个对比的数据集
+        不同，论文未明确说明口径差异
+
+[x] F10 结论 6"所有公式均经原始标准核实"无法支撑   ← v4.1 已修复（声明弱化，注明 Peterson/Neuber 近似位置）
+      - 代码注释存在"simplified"（FKM Kd）、"engineering approximation"
+        （Kt）等字样
+      -> 删除或弱化该声明。
+
+----------------------------------------------------------------------
+G. 正文矛盾与编辑问题
+----------------------------------------------------------------------
+[x] G1  §3.3 自相矛盾   ← v4.1 已修复（σm/σuts 统一 0.25–0.28，两处表述方向一致）
+      - 前句："contradicts the common assumption that mean-stress
+        effects are negligible for gear bending at R=0"
+      - 后句："This finding does not contradict the traditional
+        engineering view that mean-stress effects are minor at R=0"
+      -> 二选一并统一措辞。
+
+[x] G2  §3.4 与 §3.7 冲突   ← v4.1 已修复（最长有限寿命改为 AGMA+Morrow+as-forged+#66+Miner=5.92）
+      - §3.4："at Rz=4 µm (ground), ISO entries are entirely run-out"
+      - §3.7："the longest [finite life] to ISO 6336 with Gerber
+        correction applied to a ground surface"
+      -> 以 sweep.json 为准（ISO+ground 全部 run-out），修正 §3.7。
+
+[x] G3  §3.1 算术错误   ← v4.1 已修复（3×3×2×3×3 表述已消失；108 仅指 3 方法子集）
+      - "3 × 3 × 2 × 3 × 3 = 108 combinations"（实际 = 162；
+        108 应为 2×3×2×3×3）
+
+[x] G4  §4.9 措辞与框架矛盾   ← v4.1 已修复（最不保守组合=AGMA+Morrow+as-forged+#66+Miner=5.92，与数据一致）
+      - "least conservative combination that still produces
+        finite-life predictions for some S–N curves"——但该组合在
+        基线框架下对两条曲线都是 run-out；"有限寿命"仅在不设阈值
+        的外推情景下成立
+
+[x] G5  残句与重复词组   ← v4.1 已修复（ordering.), / is a addressed / simultaneous×2 等全部修正）
+      - §4.7："...preserves the correct factor ordering.), which in
+        practice requires..."（编辑残留）
+      - §3.5："framework is a addressed in Phase 2"
+      - 引言："a simultaneous full-factorial simultaneous variance
+        decomposition"
+      - §4.6："the correction factors in the correction factors in
+        this section"
+
+[x] G6  §4.12.5 整段重复   ← v4.1 已修复（"The log-normal is retained" 重复段与重复 Levene 段已删除）
+      - "The log-normal is retained for three further reasons: (i)...
+        (iii)..." 之后紧接着几乎逐字重复的
+        "The log-normal is retained for three reasons: (i)... (iii)..."
+      - 其后 Levene 检验段落亦重复两遍
+      -> 删除其中一个版本。
+
+[x] G7  参考文献问题   ← v4.1 已修复（SMDIdbase URL 完整断行；Du et al. 不在当前 bib；wang2023 两段描述已精简，§7 引用 §6）
+      - [6] SMDIdbase URL 在 PDF 中截断（止于 .../SMDIdbase/Steel/）
+      - Du et al. (2022, Int. J. Fatigue 155: 106575)：外部检索显示
+        正确文章号为 106578（"Implementation of Sobol's sensitivity
+        analysis to cyclic plasticity model with parameter
+        uncertainty"，Du, Li, Luo）
+      - §4.3 与 §4.4 中 Wang et al. 的试验描述几乎逐字重复两遍
+        （可精简一处）
+
+----------------------------------------------------------------------
+H. 后续修正清单（按优先级）
+----------------------------------------------------------------------
+[x] H1  统一主分析数据集（3 方法 108 vs 4 方法 144），修正 Table 2
+        标题/脚注/§3.1，并全文统一 43.7/26.4/25.4 与 39.1/35.3/23.5
+        的使用（对应 A1–A8、E3）。   ← v4.1 完成
+[x] H2  解决 Basquin 参数与 10^6 疲劳强度的矛盾，核实 679/626 的
+        真实来源并如实引用；统一 Table 5 的 σe（B1–B3）。   ← v4.1 完成
+[x] H3  修正 §3.7/§4.9/结论中的寿命极端值与量级表述，统一为
+        sweep.json 实际数据（2.79 dex；最短 10^3.13 ≈ 1.3×10^3 周）
+        （C1–C4）。   ← v4.1 完成
+[x] H4  重跑全部多扭矩/KA/threshold/Table 5 分析，更新 output/*.json，
+        修复元数据 bug，删除 30.3%、17.8%/10.2% 等无出处数字
+        （D1–D4、E1–E2、F4）。   ← v4.1 完成
+[x] H5  重做 3 方法基线的 bootstrap（或明确 bootstrap 仅验证 4 方法），
+        修正 Cox-Snell/KS 与 R² 的表述（F1–F3）。   ← v4.1 完成
+[x] H6  统一 native stress-chain 的数值与口径（±7% vs 19%、Kf 取值、
+        1/J 范围、YSa 偏差、Rz 封顶影响）（F5–F8）。   ← v4.1 完成
+[x] H7  修正正文自相矛盾与编辑问题（G1–G6），更新参考文献
+        （[6] URL、Du et al. 文章号）（G7）。   ← v4.1 完成
+[x] H8  全文重读一遍，确认"所有数字均可由随附复现包重新生成"，
+        再考虑投稿。   ← v4.1 完成（3× 编译 0 error、paper_check PASS、复现包 md5 一致）
+
+======================================================================
+【v4.2 追加 — 2026-08-05 分解方法升级（方案 A：common-σ 全量重跑）】
+======================================================================
+审稿人上一轮质疑的根因：refit-σ 的 ΔlogL = (n/2)·log(1+a_k) 对
+大效应饱和、对小效应压缩，与论文声称的 Sobol' 等价在数学上不成立，
+导致标准差份额被压低（30.1%）、均值应力被抬高（33.9%）。
+
+方案 A（已执行）：drop 模型在评估似然时固定使用全模型 σ
+（common-σ）。对平衡全因子正态线性模型，ΔlogL_k ∝ 因子 k 的平方和，
+归一化份额与一阶 Sobol' 指数数学等价；AFT 框架将这一等价性延伸到
+右截尾数据。
+
+新基线（output/aft_anova.json，全部脚本 .bak_pre_v42 备份保留）：
+  Std 55.3% / Rz 22.6% / MS 18.2% / SN 2.5% / Int 1.2% / Dmg 0.3%，
+  σ = 0.1745；ΔlogL = 985.7 / 403.3 / 324.2 / 43.9 / 20.5 / 5.9。
+  Bootstrap（2000 次）：Std 55.6% CI[48.7,63.0] S/N≈15；
+  Rz 22.3% CI[16.9,27.8]；MS 18.2% CI[10.8,25.0]；SN 2.4%；
+  Int 1.1%；Dmg 0.4%。
+  三因子合计 96.1%（论文摘要/结论同步更新）。
+
+模拟验证（新增 output/simulation_validation.json + fig_sim_validation.png）：
+  500 模拟 × 30% 截尾，|bias|≤3.4pp，top-3 排序命中 98.2%，
+  Spearman ρ=0.973；bootstrap 覆盖率 92–98.7%；完整数据下
+  LR 份额 vs Sobol' 指数 R²=0.9933。截尾扫描：15%→−1.46pp、
+  30%→−3.19pp、45%→−5.23pp、58%→−7.01pp —— 58% 截尾下
+  55.3% 是保守下界（真实份额只会更高）。
+
+连带更新：
+  - Table 2、bootstrap 段、均值应力/粗糙度/S-N 段、Sobol 对比段、
+    结论、Methods（heuristic caveat 整段替换为 common-σ + MC 验证）
+  - K_A 段："粗糙度在 K_A=1.0 略高，K_A≥1.25 时 MS 反超"
+  - 设计场景决策顺序：先定标准(55.3%)→控粗糙度(22.6%)→定均值应力(18.2%)
+  - 修正 Du et al. 引用：106575→106578（IJF 155, 2022，bibitem du2022）
+  - 复现包同步：8 个脚本 + simulation_validation.py + 全部新 JSON/图 +
+    tex/pdf/清单；README v4.2 新数字
+  - 3× 编译 0 error、paper_check PASS
+
+----------------------------------------------------------------------
+【v4.2 补记 — 2026-08-05 收尾审计又发现并修正 5 处残留】
+----------------------------------------------------------------------
+交接后全量核对（论文数字 vs output/*.json）发现以下 v4.0/refit-σ
+残留，均已修正并重新编译：
+
+[R1] §Torque（L976-990）：原文称 600 N·m "underdetermined、NaN"，
+     与 multi_torque_aft.json 矛盾（600 已识别：Std 40.1 / Rz 34.1 /
+     MS 17.9，仅 500 为 NaN）。已改写为 500 不可识别、600 识别但
+     排名偏移、700 信息量最丰富。
+[R2] 均值应力段（L868-873）：原文称 600 N·m "decomposition is not
+     identified...quantitative comparison is not possible"。已改为
+     600 识别且 MS 17.9%≈18.2%（不降反稳），Rz 升至 34.1%。
+[R3] §Discussion caveat（L1397）与 Table 4 caption："700 是唯一可
+     识别扭矩" → "信息量最丰富"；Table 4 Δ 符号约定写反（Δ 列实际
+     = Sobol' − AFT，caption 原称 positive Δ = AFT more）→ 已更正；
+     caption 删除"600 未识别"的错误排除理由。
+[R4] 阈值敏感性段（L2087-2092）：basquin-only 旧数字（51% 截尾、
+     MS>Std>Rz、33.6→36.1 等）→ 改为当前 JSON（58.3/45.8/40.3/0%
+     截尾；Std 54.9→45.9 主导；Std>Rz>MS）。
+[R5] native 段两处（§3.x L459-467 与 §Constraints L1925-1948）：
+     "38.7%→41.8%（+3.1pp）、near-zero sensitivity、±7%" →
+     52.1%→64.4%（+12.3pp），"direction of change" 改为几何解释
+     （AGMA +1.3% / FKM +19%），删除 "negligible bias" 表述；
+     L1835 "close to uniform-baseline" → "bracketed within
+     [−27.7,+17.8] pp（mean −7.3pp）"。
+
+代码层（root + 复现包均已同步、重跑）：
+  - ysa_sensitivity.py：conclusion/print/annotate 中的 "MS > Std >
+    Rz" 旧排序残留 → "Std 恒第一（Rz=Std 在 0.75x 处打平）"；
+    删除图中过时的 ±3pp 参考线。JSON+图已重跑。
+  - threshold_sensitivity.py：L329 打印标签 "Ranking stability
+    (MS > Std > Rz)" → "Ranking (top 3 per threshold)"。
+  - native_bias_propagation.py 注释 "30.1%" → "52.1%"。
+
+复跑后 paper_check PASS、3× 编译 0 error；README Nf 范围
+（3.3×10²–3.1×10⁷, 5.0 dex 旧值）→ "finite 1.3×10³–8.3×10⁵
+（2.79 dex），84/144 run-out"。
+
+复现包卫生（2026-08-05 收尾）：
+  - code/output/（旧布局残留，7 月 v4.0 数据）并入 output/_legacy/，
+    空 code/ 目录删除；旧脚本（variance_decomposition.py /
+    multi_torque_analysis.py / generate_labels_v2.py）、旧图
+    （fig1-3 17:53 版）、plot_results.py.bak_pre_v41_fig 全部移入
+    _legacy/；paper/ 下 v2.8/v3.0 移入 _legacy/paper/。
+  - reproduce.sh 步骤编号统一 [1/11]–[11/11]（含 simulation_validation）。
+  - README 文件树补齐 aft_residual_diagnostics.py / benchmark_wang2023.py；
+    当前包内不再含任何未引用的旧数字（仅 _legacy/ 与历史版本保留）。
+
+----------------------------------------------------------------------
+【v4.3 追加 — 2026-08-05 审稿意见（0805 docx）逐条核对后的小修】
+----------------------------------------------------------------------
+对 Codex-审稿人意见-0805.docx 的 10 大类逐条核对：结构性硬伤
+（Major）在 v4.1/v4.2 已全部修正；剩余 6 处标注级缺口在 v4.3 补齐
+（另存 gear_fatigue_v4.3.tex/.pdf，v4.0 原文件未动）：
+
+[V1] fig2（方差分解图）caption 补 "common ISO Y_Sa baseline + lower
+     bound" 标注；fig6（bootstrap CI）caption 同补，并解释 bootstrap
+     均值 55.6% vs 点估计 55.3% 差异来源（六-1/六-4）。
+[V2] Table 4 后正文补粗糙度低估量化："surface roughness by 7.6 pp
+     (15.0% vs. 22.6%)"（六-3）。
+[V3] Table 2 脚注补交互项下界："Standard×R_z interaction (1.2%) is
+     likewise a conservative estimate at high roughness, because ISO's
+     roughness penalty is capped at R_z=40 μm"（四-3）。
+[V4] §Discussion 扭矩段补分载荷差异化管控句："at or below ~600 N·m…
+     roughness (34.1%) approaches the standard (40.1%)… control
+     priority shifts… Design guidance must be stated per load regime"
+     （八）。
+[V5] Methods MC 段补一句："censoring is threshold-based: a simulated
+     entry is treated as a run-out when its life exceeds 10^6 cycles,
+     so the validation covers the same response-dependent censoring
+     pattern"（三-1 强化，直接封死"信息删失"质疑）。
+[V6] 摘要首句补限定词："through-hardened (residual-stress-free)
+     42CrMo4 spur gear under constant-amplitude pulsating bending"
+     （五-1 / 十-Clarifications-3）。
+
+v4.3：3× 编译 0 error / 0 undefined；paper_check PASS。
+复现包 paper/ 已同步 v4.3 副本（v4.0 仍在）。
+
+======================================================================
+（本清单由 2026-08-04 全面核对生成；核对范围：v4.0 PDF 全文、
+ tex 源码、复现包代码与输出。后续修正时请在对应条目打勾并注明版本。）
+======================================================================

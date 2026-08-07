@@ -1,0 +1,16 @@
+{
+  "description": "Two-level variable-amplitude damage rule comparison",
+  "blocks": [
+    {
+      "ratio": 1.0,
+      "cycles": 10000.0
+    },
+    {
+      "ratio": 0.35,
+      "cycles": 1000000.0
+    }
+  ],
+  "damage_rule_variance_pct": 0.8,
+  "constant_amplitude_baseline_pct": 0.9,
+  "ratio_VA_to_CA": 0.8
+}

@@ -1,0 +1,300 @@
+﻿================================================================================
+0806 工作进度 — v4.8 低级错误修复完成 + 全量审计结论
+================================================================================
+
+一、本次会话做的事
+  1. 按 D:\Papers\工作标准.txt 对论文最新版 paper/gear_fatigue_v4.7.tex 做了全量审计
+     （版本/编译/文献/数字/风格/复现包/Cover Letter 逐项核对）。
+  2. 用户选择第 1 项：另存 v4.8 并修复低级错误，check_compile.sh 全绿。
+
+二、最新版本状态
+  - 文件: paper/gear_fatigue_v4.8.tex（2026-08-06，37 页）
+  - PDF:  paper/gear_fatigue_v4.8.pdf（3 遍编译，0 error / 0 undefined / 0 重复标签）
+  - check_compile.sh gear_fatigue_v4.8 → PASS（仅 3 处 <20pt 表格内 Overfull 警告：
+    2.90pt@L241-257、12.55pt@L761-775、11.20pt@L1378-1397，均为历史遗留，非阻断）
+  - v4.7 保持原样未动（bug 版本留档）
+
+三、v4.8 修复内容（对照 v4.7）
+  1. 删除第二处重复图 fig8_multi_sn_sensitivity.png（原 Figure 11 + 重复
+     \label{fig:multi_sn}）→ 图编号 1-10，log 中 multiply-defined 消失
+  2. 删除 3 处打印进 PDF 的内部注释 @source:（原 L1045 two_level、
+     L1455 multi_sn、L1752 sobol_censoring_gradient 的图注内）→ PDF 中
+     @source 出现页数 = 0；% @source 注释行保留（供 paper_check 溯源）
+  3. Figure 1 图注 Y_Sa → $Y_{Sa}$（原 4 次 "Missing $ inserted"）→ 硬错误 4→0
+  4. 上述图注连带消除 414.87pt 与 17.62pt 两个 Overfull → Overfull>20pt 5→0
+  5. 引言 "a a native" → "a native"（原 L112-113）
+  - 头注释更新为 v4.8 变更日志；Prior versions: v1.0–v4.7
+
+四、审计已确认达标项（不需再改）
+  - 13 条 bibitem 全部有正文引用；无 2026 文献；无 &amp; 污染；无占位符
+  - 钩子×2 + 比喻已在（引言开头 + 摘要/结论结尾 "stamped into the steel"）
+  - 正文统计数字 ↔ output/*.json 一致（55.3/22.6/18.2/2.5/1.2/0.3、
+    Shapiro-Wilk W=0.962 p=0.056、ΔAIC=+77.1、bootstrap Std 55.6%、
+    fig8 五强度 747/610/595/610/518）
+  - 双盲：正文无作者/邮箱/机构
+  - 参考文献本地库：8 篇期刊 PDF + Waterloo Iter 66/68 在 paper/ref_papers，
+    3 本标准在 Standard/
+
+五、待办（3 小时后继续，按优先级）
+  [ ] 2. 数字来源表闭环：
+      - 数字来源-齿轮疲劳v2.8.csv 已过时（28 run-out、31.1/30.9/8.5%、
+        UTS 1000 MPa、spread 5.0 dex），需按 v4.7/v4.8 重做（84 run-out、
+        55.3/22.6/18.2%、610.5/609.9 MPa、2.79 dex）
+      - 要求"每个数字及其来源罗列在 Excel 电子表格"；现仅有 CSV + 材料数据 xlsx
+      - 跑 generate_labels.py 生成 output/labels.json，让 paper_check.py
+        标签层验证真正闭环（当前 labels.json 缺失，273 个数字无 @source 标记）
+  [ ] 3. 复现包同步（reproducibility_package/）：
+      - paper/ 缺 v4.6/v4.7/v4.8（最新只有 v4.5）
+      - 缺 multi_sn_sensitivity.py、sobol_censoring_gradient.py、
+        fig8/fig9、multi_sn_sensitivity.json、sobol_censoring_gradient.json、
+        fig_ysa_sensitivity_curve.png
+      - 内容不一致：two_level_variable_amplitude.py、fig7、fig_ysa_sensitivity.png、
+        ysa_sensitivity.json（MD5 DIFF）
+      - ref_papers 只有 ulrich2025（缺其余 7 PDF + xlsx）
+      - reproduce.sh 审计步骤写死 v4.0；README 自称 v4.5
+  [ ] 4. Cover Letter 重写（cover_letter_v4.0.tex 过时且与正文矛盾）：
+      - 目标期刊：封面写 JMST，tex 头写 IJF —— 先确认目标期刊
+      - 数字全部旧：92 run-out、MS39.1/Std35.3/Rz23.5%、S-N −0.7%、
+        Shapiro p=0.599、ΔAIC=+29.7、"Figures: 7; Tables: 3"
+      - 实际：84 run-out、55.3/22.6/18.2%、2.5%、p=0.056、ΔAIC=+77.1、11图6表
+      - 引用正文没有的 Dowling 2009
+  [ ] 5. AI 声明 + Waiver：
+      - v4.7/v4.8 正文与 cover_letter_v4.0 均无 AI 声明（旧 cover_letter.tex 有，
+        新版丢了）；按工作标准十七.9 统一一句："Generative AI tools assisted
+        with LaTeX formatting, Python code implementation, and English language
+        editing."
+      - Waiver Letter 不存在（本目录无任何 waiver 文件；MNRAS 目录下的 waiver
+        属于另一篇论文，勿混用）
+  [ ] 6.（可选）机器味词裁决：However ×4、Notably ×2；超长句复核；
+      确认是否处理 3 处表格 Overfull
+  [ ] 7.（可选）C1：Sobol 梯度剔除（审稿人二.2 建议，非强制）
+
+六、注意 / 备忘
+  - 沙箱辅助进程异常（helper_unknown_error），所有命令走沙箱外审批；
+    apply_patch 不可用，文件补丁用 Python 精确替换完成（均校验唯一命中）
+  - 临时编译副本: D:\tmp\gf47_audit\（v4.7 复编译 PDF + 渲染页，可删）
+  - audit_submit.sh 是金属量项目专用脚本，不适用于齿轮项目；
+    齿轮项目自己的关卡 = check_compile.sh + paper_check.py + reproduce.sh
+  - 0805 进度记录的"零错误编译/复现包全量同步"对 v4.7 不成立；
+    v4.8 起 check_compile.sh 已真正 PASS
+================================================================================
+
+================================================================================
+0806 续 — 待办 2 完成：数字来源表闭环 + paper_check 标签层激活
+================================================================================
+
+一、完成内容
+  1. 新增 generate_labels_v3.py（读当前 output/*.json 程序化取值，替代过时的
+     generate_labels.py / generate_labels_v2.py）→ output/labels.json（141 个标签）
+  2. 数字来源表重建（v4.8 基线，141 行）：
+     - 数字来源-齿轮疲劳v4.8.csv（UTF-8 BOM）
+     - 数字来源-齿轮疲劳v4.8.xlsx（Excel，含表头加粗 + 筛选）
+     列：Paper Section | Claim/Number | Value in Paper | Source File | Source Key | Match
+     （旧 v2.8 CSV 保留未动，勿再引用）
+  3. 另存 v4.9（= v4.8 + 24 处 % @source 注释标签，PDF 与 v4.8 字节一致 1852074）：
+     摘要 6 行、Table 2 六行、Shapiro-Wilk/R^2 行、ΔAIC 行、Fig 1 图注、
+     MC top-3 行、500/600 Nm 扭矩行、结论 5 行
+  4. paper_check.py paper/gear_fatigue_v4.9.tex 终态：
+     [0/3] Data lineage: OK — all source_input files verified
+     [1/3] Label verification: MATCH 34 / MANUAL 1 / MISMATCH 0
+     [2/3] Number traceability: Traced 270 / Orphan 0
+     [3/3] Untagged: 253（建议性提示，非阻断；全部打标签不现实）
+     → [PASS] Ready to submit
+  5. v4.9 编译 3 遍：37 页，0 error / 0 undefined / 0 multiply / overfull>20pt=0
+
+二、验证过程中的新发现（已核实，不影响结论）
+  - Y_Sa 图注 "at most -1.1 pp"：0.95-1.15x 扰动下标准份额最大偏差 1.1pp，
+    与 ysa_sensitivity.json 完全一致（0.95x:1.1 / 1.05x:0.3 / 1.1x:0.7 / 1.15x:1.1）
+  - paper_check 第 0 层要求 source_input = output/ 下的文件名（不是点路径），
+    generate_labels_v3.py 已按此修正
+
+三、遗留说明
+  - [3/3] untagged 253 处为工具提示，不影响 PASS；如需 0 untagged 需给
+    ~250 个数字行全部加标签（不建议，污染源码）
+  - 数字来源表中 LIT 类条目（Ulrich 624.5 MPa、Waterloo Basquin 参数等）
+    标注来源为 ref_papers/Standard 下 PDF，未走 JSON 自动校验（Match=LIT）
+  - 旧 generate_labels.py / generate_labels_v2.py 已过时（读 anova.json），
+    保留但勿运行；后续统一用 generate_labels_v3.py
+
+四、下一步
+  [ ] 3. 复现包同步（v4.6-v4.9 三件套 + 缺失脚本/图/JSON + ref_papers +
+      reproduce.sh/README 更新 + labels.json/generate_labels_v3.py/数字来源表）
+  [ ] 4. Cover Letter 重写（需先确认目标期刊：IJF 还是 JMST）
+  [ ] 5. AI 声明 + Waiver
+================================================================================
+
+================================================================================
+0806 续 — 待办 3 完成：复现包全量同步（v4.9 状态）
+================================================================================
+
+一、同步内容（根目录 → reproducibility_package/，全部 MD5 验证一致）
+  1. 脚本补齐/覆盖：
+     - 新增 multi_sn_sensitivity.py、sobol_censoring_gradient.py、generate_labels_v3.py
+     - 覆盖 two_level_variable_amplitude.py（内容 DIFF）
+     - 22 个共有 .py 全部 SAME
+  2. output/：31 个共有文件全部 SAME；补齐 fig8/fig9、multi_sn_sensitivity.json、
+     sobol_censoring_gradient.json、fig_ysa_sensitivity_curve.png、labels.json
+  3. paper/：v4.6-v4.9 tex+pdf 补入；v4.4.pdf、v4.5.log/pdf 覆盖为根目录版本；
+     v4.0-v4.9 十代 tex+pdf 全部 SAME
+  4. ref_papers/：13 个文件全部 SAME（含 ulrich2025 PDF、Waterloo Iter 66/68、
+     8 篇期刊 PDF、材料力学性能测试数据表.xlsx）
+     - 发现并修复反向缺口：ulrich2025 PDF 原本只在复现包，根目录 paper/ref_papers
+       缺它 → 已双向补齐；generate_labels_v3.py 中来源文件名同步修正
+  5. 数字来源-齿轮疲劳v4.8.csv/.xlsx 复制进包根目录
+  6. reproduce.sh 更新：v4.9 标题、step 8 增加 multi_sn_sensitivity +
+     sobol_censoring_gradient、step 11 改为 generate_labels_v3.py +
+     paper_check.py paper/gear_fatigue_v4.9.tex
+  7. README.md 重写：v4.9、完整文件树（新脚本/新图/ref_papers 全列）、
+     Audit 命令更新为 v4.9、数字来源表说明
+
+二、验证结果（MD5 全量对比）
+  - scripts: 22 shared, DIFF 0
+  - output:  31 shared, DIFF 0, 无缺失
+  - paper:   v4.0-v4.9 tex/pdf 0 差异
+  - ref_papers: 13 shared, DIFF 0
+
+三、说明
+  - 包内 paper/ 保留了全部十代版本（v4.0-v4.9），与根目录一致
+  - 复现包不含 Standard/ 目录（3 本标准 PDF 在项目级 Standard/），
+    README 已注明引用位置
+  - README 中作者信息保留（投稿包惯例）；如需双盲匿名版包可后续处理
+
+四、下一步
+  [ ] 4. Cover Letter 重写（需先确认目标期刊：IJF 还是 JMST）
+  [ ] 5. AI 声明 + Waiver
+  [ ] 6.（可选）机器味词裁决 / 长句复核 / 3 处表格 Overfull
+  [ ] 7.（可选）C1：Sobol 梯度剔除
+================================================================================
+
+================================================================================
+0806 续 — JMST 投稿准备完成（A-D 全执行，reasonix 已接手失败后收回）
+================================================================================
+
+一、reasonix 交接结果
+  reasonix 仅创建了 cover_letter_v5.0_jmst.tex 草稿（未编译、未做 v5.0/zip），
+  且草稿把方法误述为 "analysis of variance"（与正文立论矛盾——普通 ANOVA 会丢弃
+  run-out，正文用的是截尾似然 AFT）。用户决定收回自己做。
+  草稿已留档：paper/cover_letter_v5.0_jmst.reasonix_draft.tex.bak（勿引用）。
+
+二、A. Cover Letter（JMST 版）— 完成
+  文件：paper/cover_letter_v5.0_jmst.tex + .pdf（1 页，两遍编译 58,492 字节一致）
+  要点：
+  - 收件方 JMST 主编（KSME）；作者 Zhilei Chen（广东培正学院，2604513@peizheng.edu.cn）
+  - 数字全部与 v5.0 正文一致：144/84/60、55.3/22.6/18.2/2.5/1.2/0.3%、
+    bootstrap 2000(seed 42)、W=0.962 p=0.056、ΔAIC=+77.1、11 图 6 表
+  - 方法表述纠正为 "censored-likelihood accelerated failure-time (AFT) model...
+    ordinary ANOVA/Sobol' ... must discard censored entries"
+  - 含 AI 声明句（原文照抄）；无 Dowling 2009 引用；无编造内容
+
+三、B. 稿件 v5.0 — 完成
+  文件：paper/gear_fatigue_v5.0.tex + .pdf（37 页）
+  改动（仅 3 处）：
+  1) 头文件名/变更日志 → v5.0
+  2) "Target: International Journal of Fatigue (IJF, Elsevier)" →
+     "Target: Journal of Mechanical Science and Technology (JMST, KSME/Springer)"
+  3) 新增 \section*{Declaration of Generative AI Use}（Data and Code Availability
+     之后、thebibliography 之前），内容：Generative AI tools assisted with LaTeX
+     formatting, Python code implementation, and English language editing.
+  验证（原始输出）：
+  - 3 遍 pdflatex：0 error / 0 undefined / 0 multiply / overfull>20pt=0
+  - check_compile.sh gear_fatigue_v5.0 → PASS（3 处 <20pt 表格 Overfull 历史遗留）
+  - paper_check.py paper/gear_fatigue_v5.0.tex → [PASS]（Layer1 34 MATCH/0 MISMATCH，
+    Layer2 270 traced/0 orphan）
+
+四、C. 复现包同步 + 压缩包 — 完成
+  - v5.0 tex/pdf 复制进 reproducibility_package/paper/
+  - README.md：Target 改 JMST（KSME/Springer）；文件树补 v5.0 两行
+  - MD5 全量复验：脚本/output/paper(v4.0-v5.0 tex+pdf)/ref_papers 差异 = 0
+  - 新压缩包：gear_fatigue_uq_reproducibility_v5.0_jmst.zip（41,104,959 字节，
+    2026-08-06 18:17），旧 zip gear_fatigue_uq_reproducibility.zip 保留未动
+
+五、D. 机器味/长句评估（只报告，未改正文）
+  - However ×4（L407/476/1534/2301，均为句中自然用法，非段首机器味）
+  - Notably ×2（L493/2624，句中用法）
+  - "In this section" ×5（范围限定句，非预告句）
+  - >40 词长句：粗扫 137 句（含表格/公式误计），真实技术复合句约十余处
+    （如摘要 59 词句），结构良好含分号/破折号，保留
+  - Overfull：3 处均在表格内（2.90/12.55/11.20pt），<20pt，非阻断
+  - 结论：无必改项；如要彻底去机器味可逐句人工裁决（建议投稿后再说）
+
+六、待办（用户侧）
+  - 在 JMST 投稿系统上传：稿件 v5.0 pdf、Cover Letter pdf、复现包 zip、作者信息
+  - 如需匿名版复现包（README 含作者名），告知后可出一版脱敏 zip
+  - 可选 C1：Sobol 梯度剔除（审稿人二.2 建议，非强制，可投稿后再做）
+================================================================================
+
+================================================================================
+0806 续 — Phase 0 补跑：canonical_numbers.json + MANIFEST.txt
+================================================================================
+
+任务：codex run "在 D:/Papers/0723-Gear_Fatigue_UQ/output/ 下生成 canonical_numbers.json 和 MANIFEST.txt"
+
+完成内容：
+  1. 新增 phase0_canonical.py（根目录 + 复现包内）
+     - canonical_numbers.json：从 数字来源-齿轮疲劳v4.8.csv 构建的机器可读
+       规范数字注册表，141 个数字，每项含 value/section/note/source_file/
+       source_key/match（AUTO=JSON 直取、COMPUTED=推导、LIT=文献 PDF）
+     - MANIFEST.txt：output/ 顶层 32 个文件（排除 _legacy）的 MD5+大小清单，
+       作为 reproduce.sh 重跑后的一致性锚点（重跑后 diff MANIFEST.txt 即可
+       发现任何数据漂移）
+  2. 输出位置：output/canonical_numbers.json（37,050 B）、output/MANIFEST.txt（2,564 B）
+  3. 复现包同步：reproducibility_package/output/ 两份 + phase0_canonical.py 已复制
+
+用途（对应战略文件"MANIFEST 一致性锚点"待办项）：
+  - canonical_numbers.json 供工具/审稿人逐条核对论文数字与其来源
+  - MANIFEST.txt 供 reproduce.sh 重跑后校验输出文件未被改动/漂移
+
+下一步（可选）：
+  [ ] 把 MANIFEST 校验步骤写进 reproduce.sh（重跑后 python phase0_canonical.py
+      并 diff MANIFEST.txt，不一致即报错）
+================================================================================
+
+================================================================================
+0806 续 — MANIFEST 一致性锚点已接入 reproduce.sh（Phase 0 收尾）
+================================================================================
+
+完成内容：
+  1. phase0_canonical.py 升级（根目录 + 复现包同步）：
+     - 去掉时间戳，manifest 改为确定性生成（排除 MANIFEST.txt 自身）
+     - 修复一代滞后的 bug：regenerate 分支先写 canonical_numbers.json、
+       再基于新文件构建 manifest；文件读写统一 LF（newline="\n"）
+     - 新增 --check 模式：内存重建 canonical + manifest 与磁盘文件逐字节比对，
+       不一致返回 exit 1
+     - 实测：连续两次重生成，MANIFEST.txt MD5 完全一致（164DECB90A1EA709C18F1BE2DD909018）
+       ；--check 在根目录与复现包内均 PASS
+  2. reproduce.sh 升级 v5.0（复现包内）：
+     - 步骤 [1/11] → [1/12]，共 12 步
+     - 第 11 步 paper_check 目标改为 paper/gear_fatigue_v5.0.tex
+     - 新增第 12 步：python phase0_canonical.py --check（数据漂移即报错退出，
+       配合 set -e 阻断后续）
+     - bash -n 语法检查通过
+  3. README.md（复现包）同步：12 步说明、文件树补 phase0_canonical.py、
+     output 树补 canonical_numbers.json + MANIFEST.txt、Audit 命令补 --check
+  4. MD5 复验：phase0_canonical.py / canonical_numbers.json / MANIFEST.txt
+     根目录 vs 复现包全部 SAME
+
+用途（战略文件"MANIFEST 一致性锚点 → reproduce.sh"待办项闭合）：
+  任何人重跑管线后，第 12 步自动核对 canonical 数字与 output 文件清单，
+  任何脚本改动/seed 变化/手改数据都会当场暴露。
+================================================================================
+
+================================================================================
+0806 决策记录 — 不回退，v5.0 维持 Codex 草稿定稿
+================================================================================
+
+背景：按分工表（Claude=Phase1 写作 / Codex=计算审计+独立复现+模拟验证 /
+Reasonix=DeepSeek 原生审计+bwrap / Hermes=调度+终审），Codex 本次越界承担了
+稿件文本修改（v4.8/v4.9/v5.0）与 Cover Letter 写作，属于 Claude 的 Phase 1 职责，
+导致"写验同源"——Codex 改稿后又自验 paper_check/check_compile，独立审计强度下降。
+
+用户决定：这次暂时不回退。v5.0（含 Cover Letter v5.0_jmst）作为投稿稿保留，
+Codex 的文本修改视为"Codex 草稿定稿"，正式进入后续流程。
+
+后续约定（本次生效）：
+  1. Codex 从即刻起只做审计/复现/模拟验证，不再修改稿件文本与 Cover Letter
+     （除非用户明确点名要 Codex 改）。
+  2. Phase 2 建议由 Claude 或 Reasonix 以 fresh-eyes 方式做一次独立数字-文本
+     一致性复核（Claude 只读 canonical_numbers.json，Reasonix 按 hermes_audit
+     约定跑 bwrap 沙箱），以部分弥补写验同源；是否执行由用户/调度决定。
+  3. 若审稿返修涉及文本修改，默认交回 Claude。
+================================================================================

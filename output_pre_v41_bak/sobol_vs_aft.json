@@ -1,0 +1,84 @@
+{
+  "description": "Sobol sensitivity indices vs AFT variance fractions on 144-combination sweep",
+  "n_total": 144,
+  "n_finite_used_for_sobol": 52,
+  "n_censored_excluded": 92,
+  "sobol_indices": {
+    "mean_stress_method": {
+      "S1": 0.1149,
+      "ST": 0.5912,
+      "S1_pct": 11.5,
+      "ST_pct": 59.1
+    },
+    "size_surface_standard": {
+      "S1": 0.2009,
+      "ST": 0.5086,
+      "S1_pct": 20.1,
+      "ST_pct": 50.9
+    },
+    "rz_level": {
+      "S1": 0.1107,
+      "ST": 0.698,
+      "S1_pct": 11.1,
+      "ST_pct": 69.8
+    },
+    "sn_source": {
+      "S1": 0.2901,
+      "ST": 0.9084,
+      "S1_pct": 29.0,
+      "ST_pct": 90.8
+    },
+    "damage_method": {
+      "S1": 0.01,
+      "ST": 0.99,
+      "S1_pct": 1.0,
+      "ST_pct": 99.0
+    }
+  },
+  "aft_var_pct": {
+    "mean_stress_method": 39.1,
+    "size_surface_standard": 35.3,
+    "rz_level": 23.5,
+    "sn_source": -0.7,
+    "damage_method": 0.3,
+    "interaction": 2.5
+  },
+  "comparison": [
+    {
+      "factor": "mean_stress_method",
+      "sobol_S1_pct": 11.5,
+      "sobol_ST_pct": 59.1,
+      "aft_var_pct": 39.1,
+      "delta_S1_minus_AFT_pp": -27.6
+    },
+    {
+      "factor": "size_surface_standard",
+      "sobol_S1_pct": 20.1,
+      "sobol_ST_pct": 50.9,
+      "aft_var_pct": 35.3,
+      "delta_S1_minus_AFT_pp": -15.2
+    },
+    {
+      "factor": "rz_level",
+      "sobol_S1_pct": 11.1,
+      "sobol_ST_pct": 69.8,
+      "aft_var_pct": 23.5,
+      "delta_S1_minus_AFT_pp": -12.4
+    },
+    {
+      "factor": "sn_source",
+      "sobol_S1_pct": 29.0,
+      "sobol_ST_pct": 90.8,
+      "aft_var_pct": -0.7,
+      "delta_S1_minus_AFT_pp": 29.7
+    },
+    {
+      "factor": "damage_method",
+      "sobol_S1_pct": 1.0,
+      "sobol_ST_pct": 99.0,
+      "aft_var_pct": 0.3,
+      "delta_S1_minus_AFT_pp": 0.7
+    }
+  ],
+  "note": "Sobol S1 computed on finite-life entries only (discards run-outs). AFT preserves all 144 entries via censored likelihood. The systematic underestimation of surface-related factors (Rz, Std) by Sobol/ANOVA is corrected by AFT."
+}

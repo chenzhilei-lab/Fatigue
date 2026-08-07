@@ -1,0 +1,195 @@
+"""
+gear_params.py — Test gear definition + material databases
+===========================================================
+Fixed inputs: a single spur gear pair under constant torque.
+All variability comes from methodological choices (fatigue_models.py).
+"""
+
+import numpy as np
+import json
+import os
+
+# Working directory setup — use pathlib-style resolution to avoid global chdir
+_BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# ═══════════════════════════════════════════════════════════
+# GEAR GEOMETRY (ISO 6336 standard spur gear)
+# ═══════════════════════════════════════════════════════════
+GEAR = {
+    "module_mn": 3.0,              # mm, normal module
+    "teeth_pinion": 20,            # pinion tooth count
+    "teeth_gear": 60,              # gear tooth count (3:1 ratio)
+    "pressure_angle": 20.0,        # degrees
+    "helix_angle": 0.0,            # degrees (spur gear = 0)
+    "face_width": 30.0,            # mm
+    "addendum_coeff": 1.0,
+    "dedendum_coeff": 1.25,
+    "tip_radius": 0.38,            # mm, tool tip radius
+}
+
+# Derived geometry
+GEAR["pitch_diameter_pinion"] = GEAR["module_mn"] * GEAR["teeth_pinion"]
+GEAR["pitch_diameter_gear"] = GEAR["module_mn"] * GEAR["teeth_gear"]
+GEAR["center_distance"] = (GEAR["pitch_diameter_pinion"] + GEAR["pitch_diameter_gear"]) / 2
+GEAR["base_diameter_pinion"] = GEAR["pitch_diameter_pinion"] * np.cos(np.radians(GEAR["pressure_angle"]))
+GEAR["gear_ratio"] = GEAR["teeth_gear"] / GEAR["teeth_pinion"]
+
+# ═══════════════════════════════════════════════════════════
+# LOADING CONDITIONS
+# ═══════════════════════════════════════════════════════════
+LOAD = {
+    "torque_pinion": 700.0,        # N·m, input torque (recalibrated v2.3: Kf removed → σF0≈778 MPa)
+    "speed_pinion": 1500.0,        # rpm
+    "duty_cycle": 1.0,             # fraction (1.0 = continuous)
+    "load_spectrum": "constant",   # constant amplitude (simplified)
+}
+
+# Derived loading
+LOAD["tangential_force"] = (2 * LOAD["torque_pinion"] * 1000) / GEAR["pitch_diameter_pinion"]  # N
+LOAD["Ft_per_unit_facewidth"] = LOAD["tangential_force"] / GEAR["face_width"]  # N/mm
+
+# ═══════════════════════════════════════════════════════════
+# MATERIAL: 42CrMo4 / AISI 4140 (quenched & tempered)
+# Three S-N curve sources → SWITCH 1
+# ═══════════════════════════════════════════════════════════
+
+MATERIAL = {
+    "name": "42CrMo4 / AISI 4140",
+    "uts": 1000.0,                 # MPa, ultimate tensile strength
+    "yield": 780.0,                # MPa, yield strength
+    "hardness_HB": 300,            # Brinell hardness
+    "elastic_modulus": 206000.0,   # MPa
+    "poisson_ratio": 0.3,
+}
+
+# S-N curves: σa = σf' × (2Nf)^b (Basquin form, stress amplitude in MPa)
+# Two experimentally-fitted parameter sets from publicly accessible
+# fatigue data for quenched & tempered AISI 4140 steel (~300 HB).
+# Source: University of Waterloo SMDIdbase (FDE database).
+# Anyone can download and verify the PDF reports at the URLs below.
+SN_CURVES = {
+    "Waterloo_SMDIdbase_Iter068": {
+        "sigma_f_prime": 1356.0,   # MPa, Basquin fatigue strength coefficient
+        "b": -0.055,               # fatigue strength exponent
+        "fatigue_strength_at_1e6": 679.0,  # MPa, fatigue strength at 10^6 cycles
+        "source": "Waterloo SMDIdbase, Iteration #68. Q&T AISI 4140, 300 HB. "
+                  "σ′f and b from https://fde.uwaterloo.ca/Fde/Materials/SMDIdbase/Steel/FatigueReports/Iter_068.pdf; "
+                  "fatigue strength at 10^6 from 材料力学性能测试数据表.xlsx (SAE Phase data).",
+    },
+    "Waterloo_SMDIdbase_Iter066": {
+        "sigma_f_prime": 1684.0,
+        "b": -0.070,
+        "fatigue_strength_at_1e6": 626.3,  # MPa, fatigue strength at 10^6 cycles
+        "source": "Waterloo SMDIdbase, Iteration #66. Q&T AISI 4140, 300 HB. "
+                  "σ′f and b from https://fde.uwaterloo.ca/Fde/Materials/SMDIdbase/Steel/FatigueReports/Iter_066.pdf; "
+                  "fatigue strength at 10^6 from 材料力学性能测试数据表.xlsx (SAE Phase data).",
+    },
+}
+
+# ═══════════════════════════════════════════════════════════
+# STRESS CONCENTRATION — SWITCH 2
+# ═══════════════════════════════════════════════════════════
+
+# Root fillet radius from gear geometry
+rho_F = GEAR["tip_radius"] * GEAR["module_mn"]  # approx root fillet radius, mm
+
+Kt_SOURCES = {
+    "Peterson": {
+        "description": "Peterson's stress concentration factor (1974)",
+        "notch_sensitivity_method": "Peterson",  # a = f(uts)
+    },
+    "Neuber": {
+        "description": "Neuber's stress concentration factor (1958)",
+        "notch_sensitivity_method": "Neuber",    # a' = f(uts)
+    },
+}
+# NOTE: "FEM_direct" removed in v2.0. The analytical proxy Kf=Kt×0.92 was not
+# a genuine FEA result. A proper CalculiX single-tooth analysis is under
+# development but not yet integrated.
+
+# ═══════════════════════════════════════════════════════════
+# MEAN STRESS CORRECTION — SWITCH 3
+# ═══════════════════════════════════════════════════════════
+
+MEAN_STRESS_METHODS = {
+    "Goodman": "σa/σar + σm/σuts = 1   (conservative, most common in ISO/AGMA)",
+    "Gerber": "σa/σar + (σm/σuts)^2 = 1 (better fit for ductile steels)",
+    "Morrow": "σa/σar + σm/σf' = 1      (uses true fracture strength)",
+    "SWT": "σar = sqrt(σmax × εa × E)    (Smith-Watson-Topper, strain-based)",
+}
+
+# ═══════════════════════════════════════════════════════════
+# CUMULATIVE DAMAGE — SWITCH 4
+# ═══════════════════════════════════════════════════════════
+
+DAMAGE_METHODS = {
+    "Miner_original": "D = Σ(ni/Ni), failure at D=1.0 (Palmgren-Miner, 1945)",
+    "Miner_modified": "D = Σ(ni/Ni), failure at D=0.7 (AGMA/FKM recommended)",
+}
+
+# ═══════════════════════════════════════════════════════════
+# SIZE + SURFACE FACTOR — SWITCH 5
+# ═══════════════════════════════════════════════════════════
+
+SIZE_SURFACE_STANDARDS = {
+    "ISO_6336": {
+        "description": "ISO 6336-3: YX (size factor) + YRrelT (surface roughness)",
+        "YX_formula": "linear interpolation from Table in §6.2",
+        "YRrelT_formula": "Rz-dependent reduction factor",
+    },
+    "AGMA_2001": {
+        "description": "AGMA 2001-D04: Ks (size factor) based on diametral pitch",
+        "Ks_formula": "Ks = 1.0 for module < 5mm (ANSI/AGMA 2001 §15)",
+    },
+    "FKM": {
+        "description": "FKM Guideline: Kd (size) + KFσ (surface) + KV (coating)",
+        "roughness_factor": "KR = 1 - 0.22 × log10(Rz) × log10(2σuts/σB)",
+    },
+}
+
+# Surface roughness levels — SWITCH 6 (NEW)
+# Same gear drawing, different manufacturing quality
+RZ_LEVELS = {
+    "ground_Rz4": {
+        "Rz_um": 4.0,
+        "description": "Precision ground gear, Rz=4μm (aerospace quality)",
+    },
+    "machined_Rz15": {
+        "Rz_um": 15.0,
+        "description": "Standard machined gear, Rz=15μm (industrial quality)",
+    },
+    "as_forged_Rz50": {
+        "Rz_um": 50.0,
+        "description": "As-forged rough surface, Rz=50μm (agricultural machinery)",
+    },
+}
+
+# ═══════════════════════════════════════════════════════════
+# LOAD SPECTRUM (constant amplitude — simplified for v1.0)
+# ═══════════════════════════════════════════════════════════
+
+LOAD_SPECTRUM = {
+    "type": "constant_amplitude",
+    "cycles": 1e7,                  # design target: 10^7 cycles
+    "stress_ratio_R": 0.0,          # R = σmin/σmax = 0 (pulsating bending)
+    "note": "Simplified — variable amplitude spectra are future work",
+}
+
+# ═══════════════════════════════════════════════════════════
+# CalculiX TEMPLATE PATH
+# ═══════════════════════════════════════════════════════════
+
+CALCULIX_INP_TEMPLATE = "gear_single_tooth.inp"
+
+# ═══════════════════════════════════════════════════════════
+# OUTPUT
+# ═══════════════════════════════════════════════════════════
+
+if __name__ == "__main__":
+    print("Gear parameters loaded:")
+    for k, v in GEAR.items():
+        print(f"  {k}: {v}")
+    print(f"\nMaterial: {MATERIAL['name']} (UTS={MATERIAL['uts']} MPa)")
+    print(f"Tangential force: {LOAD['tangential_force']:.0f} N")
+    print(f"S-N curves available: {list(SN_CURVES.keys())}")
+    print(f"Full factorial: 2×2×4×2×3×3 = {2*2*4*2*3*3} combinations")

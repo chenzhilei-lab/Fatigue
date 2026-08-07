@@ -1,0 +1,91 @@
+逐条对应：审稿意见 1、3、4、7 号缺陷完整修正方案前置统一说明所有修改分三块：①正文内容改写 / 删改 / 新增免责声明；②图表、公式标注补充强限定；③返修回复信对应答辩话术，适配 IJF 审稿逻辑，完全消除 “建模失真、设计失衡、夸大创新、无试验出工程规范” 四类硬伤。1. 审稿意见 1：统一\(Y_{Sa}\)篡改各标准原生计算，35.3% 仅下限却当作真实标准差异使用问题复盘人为强制 ISO \(Y_{Sa}=1.55\)套用于 AGMA、FKM，抹除三者原生应力计算链条（AGMA 几何系数J、FKM 疲劳缺口系数\(K_f\)）；全文把 “尺寸 - 表面因子单独贡献下限 35.3%” 当成标准总差异，用于工程建议，逻辑割裂失真。完整修正操作（1）方法章节重构应力计算模块，分两套计算体系区分清楚
+新增术语区分：
+
+Baseline Controlled Simulation（本文主线，现有 144 组仿真）：统一\(Y_{Sa}\)，仅分离「尺寸 + 表面修正公式差异」，输出值仅代表标准间表面 / 尺寸因子单独分歧下限，不代表完整标准计算链总偏差；
+Native Standard Calculation（待完善拓展方案，Phase2）：完整复刻 ISO/AGMA/FKM 原生应力链，含 AGMA J查表、FKM Neuber \(K_f\)缺口应力计算，说明当前未实现，现有数值存在系统性低估。
+
+重写\(Y_{Sa}\)应力集中小节，加醒目免责块：
+
+
+Critical modeling disclaimer: The unified \(Y_{Sa}=1.55\) treatment is adopted purely as an experimental control variable to isolate divergence induced solely by size & surface correction formulas across three standards. This setup deliberately omits inherent differences in root stress calculation pipelines native to AGMA 2001-D04 and FKM Guideline. Therefore, the 35.3% variance fraction attributed to standard choice constitutes a strict lower bound of full inter-standard prediction discrepancy; real-world deviations between complete standard workflows will be larger, and all engineering deductions based on this 35.3% value are conditional on this artificial unified stress baseline.
+（2）全文所有使用 35.3% 做工程推论的段落，强制绑定下限限定
+摘要、结论、讨论风险分析、标准化建议每一处出现 35.3%，紧跟括号标注：
+(strict lower bound under unified $Y_{Sa}$ controlled baseline)
+删除所有隐性表述：“标准选择贡献 35.3% 总不确定性”，替换为严谨句式：
+
+
+The size-and-surface formula component of inter-standard divergence accounts for a lower bound of 35.3% total log-variance in this controlled numerical test. Additional deviation originating from native tooth-root stress calculation rules of AGMA and FKM is not captured in this value.
+（3）更新表格、图表注释表 tab:anova、图 variance、bootstrap_ci 全部加表头注释：
+Variance decomposition results under unified ISO \(Y_{Sa}\) stress baseline; standard-choice contribution is a lower bound, native AGMA/FKM stress chain differences excluded.
+（4）研究路线图强化 Phase2 任务明确 Phase2 核心工作：移除统一\(Y_{Sa}\)假设，完整实现三套标准原生应力计算，重新量化完整标准总差异，修正现有下限偏差。返修回复对应话术
+Comment 1: The artificial unified \(Y_{Sa}\) baseline distorts inter-standard comparison and misuses the lower-bound 35.3% as full standard divergence.
+Revisions:
+
+We split the simulation framework into "controlled baseline simulation (current 144 runs)" and "native full-standard calculation (Phase 2 follow-up work)", clearly defining the modeling trade-off of fixed \(Y_{Sa}\) as an isolation tool only for surface/size formula comparison.
+Prominent disclaimers are added in Methods, Abstract, Discussion and all result figures/tables to repeatedly emphasize that 35.3% is merely a lower bound excluding AGMA J and FKM \(K_f\) stress calculation differences.
+All over-simplified statements claiming "standard choice contributes 35.3% uncertainty" are rewritten to strictly highlight the lower-bound constraint, and we explicitly state that engineering deductions derived from this value are limited to the controlled numerical environment.
+The research roadmap is updated to prioritize native full-standard stress implementation in Phase 2 to eliminate this baseline limitation in future work.
+
+2. 审稿意见 3：实验设计结构性失衡（方法因子多、材料仅 2 条 S-N 曲线），得出 “方法不确定性大于材料” 片面结论问题复盘5 组多水平方法变量，仅单材料 2 组 S-N 数据，设计不对称天然抬高方法方差占比；却将该单工况仿真结论泛化。完整修正操作（1）讨论章节新增专门段落，点明实验设计先天不对称缺陷
+Limitation of factorial design asymmetry: The present design heavily oversamples methodological decision space (5 multi-level factors) while only incorporating two S-N datasets from a single 42CrMo4 material heat. This structural imbalance artificially amplifies the relative variance share of methodological choices and suppresses material-induced scatter. The conclusion that "method-induced uncertainty dominates prediction divergence" is only valid for this narrow material sampling setup and cannot be generalized to designs with multiple material heats, batches or alloy types. Quantitatively separating material vs method uncertainty requires expanding the material factor with ≥3 independent experimentally fitted S-N curves for follow-up study.
+（2）弱化全文 “方法不确定性高于材料” 的绝对化表述原文强结论：Method-induced spread is comparable to or larger than material scatter
+修改为限定式表述：
+Within the asymmetric factorial design tested here (limited material sampling, rich methodological variable space), prediction divergence from engineering calculation choices outweighs the small scatter between the two Waterloo S-N datasets used in this study. This relative ranking is sensitive to the number and diversity of material fatigue datasets incorporated into the design.
+（3）修改 Wang 2023 对比段落，删除虚假对照误导原文：方法离散 2.1~3.3 dex，材料仅 1 dex，证明方法影响更大
+重写为：
+The ~1 dex fatigue scatter observed in Wang’s physical gear tests only provides a rough magnitude reference for material variability, and cannot be directly quantitatively compared with the method-induced spread in our simulation. The two datasets adopt distinct gear geometry, stress level and S-N characterization schemes, so cross-comparison of variance magnitudes lacks rigorous statistical equivalence and only serves qualitative illustration.
+（4）Phase2 研究计划新增材料维度扩充任务明确：拓展至少 3 组独立 42CrMo4 热处理批次 S-N 曲线，平衡实验设计，重新评估材料 / 方法方差占比。返修回复话术
+Comment3: Unbalanced factorial design overstates the dominance of methodological uncertainty over material scatter.
+Revisions:
+
+A dedicated paragraph in Constraints explicitly identifies the asymmetry between rich methodological factors and limited material sampling as a critical structural limitation of the experimental design.
+All absolute claims that methodological uncertainty universally outweighs material scatter are softened and constrained to the specific narrow material dataset adopted in this paper.
+The comparison with Wang et al. (2023) is revised to clarify that only qualitative magnitude reference is intended, and direct quantitative comparison between mismatched test conditions is discouraged.
+We add multi-batch material S-N curve expansion as a core Phase 2 task to balance the factorial design and obtain unbiased material uncertainty contributions.
+
+3. 审稿意见 4：创新点夸大，声称 “首次 AFT 全因子截尾分解齿轮疲劳” 不实；曲解前人文献、无试验却推行业标准建议分两块修正：①夸大创新修正；②文献对比公允化（1）修正夸大创新表述，客观梳理前人同类方法
+摘要、引言创新点删除 “firstly, unprecedented, unique” 等绝对词汇
+原文：This work develops the first full-factorial AFT decomposition for censored gear fatigue run-out data
+修改为客观表述：
+
+
+This study adapts existing censored AFT likelihood ratio variance decomposition (widely applied to general fatigue reliability problems) into a customized full-factorial framework to quantify method-induced uncertainty for spur gear bending fatigue, a specific gear design topic rarely addressed in prior UQ literature.
+
+
+引言补充综述：明确 AFT + 全局灵敏度已用于轴、焊接件、弹簧疲劳截尾数据，本文创新仅限定齿轮多标准方法诱导不确定性细分场景，而非统计学方法首创。
+新增综述句：
+
+
+AFT survival models combined with likelihood-based sensitivity decomposition have long been adopted for censored fatigue life analysis of mechanical components including shafts and welded joints; however, few prior studies target the specific uncertainty arising from competing ISO/AGMA/FKM gear calculation workflows, which constitutes the targeted novelty of the present framework.
+（2）公允修正前人文献对比，停止曲解 Bonaiti、Wang 等成果
+Bonaiti 2024 段落重写：不再暗示前人工作单薄，改为互补关系
+
+
+Bonaiti et al. (2024) experimentally verified systematic S-N divergence between ISO and AGMA standards via gear pulsator testing, focusing exclusively on standard selection as a single variable. The present work complements their experimental findings by jointly decomposing five simultaneous methodological factors under a numerical full-factorial design, offering a quantitative ranking of multiple uncertainty sources that their single-variable tests cannot provide. The two lines of research are mutually complementary rather than superior/inferior.
+
+
+所有文献对比删除隐性贬低措辞，统一表述为 “complementary, orthogonal research perspective”。
+（3）配套之前的方案：彻底弱化行业标准修订、通用工程规范建议全部标准化委员会、设计规范、强制限值论述降级为仅方法论演示，无行业落地效力（前文完整操作复用）。返修回复话术
+Comment4: Overclaimed methodological novelty and unfair comparison against prior literature, plus overreaching industrial standardization suggestions without experimental validation.
+Revisions:
+
+All absolute "first/novel unprecedented" innovation claims are removed. We add a literature summary clarifying that AFT censored decomposition is an established reliability tool; our novelty only lies in its customized application to multi-standard gear methodological uncertainty quantification.
+Discussions of Bonaiti, Wang and Pagliari’s work are fully rewritten to frame our research as complementary rather than superior, eliminating biased comparison logic.
+All prescriptive suggestions for standard committee revision and universal industrial design criteria are heavily downgraded with repeated strong disclaimers that all quantitative outputs are purely numerical demonstration without experimental calibration.
+
+4. 审稿意见 7：纯数值仿真无实体疲劳试验，却输出风险阈值、跨标准修正公式、设计规范建议（你上一轮重点问的那条）复用之前全套方案，整合精简可直接落地，合并到整套大修体系：完整修正操作（1）跨标准校正公式 Eq.(correction) 多层强限定
+公式前置长免责段，明确仅本文单一仿真、统一\(Y_{Sa}\)条件下拟合结果，禁止通用；
+删除 “通用工程校正公式、补偿系数” 拔高词汇，改为 “仿真内拟合偏移量，仅演示标准存在系统偏差”；
+公式末尾追加警示：严禁直接用于工业齿轮寿命换算，必须试验重新标定。
+（2）风险阈值表二选一：保留 + 重度注释 / 直接删除推荐保留表格用于方法演示（不丢图表）：
+重命名表格标题，标注纯演示、无工业效力；
+删除表格内强制设计措施；
+表格下方大号加粗免责声明，区分 “框架演示概念” 和 “可落地行业限值”。
+（3）设计案例段落全面弱化强制性将所有 “应采用、必须规定、锁定参数” 等工程强制要求，改为仿真内变量控制演示，明确无法直接用于实物齿轮设计。（4）新增独立小节：纯数值仿真无试验验证的核心局限性放在 Constraints 章节，主动自陈短板，降低审稿负面印象，模板直接复制进正文；（5）摘要、结论删除全部工程落地类拔高词汇移除 actionable engineering guidance、design conservatism factors、standardization reference 等夸大描述，替换为仅数值案例解读、方法论展示类措辞。（6）研究路线图 Phase2 明确试验验证核心任务写明下一步将开展单齿弯曲疲劳试验，对标本文仿真工况，校准修正公式、可靠风险阈值，现阶段所有定量数值仅作方法演示。返修回复话术（独立完整段落，可直接粘贴）
+Comment7: The manuscript proposes engineering risk thresholds, inter-standard correction formulas and design guidance relying solely on numerical simulation without physical gear fatigue test validation.
+Revisions:
+
+All quantitative outputs including the cross-standard log-life offset formulas and allowable fatigue spread thresholds are appended with prominent, repeated disclaimers stating they are case-specific fitting results only valid for the studied 42CrMo4 gear at 700 N·m under unified \(Y_{Sa}\) baseline, and cannot serve as universal industrial design criteria or standard revision basis.
+The illustrative design scenario and risk threshold table are revised to remove all mandatory design requirements, repositioned merely as conceptual demonstrations of how the variance decomposition framework can interpret uncertainty sources within a closed numerical test environment.
+A dedicated subsection on experimental validation limitations is added to the constraints chapter to objectively address the lack of physical fatigue testing, clarifying that all quantitative engineering deductions require experimental calibration before practical application.
+Physical gear bending fatigue benchmark testing is defined as a core priority in Phase 2 of our research roadmap to calibrate the proposed correction relations and risk classification criteria in follow-up work.

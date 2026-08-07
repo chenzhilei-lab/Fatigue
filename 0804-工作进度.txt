@@ -1,0 +1,57 @@
+================================================================================
+0804 工作进度 — 齿轮疲劳 v4.0 审计+修复
+================================================================================
+
+一、已完成
+
+1. 审稿人 10 项强制修改逐项评估
+   - 5 项已完成 (2,5,6,8,9,10)
+   - 2 项部分完成 (1 原生应力链, 7 实验验证)
+   - 3 项需 Phase 2 (3 多材料, 4 多扭矩, 7 试验)
+   详见 审稿问题清单_齿轮_v4.0.txt
+
+2. 代码层+数据层完整审计
+   - Codex 完成第一件：代码层审计 → 审计进度_齿轮_v4.0_20260804.md
+   - 第二件+第三件完成：审稿问题清单_齿轮_v4.0.txt (A-E 五节完整清单)
+
+3. 论文 v4.0 文本修复（本轮已完成）
+   - Table 1 标题: 144组合/92 run-out → 108组合/84 run-out/78%
+   - 3×3×2×3×3 → 2×3×2×3×3 (算术修正)
+   - 97.9% → 95.5% (3-method 三主效应和)
+   - "five orders of magnitude" → "over three orders (3.2 dex)"
+   - Gerber run-out 25→34, ground 22→40 (sweep.json 核实)
+   - Y_Sa 段新增强免责块 "Modeling disclaimer"
+   - ±7% → 诚实表述 (AGMA 1%, FKM 19%)
+   - 修正公式降级 "Important---case-specific fitting only"
+   - 扭矩节重写 (physical reality, zero finite-life observations)
+   - 新增 Constraints §Limitations of purely numerical UQ
+   - 新增 multi_aft_comparison.py → log-logistic/Gamma 对比
+   - 新增 §2.7.1 Caveat on decomposition method (heuristic, not formal)
+   - 似然比分解诚实声明
+
+4. 代码修复
+   - run_sweep.py docstring 972→144, print 350→700 N·m
+   - sweep_summary.json torque_Nm 350→700
+
+二、五个🔴未修复（需重跑全部分析）
+
+1. Basquin 自洽性矛盾：679/626 无法从 σf′×(2×10⁶)^b 导出 (实为 ~610/610)
+   → 需改用 Basquin 自洽门槛重跑 sweep + AFT + 全部敏感性
+2. 679/626 来源不实：本地 SAE Excel，论文称 Waterloo SMDIdbase
+   → 需修改论文来源声明或改用 Basquin 自洽值
+3. 材料 UTS 不匹配：代码 1000 MPa vs 实测 1355/1537
+   → 需评估对 Goodman/Gerber/Peterson 的影响
+4. ka_sensitivity 死代码：run-out→finite 永不触发
+5. Y_Sa 敏感性低估：Goodman+T=1.33 时寿命差 ~1.9 dex，非 "sub-percentage-point"
+
+三、当前论文状态
+   - paper/gear_fatigue_v4.0.tex: 33 页, 零错误编译
+   - 3-method (108组合) 为主基线, Goodman 排除
+   - 主结果: Std=43.7%, MS=26.4%, Rz=25.4%
+   - 输出文件: 审稿问题清单_齿轮_v4.0.txt, 审计进度_齿轮_v4.0_20260804.md, 0804-工作进度.txt
+
+四、续做清单
+   - 决定：是否用 Basquin 自洽门槛 (610/610 MPa) 重跑全部分析
+   - 若重跑：更新 sweep.json → aft_anova.json → 全部敏感性 JSON → 论文全部数字
+   - 若不重跑：论文中诚实标注 679/626 来自 SAE Excel，并加 caveat 说明 Basquin 不自洽
+================================================================================

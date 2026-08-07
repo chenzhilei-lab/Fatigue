@@ -1,0 +1,88 @@
+ alpha=0.4, label='EOL (80%)')
+
+fig.tight_layout()
+fig.savefig('output/nasa_vs_synthetic_capacity.png', dpi=300)
+print("鉁?鍥惧凡鐢熸垚: output/nasa_vs_synthetic_capacity.png")
+EOF
+  鈼?Reasonix
+
+  鍥惧凡鐢熸垚銆傞獙璇佷竴涓嬪唴瀹规槸鍚﹀悎鐞嗭紙鐗瑰埆鏄?NASA B0005 涓庡悎鎴?Cell_A 鐨?SOH 鏇茬嚎璐村悎搴︼級锛?
+  鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+  鏈疆  256.3K tok 路 in 255.8K 路 cached 255.7K 路 new 42 路 out 475 路 楼0.0061
+
+  鈼?Bash(cd /mnt/d/Papers/0723-Battery_SOH_UQ && python3 - <<'EOF'
+import csv, json, numpy as np
+# 瀹氶噺瀵规瘮锛氬悇鐢垫睜瀵瑰湪 cycle 40/80/120/168 鐨?SOH )
+  鈳? 4 lines
+  路 鎺堟潈宸蹭繚瀛樺埌 /mnt/d/Papers/0723-Battery_SOH_UQ/reasonix.toml锛欱ash=cd /mnt/d/Papers/0723-Battery_SOH_UQ && python3 - <<'EOF'
+import csv, json, numpy as np
+# 瀹氶噺瀵规瘮锛氬悇鐢垫睜瀵瑰湪 cycle 40/80/120/168 鐨?SOH 宸窛
+def load_nasa(batt):
+    rows = []
+    with open('paper/ref_papers/nasa_dataset/cleaned_dataset/metadata.csv') as f:
+        for r in csv.DictReader(f):
+            if r['type']=='discharge' and r['battery_id']==batt:
+                rows.append((int(r['test_id']), float(r['Capacity'])))
+    rows.sort()
+    cap = np.array([c for _, c in rows])
+    return cap / cap[0]
+
+aging = json.load(open('data/battery_aging_data.json'))
+def syn_soh(cell):
+    cyc = [c['capacity_true_Ah'] for c in aging[cell]['cycles']]
+    return np.array(cyc) / cyc[0]
+
+pairs = [('B0005','Cell_A'), ('B0006','Cell_B'), ('B0018','Cell_C')]
+print(f"{'NASA':6s} {'鍚堟垚':8s} {'@40':>8s} {'@80':>8s} {'@120':>8s} {'@168':>8s}")
+for nb, sc in pairs:
+    n = load_nasa(nb); s = syn_soh(sc)
+    idx = [39, 79, 119, 167]
+    diffs = [100*abs(n[i]-s[i]) for i in idx if i < min(len(n), len(s))]
+    print(f"{nb:6s} {sc:8s} " + " ".join(f"{d:7.1f}pp" for d in diffs))
+EOF
+  鈼?Reasonix
+
+  鏈夐噸瑕佸彂鐜伴渶瑕佸瀹炲鐞嗭細Cell_A鈫擝0005 璐村悎寰堝ソ锛?-5pp锛夛紝浣?Cell_B鈫擝0006銆丆ell_C鈫擝0018 宸窛杈冨ぇ锛?7-26pp锛?銆傝鏂囧０鏄庢槸"aging parameters
+  calibrated to NASA PCoE (B0005鈥揃0018)"鈥斺€旂洰鍓嶅彧瀵瑰揩閫熻€佸寲鐢垫睜鎴愮珛锛屽涓?鎱㈤€熺數姹犲涓嶄笂銆傛煡涓€涓嬫垜鐨勯厤瀵规槸鍚﹀悎鐞嗭紙B0006/B0018 鏄惁鐪熸槸涓?鎱㈤€燂級锛?
+  鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
+  鏈疆  257.0K tok 路 in 256.4K 路 cached 256.3K 路 new 109 路 out 670 路 楼0.0066
+
+  鈼?Bash(cd /mnt/d/Papers/0723-Battery_SOH_UQ && python3 - <<'EOF'
+import csv, numpy as np
+def load_nasa(batt):
+    rows = []
+    with open('paper/ref)
+  鈳? 13 lines
+  路 鎺堟潈宸蹭繚瀛樺埌 /mnt/d/Papers/0723-Battery_SOH_UQ/reasonix.toml锛欱ash=cd /mnt/d/Papers/0723-Battery_SOH_UQ && python3 - <<'EOF'
+import csv, numpy as np
+def load_nasa(batt):
+    rows = []
+    with open('paper/ref_papers/nasa_dataset/cleaned_dataset/metadata.csv') as f:
+        for r in csv.DictReader(f):
+            if r['type']=='discharge' and r['battery_id']==batt:
+                rows.append((int(r['test_id']), float(r['Capacity'])))
+    rows.sort()
+    cap = np.array([c for _, c in rows])
+    return cap / cap[0]
+
+# 鍒楀嚭鎵€鏈?168 寰幆鐢垫睜鐨勫疄闄呰“鍑忕巼锛岀湅鍝釜鏈€鎺ヨ繎 Cell_B (88.2% @120) / Cell_C (95.3% @120)
+print("=== 鎵€鏈?168 寰幆鐢垫睜鐨?SOH@120 ===")
+for b in ['B0005','B0006','B0007','B0018']:
+    s = load_nasa(b)
+    print(f"  {b}: SOH@120 = {100*s[119]:.1f}%  SOH@168 = {100*s[-1]:.1f}%")
+print("\n璁烘枃鍚堟垚: Cell_A@120=74.9%  Cell_B@120=88.2%  Cell_C@120=95.3%")
+print("\n=== 鍏朵粬闀垮惊鐜數姹狅紙>100 discharge锛?==")
+from collections import Counter
+rows = []
+with open('paper/ref_papers/nasa_dataset/cleaned_dataset/metadata.csv') as f:
+    for r in csv.DictReader(f):
+        if r['type']=='discharge':
+            rows.append((r['battery_id'], int(r['test_id']), float(r['Capacity'])))
+cnt = Counter(b for b,_,_ in rows)
+for b, n in sorted(cnt.items(), key=lambda x:-x[1]):
+    if n >= 100:
+        sub = sorted([(t,c) for bb,t,c in rows if bb==b])
+        caps = np.array([c for _,c in sub])
+        soh = caps/caps[0]
+        idx = min(119, len(soh)-1)
+        print(f"  {b}: {n} 娆℃斁鐢? SOH@120 = {100*soh[idx]:.1f}%")

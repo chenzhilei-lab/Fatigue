@@ -1,0 +1,466 @@
+"""
+threshold_sensitivity.py — Run-out threshold sensitivity analysis
+==================================================================
+Tests AFT variance decomposition under different run-out definitions:
+  - 10^6 cycles (baseline: current paper)
+  - 3×10^6 cycles (ISO 6336 knee-point recommendation)
+  - 5×10^6 cycles (AGMA 2001 knee-point recommendation)
+  - No threshold (all Basquin-predicted Nf treated as observed)
+
+This addresses the logical inconsistency: Basquin equation predicts
+finite life at all stress levels, but we artificially truncate at 10^6.
+"""
+import json, sys, os, copy
+import numpy as np
+from scipy.stats import norm
+
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+os.makedirs("output", exist_ok=True)
+
+from gear_params import SN_CURVES
+
+# ============================================================
+# 1. Load sweep data
+# ============================================================
+print("Loading sweep data...", flush=True)
+with open("output/sweep.json") as f:
+    sweep_orig = json.load(f)
+
+# ============================================================
+# 2. AFT decomposition (compact, same algorithm)
+# ============================================================
+FACTORS = {
+    "sn_source": ["Waterloo_SMDIdbase_Iter066", "Waterloo_SMDIdbase_Iter068"],
+    "mean_stress_method": ["Goodman", "Gerber", "Morrow", "SWT"],
+    "damage_method": ["Miner_original", "Miner_modified"],
+    "size_surface_standard": ["ISO_6336", "AGMA_2001", "FKM"],
+    "rz_level": ["as_forged_Rz50", "ground_Rz4", "machined_Rz15"],
+}
+
+FACTOR_ORDER = [
+    "mean_stress_method",
+    "size_surface_standard",
+    "rz_level",
+    "sn_source",
+    "damage_method",
+]
+
+FACTOR_LABELS = {
+    "mean_stress_method": "Mean-Stress Correction",
+    "size_surface_standard": "Size/Surface Standard",
+    "rz_level": "Surface Roughness Rz",
+    "sn_source": "S-N Curve Source",
+    "damage_method": "Cumulative Damage Rule",
+}
+
+
+def build_entries(sweep_data, threshold):
+    """Build entry list with given run-out threshold (Nf cycles)."""
+    entries = []
+    for r in sweep_data:
+        e = {
+            "sn_source": r["sn_source"],
+            "mean_stress_method": r["mean_stress_method"],
+            "damage_method": r["damage_method"],
+            "size_surface_standard": r["size_surface_standard"],
+            "rz_level": r["rz_level"],
+        }
+        nf = r.get("Nf", float("inf"))
+        log_nf = r.get("log10_Nf")
+
+        if threshold is None:
+            # No threshold: use all Basquin-predicted Nf as observed
+            if isinstance(nf, (int, float)) and np.isfinite(nf) and nf > 0:
+                e["logNf"] = float(np.log10(nf))
+                e["censored"] = 0
+            else:
+                e["logNf"] = None
+                e["censored"] = 1
+        else:
+            # Threshold-based: Nf > threshold → run-out
+            if isinstance(nf, (int, float)) and np.isfinite(nf) and nf > 0:
+                if nf > threshold:
+                    e["logNf"] = None
+                    e["censored"] = 1
+                else:
+                    e["logNf"] = float(np.log10(nf))
+                    e["censored"] = 0
+            else:
+                e["logNf"] = None
+                e["censored"] = 1
+        entries.append(e)
+
+    # Set lower bound for censored entries
+    finite_vals = [e["logNf"] for e in entries if e["logNf"] is not None]
+    if finite_vals:
+        max_obs = max(finite_vals)
+        for e in entries:
+            if e["censored"] == 1:
+                e["logNf_lower"] = max_obs
+    return entries
+
+
+def build_design(entries, factors_subset=None):
+    if factors_subset is None:
+        factors_subset = FACTOR_ORDER
+    cols = []
+    for fname in factors_subset:
+        levels = FACTORS[fname]
+        for j in range(1, len(levels)):
+            col = np.array([1.0 if e[fname] == levels[j] else 0.0 for e in entries])
+            cols.append(col - 1.0 / len(levels))
+    X = np.column_stack(cols) if cols else np.zeros((len(entries), 0))
+    X = np.column_stack([np.ones(len(entries)), X])
+    return X
+
+
+def extract_arrays(entries):
+    y = np.array([e.get("logNf", 0.0) or 0.0 for e in entries])
+    cens = np.array([e["censored"] == 1 for e in entries], dtype=bool)
+    y_low = np.array([e.get("logNf_lower", 0.0) or 0.0 for e in entries])
+    return y, cens, y_low
+
+
+def em_censored_normal(X, y_obs, censored, y_lower, n_iter=30, tol=1e-8,
+                       sigma_fixed=None):
+    n, p = X.shape
+    obs_mask = ~censored
+    if obs_mask.sum() < p + 2:
+        return None, None, float('-inf')
+
+    beta = np.linalg.lstsq(X[obs_mask], y_obs[obs_mask], rcond=None)[0]
+    resid_obs = y_obs[obs_mask] - X[obs_mask] @ beta
+    sigma = (sigma_fixed if sigma_fixed is not None
+             else max(np.std(resid_obs, ddof=p), 0.001))
+    y_aug = y_obs.copy()
+
+    for iteration in range(n_iter):
+        mu = X @ beta
+        beta_old = beta.copy()
+        sigma_old = sigma
+        if censored.any():
+            z = (y_lower[censored] - mu[censored]) / sigma
+            log_phi = norm.logpdf(z)
+            log_sf = norm.logsf(z)
+            imr = np.where(z > 30, z, np.where(z < -30, 0.0, np.exp(log_phi - log_sf)))
+            y_aug[censored] = mu[censored] + sigma * imr
+        beta = np.linalg.lstsq(X, y_aug, rcond=None)[0]
+        resid = y_aug - X @ beta
+        if sigma_fixed is None:
+            sigma2 = np.sum(resid[obs_mask]**2) / max(obs_mask.sum(), 1)
+            if censored.any():
+                z = (y_lower[censored] - X[censored] @ beta) / sigma_old
+                imr = np.where(z > 30, z, np.where(z < -30, 0.0, np.exp(norm.logpdf(z) - norm.logsf(z))))
+                cond_var = sigma_old**2 * (1 + z * imr - imr**2)
+                cond_var = np.maximum(cond_var, 0.0)
+                sigma2 = (np.sum(resid[obs_mask]**2) + np.sum(cond_var)) / n
+            sigma = np.sqrt(max(sigma2, 0.001))
+        sigma_converged = (sigma_fixed is not None) or abs(sigma - sigma_old) < tol
+        if np.max(np.abs(beta - beta_old)) < tol and sigma_converged:
+            break
+
+    mu = X @ beta
+    ll = 0.0
+    resid_obs_final = (y_obs[obs_mask] - mu[obs_mask]) / sigma
+    ll += np.sum(norm.logpdf(resid_obs_final)) - obs_mask.sum() * np.log(sigma)
+    if censored.any():
+        z_cens = (y_lower[censored] - mu[censored]) / sigma
+        ll += np.sum(norm.logsf(z_cens))
+    return beta, sigma, ll
+
+
+def run_aft(entries):
+    n_total = len(entries)
+    n_censored = sum(1 for e in entries if e["censored"] == 1)
+    n_obs = n_total - n_censored
+
+    X_FULL = build_design(entries, FACTOR_ORDER)
+    Y_OBS, CENS, Y_LOWER = extract_arrays(entries)
+
+    beta_full, sigma_full, ll_full = em_censored_normal(X_FULL, Y_OBS, CENS, Y_LOWER)
+    if beta_full is None:
+        return {"n_total": n_total, "n_censored": n_censored, "n_observed": n_obs, "error": "insufficient observed"}
+
+    drop_results = {}
+    for drop_factor in FACTOR_ORDER:
+        remaining = [f for f in FACTOR_ORDER if f != drop_factor]
+        X_drop = build_design(entries, remaining)
+        beta, sigma, ll = em_censored_normal(X_drop, Y_OBS, CENS, Y_LOWER,
+                                             sigma_fixed=sigma_full)
+        if beta is not None:
+            delta = ll_full - ll
+            drop_results[drop_factor] = {"delta_logLik": delta, "df": len(FACTORS[drop_factor]) - 1}
+        else:
+            drop_results[drop_factor] = {"delta_logLik": 0.0, "df": 0}
+
+    # Interaction
+    levels_std = FACTORS["size_surface_standard"]
+    levels_rz = FACTORS["rz_level"]
+    X_int_cols = []
+    for si in range(1, len(levels_std)):
+        for rj in range(1, len(levels_rz)):
+            col = np.array([1.0 if e["size_surface_standard"] == levels_std[si] and e["rz_level"] == levels_rz[rj] else 0.0 for e in entries])
+            X_int_cols.append(col)
+    X_int_raw = np.column_stack(X_int_cols) if X_int_cols else np.zeros((n_total, 0))
+    X_int_centered = X_int_raw - X_int_raw.mean(axis=0)
+    X_W_INT = np.column_stack([X_FULL, X_int_centered])
+    beta_int, sigma_int, ll_int = em_censored_normal(
+        X_W_INT, Y_OBS, CENS, Y_LOWER, sigma_fixed=sigma_full)
+    delta_int = ll_int - ll_full if beta_int is not None else 0.0
+
+    total_delta = sum(max(0, d["delta_logLik"]) for d in drop_results.values()) + max(0, delta_int)
+    if total_delta <= 0:
+        total_delta = 1.0
+
+    variance_fractions = {}
+    for fname in FACTOR_ORDER:
+        var_pct = 100 * max(0, drop_results[fname]["delta_logLik"]) / total_delta
+        variance_fractions[fname] = round(var_pct, 1)
+    variance_fractions["interaction"] = round(100 * max(0, delta_int) / total_delta, 1)
+
+    # Also compute raw log₁₀(Nf) spread for observed entries
+    obs_log_nf = [e["logNf"] for e in entries if e["logNf"] is not None]
+    spread_dex = round(max(obs_log_nf) - min(obs_log_nf), 2) if len(obs_log_nf) >= 2 else None
+
+    return {
+        "n_total": n_total,
+        "n_censored": n_censored,
+        "n_observed": n_obs,
+        "censoring_rate_%": round(100 * n_censored / n_total, 1),
+        "sigma": round(float(sigma_full), 4) if sigma_full else None,
+        "logLik": round(float(ll_full), 2) if ll_full else None,
+        "variance_fractions": variance_fractions,
+        "spread_dex": spread_dex,
+    }
+
+
+# ============================================================
+# 3. Run sensitivity
+# ============================================================
+THRESHOLDS = [
+    (1e6, "10^6 cycles (baseline: Waterloo fatigue strength)"),
+    (3e6, "3×10^6 cycles (ISO 6336 knee-point recommendation)"),
+    (5e6, "5×10^6 cycles (AGMA 2001 knee-point recommendation)"),
+    (None, "No threshold (all Basquin-predicted Nf as observed)"),
+]
+
+print(f"\n{'='*80}")
+print(f"Run-out Threshold Sensitivity Analysis")
+print(f"{'='*80}", flush=True)
+
+results = {}
+baseline_v = None
+
+for threshold, label in THRESHOLDS:
+    print(f"\n--- Threshold: {label} ---", flush=True)
+    entries = build_entries(sweep_orig, threshold)
+    result = run_aft(entries)
+    results[str(threshold) if threshold else "none"] = result
+
+    n_obs = result["n_observed"]
+    n_cens = result["n_censored"]
+    rate = result["censoring_rate_%"]
+    spread = result.get("spread_dex", "N/A")
+    print(f"  Observed={n_obs}, Censored={n_cens}, Rate={rate}%, Spread={spread} dex", flush=True)
+
+    if "error" in result:
+        print(f"  ERROR: {result['error']}", flush=True)
+        continue
+
+    v = result["variance_fractions"]
+    for fname in FACTOR_ORDER:
+        print(f"    {FACTOR_LABELS[fname]:30s}: {v[fname]:5.1f}%", flush=True)
+    print(f"    {'Interaction':30s}: {v['interaction']:5.1f}%", flush=True)
+
+    if threshold == 1e6:
+        baseline_v = v
+
+# ============================================================
+# 4. Comparison table
+# ============================================================
+print(f"\n{'='*80}")
+print("Comparison: Run-out Threshold Sensitivity")
+print(f"{'='*80}")
+header = f"{'Factor':30s}"
+for threshold, label in THRESHOLDS:
+    key = str(threshold) if threshold else "none"
+    header += f" {key:>8s}"
+print(header, flush=True)
+print("-" * (30 + 9 * len(THRESHOLDS)), flush=True)
+
+for fname in FACTOR_ORDER:
+    row = f"{FACTOR_LABELS[fname]:30s}"
+    for threshold, label in THRESHOLDS:
+        key = str(threshold) if threshold else "none"
+        v = results[key].get("variance_fractions", {}).get(fname, 0)
+        marker = ""
+        if baseline_v and threshold != 1e6:
+            delta = v - baseline_v[fname]
+            if abs(delta) >= 5:
+                marker = " ***"
+            elif abs(delta) >= 2:
+                marker = "  * "
+        row += f" {v:5.1f}%  "
+    print(row, flush=True)
+
+# Also show censoring rate row
+row = f"{'Censoring rate':30s}"
+for threshold, label in THRESHOLDS:
+    key = str(threshold) if threshold else "none"
+    rate = results[key]["censoring_rate_%"]
+    row += f" {rate:5.1f}%  "
+print(row, flush=True)
+row = f"{'Nf spread (dex)':30s}"
+for threshold, label in THRESHOLDS:
+    key = str(threshold) if threshold else "none"
+    spread = results[key].get("spread_dex", "N/A")
+    if isinstance(spread, (int, float)):
+        row += f" {spread:5.2f}  "
+    else:
+        row += f" {'N/A':>5s}  "
+print(row, flush=True)
+
+# ============================================================
+# 5. Ranking stability check
+# ============================================================
+print(f"\nRanking (top 3 per threshold):")
+for threshold, label in THRESHOLDS:
+    key = str(threshold) if threshold else "none"
+    v = results[key].get("variance_fractions", {})
+    ranking = sorted([(f, v[f]) for f in FACTOR_ORDER], key=lambda x: -x[1])
+    top3 = " > ".join([f"{FACTOR_LABELS[r[0]]}({r[1]:.1f})" for r in ranking[:3]])
+    print(f"  {label[:50]:50s}: {top3}", flush=True)
+
+# ============================================================
+# 6. Save
+# ============================================================
+# ============================================================
+# 7. Basquin-only sensitivity (no fatigue strength criterion)
+# ============================================================
+print(f"\n{'='*80}")
+print("Basquin-Only Analysis (no fatigue strength; threshold-only cutoff)")
+print(f"{'='*80}", flush=True)
+
+def recompute_basquin_nf(sigma_eff, sn_source):
+    """Compute Nf from Basquin equation ONLY, no fatigue limit."""
+    curve = SN_CURVES[sn_source]
+    sigma_f_prime = curve["sigma_f_prime"]
+    b = curve["b"]
+    if sigma_eff <= 0:
+        return float('inf')
+    return 0.5 * (sigma_eff / sigma_f_prime) ** (1.0 / b)
+
+
+def build_entries_basquin_only(sweep_data, threshold):
+    """Build entries using Basquin-only Nf with threshold cutoff."""
+    entries = []
+    for r in sweep_data:
+        e = {
+            "sn_source": r["sn_source"],
+            "mean_stress_method": r["mean_stress_method"],
+            "damage_method": r["damage_method"],
+            "size_surface_standard": r["size_surface_standard"],
+            "rz_level": r["rz_level"],
+        }
+        sigma_eff = r.get("sigma_effective", 0)
+        nf_basquin = recompute_basquin_nf(sigma_eff, r["sn_source"])
+
+        if threshold is None:
+            if np.isfinite(nf_basquin) and nf_basquin > 0:
+                e["logNf"] = float(np.log10(nf_basquin))
+                e["censored"] = 0
+            else:
+                e["logNf"] = None
+                e["censored"] = 1
+        else:
+            if np.isfinite(nf_basquin) and nf_basquin > 0:
+                if nf_basquin > threshold:
+                    e["logNf"] = None
+                    e["censored"] = 1
+                else:
+                    e["logNf"] = float(np.log10(nf_basquin))
+                    e["censored"] = 0
+            else:
+                e["logNf"] = None
+                e["censored"] = 1
+        entries.append(e)
+
+    finite_vals = [e["logNf"] for e in entries if e["logNf"] is not None]
+    if finite_vals:
+        max_obs = max(finite_vals)
+        for e in entries:
+            if e["censored"] == 1:
+                e["logNf_lower"] = max_obs
+    return entries
+
+
+basquin_results = {}
+for threshold, label in THRESHOLDS:
+    print(f"\n--- Basquin-only, Threshold: {label} ---", flush=True)
+    entries = build_entries_basquin_only(sweep_orig, threshold)
+    result = run_aft(entries)
+    key = "bq_" + (str(threshold) if threshold else "none")
+    basquin_results[key] = result
+
+    n_obs = result["n_observed"]
+    n_cens = result["n_censored"]
+    rate = result["censoring_rate_%"]
+    spread = result.get("spread_dex", "N/A")
+    print(f"  Observed={n_obs}, Censored={n_cens}, Rate={rate}%, Spread={spread} dex", flush=True)
+
+    if "error" in result:
+        print(f"  ERROR: {result['error']}", flush=True)
+        continue
+
+    v = result["variance_fractions"]
+    for fname in FACTOR_ORDER:
+        print(f"    {FACTOR_LABELS[fname]:30s}: {v[fname]:5.1f}%", flush=True)
+    print(f"    {'Interaction':30s}: {v['interaction']:5.1f}%", flush=True)
+
+print(f"\nBasquin-only Comparison:")
+header = f"{'Factor':30s}"
+for threshold, label in THRESHOLDS:
+    header += f" {str(threshold) if threshold else 'none':>10s}"
+print(header)
+print("-" * 70)
+for fname in FACTOR_ORDER:
+    row = f"{FACTOR_LABELS[fname]:30s}"
+    for threshold, label in THRESHOLDS:
+        key = "bq_" + (str(threshold) if threshold else "none")
+        v = basquin_results[key].get("variance_fractions", {}).get(fname, 0)
+        row += f" {v:7.1f}%  "
+    print(row)
+row = f"{'Censoring rate':30s}"
+for threshold, label in THRESHOLDS:
+    key = "bq_" + (str(threshold) if threshold else "none")
+    rate = basquin_results[key]["censoring_rate_%"]
+    row += f" {rate:7.1f}%  "
+print(row)
+row = f"{'Nf spread (dex)':30s}"
+for threshold, label in THRESHOLDS:
+    key = "bq_" + (str(threshold) if threshold else "none")
+    spread = basquin_results[key].get("spread_dex", "N/A")
+    if isinstance(spread, (int, float)):
+        row += f" {spread:7.2f}  "
+    else:
+        row += f" {'N/A':>7s}  "
+print(row)
+
+output = {
+    "description": "Run-out threshold sensitivity analysis — with and without fatigue strength criterion",
+    "thresholds_tested": [{"value": t if t else "none", "label": l} for t, l in THRESHOLDS],
+    "fatigue_strength_criterion": results,
+    "basquin_only": basquin_results,
+    "summary": {
+        "with_fatigue_strength": "Threshold choice irrelevant: all finite-life Nf < 1e6; run-out driven by fatigue strength criterion",
+        "basquin_only": "Without fatigue strength, Basquin predicts finite life for all entries; threshold choice determines censoring rate and affects variance fractions",
+    }
+}
+
+with open("output/threshold_sensitivity.json", "w") as f:
+    json.dump(output, f, indent=2)
+print(f"\nSaved output/threshold_sensitivity.json", flush=True)
+print("=== Complete ===", flush=True)

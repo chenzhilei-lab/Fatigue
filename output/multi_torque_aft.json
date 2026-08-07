@@ -1,0 +1,55 @@
+{
+  "description": "AFT variance decomposition at 3 torque levels",
+  "torque_levels": [
+    500,
+    600,
+    700
+  ],
+  "results": {
+    "500": {
+      "n_total": 144,
+      "n_finite": 4,
+      "n_censored": 140,
+      "sigma_aft": NaN,
+      "logLik": NaN,
+      "factors": {
+        "mean_stress_method": NaN,
+        "size_surface_standard": NaN,
+        "rz_level": NaN,
+        "sn_source": NaN,
+        "damage_method": NaN,
+        "interaction": NaN
+      }
+    },
+    "600": {
+      "n_total": 144,
+      "n_finite": 16,
+      "n_censored": 128,
+      "sigma_aft": 0.1403,
+      "logLik": -10.83,
+      "factors": {
+        "mean_stress_method": 17.9,
+        "size_surface_standard": 40.1,
+        "rz_level": 34.1,
+        "sn_source": 2.0,
+        "damage_method": 1.8,
+        "interaction": 4.0
+      }
+    },
+    "700": {
+      "n_total": 144,
+      "n_finite": 60,
+      "n_censored": 84,
+      "sigma_aft": 0.1745,
+      "logLik": 11.32,
+      "factors": {
+        "mean_stress_method": 18.2,
+        "size_surface_standard": 55.3,
+        "rz_level": 22.6,
+        "sn_source": 2.5,
+        "damage_method": 0.3,
+        "interaction": 1.2
+      }
+    }
+  }
+}

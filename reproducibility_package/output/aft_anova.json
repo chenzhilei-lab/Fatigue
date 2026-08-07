@@ -1,0 +1,121 @@
+{
+  "model": "Log-normal AFT with right-censoring (EM estimation)",
+  "n_total": 144,
+  "n_censored": 84,
+  "n_observed": 60,
+  "sigma_aft": 0.1745,
+  "logLik_full": 11.32,
+  "anova_table": [
+    {
+      "factor": "mean_stress_method",
+      "delta_logLik": 324.2129,
+      "variance_frac_%": 18.2,
+      "df": 3
+    },
+    {
+      "factor": "size_surface_standard",
+      "delta_logLik": 985.7123,
+      "variance_frac_%": 55.3,
+      "df": 2
+    },
+    {
+      "factor": "rz_level",
+      "delta_logLik": 403.3071,
+      "variance_frac_%": 22.6,
+      "df": 2
+    },
+    {
+      "factor": "sn_source",
+      "delta_logLik": 43.9015,
+      "variance_frac_%": 2.5,
+      "df": 1
+    },
+    {
+      "factor": "damage_method",
+      "delta_logLik": 5.8778,
+      "variance_frac_%": 0.3,
+      "df": 1
+    },
+    {
+      "factor": "size_surface_standard x rz_level",
+      "delta_logLik": 20.5399,
+      "variance_frac_%": 1.2,
+      "df": 4,
+      "type": "interaction"
+    }
+  ],
+  "bootstrap": {
+    "n_bootstrap": 2000,
+    "rng_seed": 42,
+    "noise_floor": {
+      "mean_stress_method": {
+        "mean": 18.19,
+        "std": 3.66,
+        "ci_95_lower": 10.75,
+        "ci_95_upper": 24.99,
+        "s_n": 5.0
+      },
+      "size_surface_standard": {
+        "mean": 55.65,
+        "std": 3.73,
+        "ci_95_lower": 48.73,
+        "ci_95_upper": 62.97,
+        "s_n": 15.0
+      },
+      "rz_level": {
+        "mean": 22.3,
+        "std": 2.71,
+        "ci_95_lower": 16.88,
+        "ci_95_upper": 27.79,
+        "s_n": 8.0
+      },
+      "sn_source": {
+        "mean": 2.39,
+        "std": 0.6,
+        "ci_95_lower": 1.29,
+        "ci_95_upper": 3.65,
+        "s_n": 4.0
+      },
+      "damage_method": {
+        "mean": 0.35,
+        "std": 0.21,
+        "ci_95_lower": 0.05,
+        "ci_95_upper": 0.82,
+        "s_n": 2.0
+      },
+      "size_surface_standard x rz_level": {
+        "mean": 1.12,
+        "std": 0.31,
+        "ci_95_lower": 0.58,
+        "ci_95_upper": 1.77,
+        "s_n": 4.0
+      }
+    }
+  },
+  "factor_levels": {
+    "sn_source": [
+      "Waterloo_SMDIdbase_Iter066",
+      "Waterloo_SMDIdbase_Iter068"
+    ],
+    "mean_stress_method": [
+      "Goodman",
+      "Gerber",
+      "Morrow",
+      "SWT"
+    ],
+    "damage_method": [
+      "Miner_original",
+      "Miner_modified"
+    ],
+    "size_surface_standard": [
+      "ISO_6336",
+      "AGMA_2001",
+      "FKM"
+    ],
+    "rz_level": [
+      "as_forged_Rz50",
+      "ground_Rz4",
+      "machined_Rz15"
+    ]
+  }
+}

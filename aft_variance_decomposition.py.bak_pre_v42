@@ -1,0 +1,399 @@
+"""
+aft_variance_decomposition.py — Log-normal AFT + Likelihood-Ratio Variance Decomposition
+==========================================================================================
+Fast version: EM algorithm (censored normal) for point estimates,
+OLS initialization, then L-BFGS-B for refinement.
+2000 bootstrap draws in ~3-5 minutes.
+Output: output/aft_anova.json
+"""
+import json, sys, time
+import numpy as np
+from scipy.stats import norm
+
+# Force unbuffered output
+sys.stdout.reconfigure(line_buffering=True)
+
+# ============================================================
+# 1. Load & prepare data
+# ============================================================
+print("Loading sweep data...", flush=True)
+with open("output/sweep.json") as f:
+    sweep = json.load(f)
+
+ENTRIES = []
+for r in sweep:
+    e = {
+        "sn_source": r["sn_source"],
+        "mean_stress_method": r["mean_stress_method"],
+        "damage_method": r["damage_method"],
+        "size_surface_standard": r["size_surface_standard"],
+        "rz_level": r["rz_level"],
+    }
+    nf = r.get("Nf", float("inf"))
+    log_nf = r.get("log10_Nf")
+    if isinstance(nf, (int, float)) and np.isfinite(nf) and nf > 0 and log_nf is not None:
+        e["logNf"] = float(log_nf)
+        e["censored"] = 0
+    else:
+        e["logNf"] = None
+        e["censored"] = 1
+    ENTRIES.append(e)
+
+MAX_OBS = max(e["logNf"] for e in ENTRIES if e["logNf"] is not None)
+for e in ENTRIES:
+    if e["censored"] == 1:
+        e["logNf_lower"] = MAX_OBS
+
+N_TOTAL = len(ENTRIES)
+N_CENSORED = sum(1 for e in ENTRIES if e["censored"] == 1)
+N_OBSERVED = N_TOTAL - N_CENSORED
+print(f"Total: {N_TOTAL}, Observed: {N_OBSERVED}, Censored: {N_CENSORED}", flush=True)
+
+# ============================================================
+# 2. Factor encoding
+# ============================================================
+FACTORS = {
+    "sn_source": ["Waterloo_SMDIdbase_Iter066", "Waterloo_SMDIdbase_Iter068"],
+    "mean_stress_method": ["Goodman", "Gerber", "Morrow", "SWT"],
+    "damage_method": ["Miner_original", "Miner_modified"],
+    "size_surface_standard": ["ISO_6336", "AGMA_2001", "FKM"],
+    "rz_level": ["as_forged_Rz50", "ground_Rz4", "machined_Rz15"],
+}
+
+FACTOR_ORDER = [
+    "mean_stress_method",
+    "size_surface_standard",
+    "rz_level",
+    "sn_source",
+    "damage_method",
+]
+
+def build_design(entries, factors_subset=None):
+    """Build design matrix X with sum-to-zero contrasts."""
+    if factors_subset is None:
+        factors_subset = FACTOR_ORDER
+    cols = []
+    for fname in factors_subset:
+        levels = FACTORS[fname]
+        for j in range(1, len(levels)):
+            col = np.array([1.0 if e[fname] == levels[j] else 0.0 for e in entries])
+            cols.append(col - 1.0 / len(levels))
+    X = np.column_stack(cols) if cols else np.zeros((len(entries), 0))
+    X = np.column_stack([np.ones(len(entries)), X])
+    return X
+
+def extract_arrays(entries):
+    """Extract y_obs, censored mask, y_lower arrays from entry list."""
+    y = np.array([e.get("logNf", 0.0) or 0.0 for e in entries])
+    cens = np.array([e["censored"] == 1 for e in entries], dtype=bool)
+    y_low = np.array([e.get("logNf_lower", 0.0) or 0.0 for e in entries])
+    return y, cens, y_low
+
+# ============================================================
+# 3. Fast EM algorithm for censored normal regression
+# ============================================================
+def em_censored_normal(X, y_obs, censored, y_lower, n_iter=30, tol=1e-8):
+    """
+    EM algorithm for censored normal (log-normal AFT) regression.
+    Very fast: each iteration is just OLS + inverse Mills ratio.
+    Returns: beta, sigma, log_likelihood
+    """
+    n, p = X.shape
+    obs_mask = ~censored
+
+    # Initialize from OLS on observed entries only
+    beta = np.linalg.lstsq(X[obs_mask], y_obs[obs_mask], rcond=None)[0]
+    resid_obs = y_obs[obs_mask] - X[obs_mask] @ beta
+    sigma = np.std(resid_obs, ddof=p)
+
+    y_aug = y_obs.copy()
+
+    for iteration in range(n_iter):
+        mu = X @ beta
+        beta_old = beta.copy()
+        sigma_old = sigma
+
+        # E-step: impute censored values with conditional expectation
+        if censored.any():
+            z = (y_lower[censored] - mu[censored]) / sigma
+            # Stable IMR: use log space
+            log_phi = norm.logpdf(z)
+            log_sf = norm.logsf(z)
+            # Handle extreme z
+            imr = np.where(z > 30, z, np.where(z < -30, 0.0, np.exp(log_phi - log_sf)))
+            y_aug[censored] = mu[censored] + sigma * imr
+
+        # M-step: OLS
+        beta = np.linalg.lstsq(X, y_aug, rcond=None)[0]
+        resid = y_aug - X @ beta
+
+        # Update sigma with proper censored variance
+        sigma2 = np.sum(resid[obs_mask]**2) / len(obs_mask)
+        if censored.any():
+            z = (y_lower[censored] - X[censored] @ beta) / sigma_old
+            imr = np.where(z > 30, z, np.where(z < -30, 0.0, np.exp(norm.logpdf(z) - norm.logsf(z))))
+            # E[(y-mu)^2 | y > c] = sigma^2 * (1 + z*imr - imr^2)
+            cond_var = sigma_old**2 * (1 + z * imr - imr**2)
+            # Clip negative values (numerical)
+            cond_var = np.maximum(cond_var, 0.0)
+            sigma2 = (np.sum(resid[obs_mask]**2) + np.sum(cond_var)) / n
+        sigma = np.sqrt(max(sigma2, 0.001))
+
+        # Convergence check
+        if np.max(np.abs(beta - beta_old)) < tol and abs(sigma - sigma_old) < tol:
+            break
+
+    # Compute log-likelihood at EM solution
+    mu = X @ beta
+    ll = 0.0
+    resid_obs = (y_obs[obs_mask] - mu[obs_mask]) / sigma
+    ll += np.sum(norm.logpdf(resid_obs)) - obs_mask.sum() * np.log(sigma)
+    if censored.any():
+        z_cens = (y_lower[censored] - mu[censored]) / sigma
+        ll += np.sum(norm.logsf(z_cens))
+
+    return beta, sigma, ll
+
+
+# ============================================================
+# EXECUTION (runs only when invoked directly, skipped on import)
+# ============================================================
+if __name__ == "__main__":
+    print("Building design matrices...", flush=True)
+    X_FULL = build_design(ENTRIES, FACTOR_ORDER)
+    
+    DROP_X = {}
+    for drop_factor in FACTOR_ORDER:
+        remaining = [f for f in FACTOR_ORDER if f != drop_factor]
+        DROP_X[drop_factor] = build_design(ENTRIES, remaining)
+    
+    # Interaction design for original data
+    levels_std = FACTORS["size_surface_standard"]
+    levels_rz = FACTORS["rz_level"]
+    X_int_cols = []
+    for si in range(1, len(levels_std)):
+        for rj in range(1, len(levels_rz)):
+            col = np.array([
+                1.0 if e["size_surface_standard"] == levels_std[si]
+                     and e["rz_level"] == levels_rz[rj]
+                else 0.0 for e in ENTRIES
+            ])
+            X_int_cols.append(col)
+    X_int_raw = np.column_stack(X_int_cols) if X_int_cols else np.zeros((N_TOTAL, 0))
+    X_int_centered = X_int_raw - X_int_raw.mean(axis=0)
+    X_W_INT = np.column_stack([X_FULL, X_int_centered])
+    DF_INT = (len(levels_std) - 1) * (len(levels_rz) - 1)
+    
+    # Pre-extract arrays
+    Y_OBS, CENS, Y_LOWER = extract_arrays(ENTRIES)
+    
+    # ============================================================
+    # 5. Full model fit
+    # ============================================================
+    print("Fitting full AFT model...", flush=True)
+    beta_full, sigma_full, ll_full = em_censored_normal(X_FULL, Y_OBS, CENS, Y_LOWER)
+    
+    print(f"  logLik = {ll_full:.2f}")
+    print(f"  sigma = {sigma_full:.4f}")
+    print(f"  Intercept = {beta_full[0]:.4f}")
+    print(f"  Parameters: {len(beta_full)} betas + 1 sigma", flush=True)
+    
+    # ============================================================
+    # 6. Drop-one-factor decomposition
+    # ============================================================
+    print("\n=== Variance Decomposition ===", flush=True)
+    
+    drop_results = {}
+    for drop_factor in FACTOR_ORDER:
+        X_drop = DROP_X[drop_factor]
+        beta, sigma, ll = em_censored_normal(X_drop, Y_OBS, CENS, Y_LOWER)
+        delta = ll_full - ll
+        df = len(FACTORS[drop_factor]) - 1
+        drop_results[drop_factor] = {
+            "logLik": ll,
+            "delta_logLik": delta,
+            "df": df,
+        }
+        print(f"  Drop {drop_factor:25s}: logLik={ll:9.2f}, ΔlogLik={delta:7.2f}", flush=True)
+    
+    # ============================================================
+    # 7. Interaction term
+    # ============================================================
+    print("Fitting interaction model...", flush=True)
+    beta_int, sigma_int, ll_int = em_censored_normal(X_W_INT, Y_OBS, CENS, Y_LOWER)
+    delta_int = ll_int - ll_full
+    print(f"  With interaction: logLik = {ll_int:.2f}")
+    print(f"  ΔlogLik = {delta_int:.2f}, df = {DF_INT}", flush=True)
+    
+    # ============================================================
+    # 8. Variance decomposition summary
+    # ============================================================
+    # Exclude negative ΔlogL from denominator: a factor whose removal IMPROVES
+    # fit contributes zero information; including its negative ΔlogL would
+    # artificially inflate all positive variance fractions (see §2.7.1).
+    total_delta = sum(max(0, d["delta_logLik"]) for d in drop_results.values()) + max(0, delta_int)
+    
+    print("\n=== Variance Decomposition ===", flush=True)
+    print(f"{'Factor':30s} {'ΔlogLik':>8s} {'Var%':>7s}", flush=True)
+    print("-" * 47, flush=True)
+    
+    anova_rows = []
+    for fname in FACTOR_ORDER:
+        d = drop_results[fname]
+        var_pct = 100 * max(0, d["delta_logLik"]) / total_delta
+        print(f"{fname:30s} {d['delta_logLik']:8.2f} {var_pct:7.1f}%", flush=True)
+        anova_rows.append({
+            "factor": fname,
+            "delta_logLik": round(d["delta_logLik"], 4),
+            "variance_frac_%": round(var_pct, 1),
+            "df": d["df"],
+        })
+    
+    int_var_pct = 100 * max(0, delta_int) / total_delta
+    print(f"{'Standard x Rz (interaction)':30s} {max(0, delta_int):8.2f} {int_var_pct:7.1f}%", flush=True)
+    anova_rows.append({
+        "factor": "size_surface_standard x rz_level",
+        "delta_logLik": round(max(0, delta_int), 4),
+        "variance_frac_%": round(int_var_pct, 1),
+        "df": DF_INT,
+        "type": "interaction",
+    })
+    
+    sigma2_pct = 100 * sigma_full**2 / (sigma_full**2 + total_delta)
+    print(f"\n  sigma_full = {sigma_full:.4f}", flush=True)
+    print(f"  All {N_TOTAL} entries used (including {N_CENSORED} run-outs)", flush=True)
+    
+    # ============================================================
+    # 9. Bootstrap (2000 draws, EM-based)
+    # ============================================================
+    N_BOOT = 2000
+    RNG_SEED = 42
+    print(f"\n=== Bootstrap (N={N_BOOT}, seed={RNG_SEED}) ===", flush=True)
+    np.random.seed(RNG_SEED)
+    
+    boot_results = {fname: [] for fname in FACTOR_ORDER}
+    boot_results_interaction = []
+    
+    t0 = time.time()
+    for b in range(N_BOOT):
+        idx = np.random.choice(N_TOTAL, size=N_TOTAL, replace=True)
+        boot_entries = [ENTRIES[i] for i in idx]
+    
+        try:
+            # Extract arrays for this bootstrap sample
+            y_boot, cens_boot, y_low_boot = extract_arrays(boot_entries)
+    
+            # Full model
+            X_bf = build_design(boot_entries, FACTOR_ORDER)
+            beta_bf, sigma_bf, ll_bf = em_censored_normal(X_bf, y_boot, cens_boot, y_low_boot)
+    
+            # Drop-one models
+            boot_deltas = {}
+            for drop_f in FACTOR_ORDER:
+                rem = [f for f in FACTOR_ORDER if f != drop_f]
+                X_bd = build_design(boot_entries, rem)
+                beta_bd, sigma_bd, ll_bd = em_censored_normal(X_bd, y_boot, cens_boot, y_low_boot)
+                boot_deltas[drop_f] = ll_bf - ll_bd
+    
+            # Interaction model
+            X_bi_cols = []
+            for si in range(1, len(levels_std)):
+                for rj in range(1, len(levels_rz)):
+                    col = np.array([
+                        1.0 if e["size_surface_standard"] == levels_std[si]
+                             and e["rz_level"] == levels_rz[rj]
+                        else 0.0 for e in boot_entries
+                    ])
+                    X_bi_cols.append(col)
+            X_bi_raw = np.column_stack(X_bi_cols) if X_bi_cols else np.zeros((len(boot_entries), 0))
+            X_bi_centered = X_bi_raw - X_bi_raw.mean(axis=0)
+            X_bi_full = np.column_stack([X_bf, X_bi_centered])
+            beta_bi, sigma_bi, ll_bi = em_censored_normal(X_bi_full, y_boot, cens_boot, y_low_boot)
+    
+            delta_bi = ll_bi - ll_bf
+            total_delta_boot = sum(boot_deltas.values()) + max(0, delta_bi)
+    
+            for fname in FACTOR_ORDER:
+                if total_delta_boot > 1e-10:
+                    boot_results[fname].append(100 * boot_deltas[fname] / total_delta_boot)
+    
+            if total_delta_boot > 1e-10:
+                boot_results_interaction.append(100 * max(0, delta_bi) / total_delta_boot)
+    
+        except Exception as e:
+            continue
+    
+        if (b + 1) % 100 == 0:
+            elapsed = time.time() - t0
+            n_done = b + 1
+            rate = n_done / elapsed
+            eta = (N_BOOT - n_done) / rate if rate > 0 else 0
+            n_good = len(boot_results[FACTOR_ORDER[0]])
+            print(f"  {n_done}/{N_BOOT} draws ({rate:.1f}/s), {n_good} valid, ETA {eta:.0f}s", flush=True)
+    
+    elapsed = time.time() - t0
+    n_success = len(boot_results[FACTOR_ORDER[0]])
+    print(f"  Completed {n_success}/{N_BOOT} valid draws in {elapsed:.0f}s", flush=True)
+    
+    print(f"\n{'Factor':30s} {'Mean':>6s} {'Std':>6s} {'CI95':>20s} {'S/N':>5s}", flush=True)
+    print("-" * 75, flush=True)
+    
+    boot_summary = {}
+    for fname in FACTOR_ORDER:
+        vals = np.array(boot_results[fname])
+        if len(vals) > 10:
+            mean_v = np.mean(vals)
+            std_v = np.std(vals)
+            ci_lo = np.percentile(vals, 2.5)
+            ci_hi = np.percentile(vals, 97.5)
+            sn = mean_v / std_v if std_v > 0 else 0
+            print(f"{fname:30s} {mean_v:6.1f}% {std_v:6.1f}% [{ci_lo:6.1f}, {ci_hi:6.1f}] {sn:5.0f}", flush=True)
+            boot_summary[fname] = {
+                "mean": round(float(mean_v), 2),
+                "std": round(float(std_v), 2),
+                "ci_95_lower": round(float(ci_lo), 2),
+                "ci_95_upper": round(float(ci_hi), 2),
+                "s_n": round(float(sn), 0),
+            }
+    
+    if boot_results_interaction:
+        vals_int = np.array(boot_results_interaction)
+        if len(vals_int) > 10:
+            mean_vi = np.mean(vals_int)
+            std_vi = np.std(vals_int)
+            ci_lo_i = np.percentile(vals_int, 2.5)
+            ci_hi_i = np.percentile(vals_int, 97.5)
+            sn_i = mean_vi / std_vi if std_vi > 0 else 0
+            print(f"{'Standard x Rz (interaction)':30s} {mean_vi:6.1f}% {std_vi:6.1f}% [{ci_lo_i:6.1f}, {ci_hi_i:6.1f}] {sn_i:5.0f}", flush=True)
+            boot_summary["size_surface_standard x rz_level"] = {
+                "mean": round(float(mean_vi), 2),
+                "std": round(float(std_vi), 2),
+                "ci_95_lower": round(float(ci_lo_i), 2),
+                "ci_95_upper": round(float(ci_hi_i), 2),
+                "s_n": round(float(sn_i), 0),
+            }
+    
+    # ============================================================
+    # 10. Save output
+    # ============================================================
+    output = {
+        "model": "Log-normal AFT with right-censoring (EM estimation)",
+        "n_total": N_TOTAL,
+        "n_censored": N_CENSORED,
+        "n_observed": N_OBSERVED,
+        "sigma_aft": round(float(sigma_full), 4),
+        "logLik_full": round(float(ll_full), 2),
+        "anova_table": anova_rows,
+        "bootstrap": {
+            "n_bootstrap": N_BOOT,
+            "rng_seed": RNG_SEED,
+            "noise_floor": boot_summary,
+        },
+        "factor_levels": {k: v for k, v in FACTORS.items()},
+    }
+    
+    with open("output/aft_anova.json", "w") as f:
+        json.dump(output, f, indent=2)
+    
+    print("\nSaved output/aft_anova.json", flush=True)
+    print("Done.", flush=True)

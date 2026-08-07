@@ -1,0 +1,35 @@
+﻿你是接手"齿轮疲劳论文 JMST 投稿准备"的 agent。先 cd 到 D:\Papers\0723-Gear_Fatigue_UQ，再按下面任务执行；背景可读 D:\Papers\工作标准.txt 和 0806-工作进度.txt。
+
+【现状】稿件 paper/gear_fatigue_v4.9.tex/.pdf 已全绿（3 遍编译 0 error/0 undefined、paper_check PASS、check_compile PASS）；复现包已与根目录 MD5 一致；数字来源表 数字来源-齿轮疲劳v4.8.csv/.xlsx 与 output/labels.json 已就绪。用户已定目标期刊：JMST（Journal of Mechanical Science and Technology, KSME/Springer）。
+
+【任务，按顺序执行，全部另存新文件绝不覆盖旧版，做完一项验证一项，并把每步证据（原始命令输出片段）追加进 0806-工作进度.txt】
+
+A. Cover Letter（JMST 版）：新建 paper/cover_letter_v5.0_jmst.tex 并编译成 PDF。
+   收件方 JMST 主编；作者 Zhilei Chen（Guangdong Peizheng College, 邮箱 2604513@peizheng.edu.cn）；
+   论文题目与正文完全一致；所有数字用现值（144 组合、84 run-out、60 finite、
+   55.3/22.6/18.2/2.5/1.2/0.3%、bootstrap 2000 seed 42、Shapiro-Wilk p=0.056、
+   ΔAIC=+77.1、11 图 6 表）；必须含一句 AI 声明（原文照抄）：
+   "Generative AI tools assisted with LaTeX formatting, Python code implementation, and English language editing."
+   删除旧版里的 Dowling 2009 引用；不得编造任何数字、事实或审稿人。
+
+B. 稿件 v5.0：从 v4.9 另存 paper/gear_fatigue_v5.0.tex，只改两处：
+   ① 头注释 "Target: International Journal of Fatigue (IJF, Elsevier)" 改为
+      "Target: Journal of Mechanical Science and Technology (JMST, KSME/Springer)"，并加 v5.0 变更日志行；
+   ② 在 Data and Code Availability 段之后、thebibliography 之前新增小节
+      \section*{Declaration of Generative AI Use}，内容为上面那句 AI 声明。
+   其余正文一字不改。完成后：3 遍 pdflatex 0 error/0 undefined；
+   bash "D:\Program Files\Git\bin\bash.exe" check_compile.sh gear_fatigue_v5.0 通过；
+   python paper_check.py paper/gear_fatigue_v5.0.tex 通过。
+
+C. 复现包同步 + 压缩包：
+   把 v5.0 tex/pdf 复制进 reproducibility_package/paper/；
+   README.md 的 Target 改为 JMST，文件树补 v5.0 两行；
+   对复现包与根目录做 MD5 复验（脚本/output/paper tex+pdf/ref_papers），差异必须为 0；
+   用 Compress-Archive 把复现包内容打成 gear_fatigue_uq_reproducibility_v5.0_jmst.zip
+   （保留旧的 gear_fatigue_uq_reproducibility.zip 不覆盖）。
+
+D. 只评估、不改正文：机器味词（However×4、Notably×2）、>40 词长句、表格 Overfull，
+   结论写进 0806-工作进度.txt；除非发现低级错误（拼写/重复词/渲染错误），否则等用户确认再改。
+
+【铁律】不编造任何数字/事实/文献；声称"已完成/已验证"前必须贴原始命令输出；
+不确定时停下，把问题写进进度文件，不要猜。

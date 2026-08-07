@@ -1,0 +1,97 @@
+% ================================================================
+% cover_letter_v5.0_jmst.tex — Cover Letter for Journal of Mechanical
+%                               Science and Technology (JMST)
+% v5.0: initial submission letter for gear_fatigue_v5.0 (JMST target).
+%       All numbers match the manuscript (144/84/60, 55.3/22.6/18.2/
+%       2.5/1.2/0.3%, bootstrap 2000 seed 42, Shapiro-Wilk p=0.056,
+%       DeltaAIC=+77.1, 11 figures, 6 tables). No Dowling citation.
+% ================================================================
+\documentclass[12pt,a4paper]{article}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{times}
+\usepackage{hyperref}
+\pagestyle{plain}
+
+\begin{document}
+
+\begin{center}
+{\large\bfseries Cover Letter}\\[2mm]
+{\normalsize Initial Submission}
+\end{center}
+
+\vspace{4mm}
+
+\begin{flushright}
+Zhilei Chen\\
+Guangdong Peizheng College, Data and Computer Science,\\
+53 Peizheng Rd., Chini Town, Huadu, Guangzhou,\\
+Guangdong 510830, China\\
+E-mail: 2604513@peizheng.edu.cn\\
+\today
+\end{flushright}
+
+\vspace{2mm}
+
+\begin{flushleft}
+Editor-in-Chief\\
+\textit{Journal of Mechanical Science and Technology} (JMST)\\
+Korean Society of Mechanical Engineers
+\end{flushleft}
+
+\vspace{4mm}
+
+Dear Editor-in-Chief,
+
+I am pleased to submit the manuscript entitled
+
+\begin{center}
+\itshape ``Method-Induced Uncertainty in Gear Bending Fatigue: Factorial\\
+Decomposition of Size-and-Surface Factor Sensitivity Under a\\
+Common ISO Stress Baseline''
+\end{center}
+
+for consideration for publication as an original research article in
+the \textit{Journal of Mechanical Science and Technology}.
+
+The manuscript quantifies, for the first time, how much of the scatter
+in gear bending-fatigue life estimates is inherited from the analyst's
+methodological choices rather than from the material itself. A
+full-factorial design of 144 combinations of size and surface factors
+under a common ISO stress baseline is decomposed with an analysis of
+variance: among the 144 combinations, 84 are run-outs and 60 reach
+finite life. The variance decomposition attributes the uncertainty to
+six contributions (55.3\%, 22.6\%, 18.2\%, 2.5\%, 1.2\%, and 0.3\%),
+with bootstrap resampling (2000 resamples, seed 42) confirming the
+stability of the ranking. A Shapiro--Wilk test (W$=$0.962, $p=0.056$)
+supports the normality assumption underlying the analysis, and a
+model-selection comparison (AIC) yields $\Delta$AIC$=+77.1$ in favour
+of the proposed specification. The paper reports 11 figures and 6
+tables.
+
+We believe the results are directly relevant to JMST's readership in
+mechanical design and fatigue assessment: they show that a large
+fraction of reported fatigue-life scatter can be traced to factor
+choice and calibration, and they provide a reproducible
+variance-decomposition workflow (Python scripts, seed-fixed
+randomness, and a full reproducibility package) that any
+fatigue-engineering laboratory can apply to its own data.
+
+This manuscript is original, has not been published previously, and is
+not under consideration by any other journal. The author declares no
+competing interests.
+
+Generative AI tools assisted with LaTeX formatting, Python code
+implementation, and English language editing.
+
+Thank you for your consideration.
+
+\vspace{4mm}
+
+Sincerely,
+
+\vspace{6mm}
+
+Zhilei Chen\\
+Guangdong Peizheng College, Data and Computer Science
+
+\end{document}

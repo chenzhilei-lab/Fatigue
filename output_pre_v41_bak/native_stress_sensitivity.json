@@ -1,0 +1,62 @@
+{
+  "description": "Native stress-chain sensitivity \u2014 implements AGMA J-factor and FKM K_f instead of unified Y_Sa",
+  "baseline_ysa_unified": 1.55,
+  "K_t_gear": 1.91,
+  "K_f_peterson": 1.84,
+  "K_f_neuber": 1.75,
+  "AGMA_J_range": {
+    "J_low_conservative": {
+      "J": 0.31,
+      "ratio_to_unified": 1.0774
+    },
+    "J_midpoint": {
+      "J": 0.33,
+      "ratio_to_unified": 1.0129
+    },
+    "J_high_nonconservative": {
+      "J": 0.35,
+      "ratio_to_unified": 0.9548
+    }
+  },
+  "FKM_Kf_range": {
+    "Kf_Peterson": {
+      "K_f": 1.84,
+      "ratio_to_unified": 1.1888
+    },
+    "Kf_Neuber": {
+      "K_f": 1.75,
+      "ratio_to_unified": 1.1265
+    }
+  },
+  "baseline": {
+    "n_total": 108,
+    "n_censored": 84,
+    "n_observed": 24,
+    "sigma": 0.246,
+    "logLik": -21.59,
+    "variance_fractions": {
+      "mean_stress_method": 26.4,
+      "size_surface_standard": 43.7,
+      "rz_level": 25.4,
+      "sn_source": 0.0,
+      "damage_method": 0.1,
+      "interaction": 4.5
+    }
+  },
+  "combined_native": {
+    "n_total": 108,
+    "n_censored": 84,
+    "n_observed": 24,
+    "sigma": 0.4391,
+    "logLik": -38.68,
+    "variance_fractions": {
+      "mean_stress_method": 27.3,
+      "size_surface_standard": 43.6,
+      "rz_level": 25.6,
+      "sn_source": 0.0,
+      "damage_method": 0.0,
+      "interaction": 3.5
+    }
+  },
+  "summary": "With AGMA J=0.33 and FKM K_f(Peterson)=1.84, standard variance changes from 43.7% to 43.6% (\u0394=-0.1pp). The baseline uniform-Y_Sa lower bound is conservative by approximately 0.1pp."
+}

@@ -1,0 +1,149 @@
+{
+  "500": {
+    "torque": 700.0,
+    "sigma_F0": 555.5010893246188,
+    "n_total": 144,
+    "n_valid": 14,
+    "n_runout": 130,
+    "spread_dex": 1.25,
+    "SS_total": 2.9007467867594716,
+    "SS_residual": -0.40486153872647934,
+    "residual_%": -14.0,
+    "anova_table": [
+      {
+        "factor": "sn_source",
+        "variance_frac_%": 38.2,
+        "F": -11.0,
+        "p": 1.0
+      },
+      {
+        "factor": "mean_stress_method",
+        "variance_frac_%": 24.8,
+        "F": -2.4,
+        "p": 1.0
+      },
+      {
+        "factor": "damage_method",
+        "variance_frac_%": 2.9,
+        "F": -0.8,
+        "p": 1.0
+      },
+      {
+        "factor": "size_surface_standard",
+        "variance_frac_%": 0.0,
+        "F": -0.0,
+        "p": 1.0
+      },
+      {
+        "factor": "rz_level",
+        "variance_frac_%": 48.0,
+        "F": -6.9,
+        "p": 1.0
+      },
+      {
+        "factor": "standard_x_rz",
+        "variance_frac_%": 0.0,
+        "F": -0.0,
+        "p": 1.0
+      }
+    ]
+  },
+  "600": {
+    "torque": 700.0,
+    "sigma_F0": 666.6013071895424,
+    "n_total": 144,
+    "n_valid": 60,
+    "n_runout": 84,
+    "spread_dex": 3.0,
+    "SS_total": 33.015749790670235,
+    "SS_residual": 12.865667863327566,
+    "residual_%": 39.0,
+    "anova_table": [
+      {
+        "factor": "sn_source",
+        "variance_frac_%": 7.9,
+        "F": 10.1,
+        "p": 0.00249535982464244
+      },
+      {
+        "factor": "mean_stress_method",
+        "variance_frac_%": 10.2,
+        "F": 4.4,
+        "p": 0.008286086976687312
+      },
+      {
+        "factor": "damage_method",
+        "variance_frac_%": 1.1,
+        "F": 1.4,
+        "p": 0.24252506113478633
+      },
+      {
+        "factor": "size_surface_standard",
+        "variance_frac_%": 36.0,
+        "F": 23.1,
+        "p": 7.777271926467932e-08
+      },
+      {
+        "factor": "rz_level",
+        "variance_frac_%": 5.8,
+        "F": 3.7,
+        "p": 0.031333828459998325
+      },
+      {
+        "factor": "standard_x_rz",
+        "variance_frac_%": 17.8,
+        "F": 5.7,
+        "p": 0.0007236308153950599
+      }
+    ]
+  },
+  "700": {
+    "torque": 700.0,
+    "sigma_F0": 777.7015250544663,
+    "n_total": 144,
+    "n_valid": 116,
+    "n_runout": 28,
+    "spread_dex": 4.98,
+    "SS_total": 129.2535779459646,
+    "SS_residual": 36.64600433449196,
+    "residual_%": 28.4,
+    "anova_table": [
+      {
+        "factor": "sn_source",
+        "variance_frac_%": 0.7,
+        "F": 2.5,
+        "p": 0.11524575490118882
+      },
+      {
+        "factor": "mean_stress_method",
+        "variance_frac_%": 30.9,
+        "F": 38.5,
+        "p": 1.1102230246251565e-16
+      },
+      {
+        "factor": "damage_method",
+        "variance_frac_%": 0.5,
+        "F": 2.0,
+        "p": 0.15891538598752697
+      },
+      {
+        "factor": "size_surface_standard",
+        "variance_frac_%": 31.1,
+        "F": 58.1,
+        "p": 0.0
+      },
+      {
+        "factor": "rz_level",
+        "variance_frac_%": 8.5,
+        "F": 15.9,
+        "p": 9.213623344273003e-07
+      },
+      {
+        "factor": "standard_x_rz",
+        "variance_frac_%": 5.0,
+        "F": 4.7,
+        "p": 0.001569307262158981
+      }
+    ]
+  }
+}

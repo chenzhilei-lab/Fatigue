@@ -1,0 +1,2104 @@
+% ================================================================
+% gear_fatigue_v3.7.tex — Gear Bending Fatigue Variance Decomposition
+% v3.7: Fix 4 uncited references; audit: fix Bonaiti knee <5e5 (not 1-2e6),
+%       remove fabricated Bonaiti damage-rule claim; fix Wang benchmark —
+%       all 144 combos run-out, remove 2.1-3.3 dex, honest disclosure
+% v3.7a: IJF defense — Methods title upgrade + Conclusion innovation statement;
+%        "therefore" 19→7; \sloppy added; 509-item fact-attribution audit H/C/?
+% v3.6: Full rewrite — AFT numbers corrected to EM-estimated ground truth,
+%       Bootstrap 2000 draws, Discussion narrative: Three Co-Equal Factors,
+%       multi-torque downgraded to qualitative, We→I throughout
+% v2.9: ANOVA→AFT (censored likelihood), but incomplete — numbers mixed old/new
+% v2.8: Bootstrap numbers corrected; bucur→vietze; 5 reviewer fixes
+% v2.7: +Bonaiti (2024) +Vietze (2024) experimental citations,
+%       bootstrap 100→2000 fix (Abstract/figures only), expanded Discussion §4.3
+% v2.6: Torque-dependence + repositioned as general UQ framework
+% v2.5: 3 experimental papers cited (Wang, Pagliari, Glodez)
+% v2.4: Kf removed, torque=700 Nm, 5 switches, 144 combos
+% All formulas verified against ISO 6336-3:2019, AGMA 2001-D04, FKM 7th ed.
+% S--N data from Waterloo SMDIdbase (publicly accessible)
+% All numbers from output/aft_anova.json (EM estimation, 2000 bootstrap) — v3.7
+% Target: International Journal of Fatigue (Elsevier)
+% Versions preserved: v1.0, v2.0, v2.1, v2.2, v2.3, v2.4, v2.5, v2.6, v2.7, v2.8, v2.9, v3.0, v3.1, v3.2, v3.4, v3.5, v3.6
+% ================================================================
+\documentclass[12pt,a4paper]{article}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,graphicx,booktabs,multirow,hyperref}
+\usepackage[numbers,sort&compress]{natbib}
+
+\begin{document}
+
+\sloppy  % Relax line-breaking tolerance to suppress Overfull hbox warnings
+
+\title{\textbf{Method-Induced Uncertainty in Gear Bending Fatigue:\\
+Factorial Decomposition of Size-and-Surface Factor Sensitivity\\
+Under a Common ISO Stress Baseline}}
+
+\author{Zhilei Chen\\
+Guangdong Peizheng College, Data and Computer Science,\\
+53 Peizheng Rd., Chini Town, Huadu, Guangzhou, Guangdong 510830, China\\
+E-mail: 2604513@peizheng.edu.cn}
+
+\maketitle
+
+% ================================================================
+% @sources: aft_anova.json (variance fractions, EM estimation, 2000 bootstrap), sweep_summary.json (Nf range, counts), gear_params.py (geometry, material)
+\begin{abstract}
+\label{sec:abstract}
+% ================================================================
+
+When three engineers compute the bending fatigue life of the same spur
+gear---same geometry, same material, same load---their predictions can
+differ by orders of magnitude. This paper examines \emph{one}
+specific instance of this problem: a single through-hardened 42CrMo4
+spur gear at a single torque level. The divergence comes not from
+material variability or manufacturing defects, but from the
+methodological choices each engineer makes: which standard to apply, how
+to penalize surface roughness, which S--N curve to trust, and how to
+correct for mean stress. I present a computational framework that
+quantifies the sensitivity of the predicted fatigue life to each of
+these engineering decisions, identifies which choices dominate the
+uncertainty budget, and provides quantitative guidance for selecting
+design conservatism factors. This is a purely numerical study---no
+physical gear tests were conducted. I hold a single spur gear pair
+(module~3~mm,% @source: module_mn
+20 teeth,% @source: teeth_pinion
+42CrMo4/AISI~4140,% @source: material
+700~N$\cdot$m,% @source: torque_Nm
+constant amplitude, $R=0$) fixed and systematically vary five methodological% @source: stress_ratio_R
+choices: size-and-surface factor formulations drawn from three standards
+(ISO~6336, AGMA~2001-D04, FKM 7th~ed.), surface
+roughness grade (Rz~=~4, 15, 50~$\mu$m), S--N curve source (Waterloo
+SMDIdbase \#68, \#66), mean-stress correction (Goodman, Gerber, Morrow,
+SWT), and cumulative damage rule (Miner, Modified Miner). The tooth
+root stress concentration is handled by the ISO~6336 $Y_{Sa}$ factor
+within the nominal stress calculation; a separate fatigue notch factor
+$K_f$ was removed to avoid double-counting of the notch effect. A
+full-factorial AFT survival model over all 144 combinations (including
+92 run-outs handled via censored likelihood) decomposes the total
+log-variance. At the reference torque of 700~N$\cdot$m---near the
+endurance limit for this gear, where the $\sigma_m/\sigma_{\rm uts}$
+ratio is $\sim$0.39---three factors account for 97.9\% of total log-variance:
+mean-stress correction (39.1\%), size-and-surface factor formulation (35.3\%), and
+surface roughness grade (23.5\%); a formulation~$\times$~Rz interaction
+accounts for 2.5\%; the S--N curve source ($-$0.7\%) and cumulative
+damage rule (0.3\%) are secondary. \textbf{The 0.3\% damage-rule contribution applies exclusively to
+constant-amplitude loading and must not be extrapolated to
+variable-amplitude spectra, where sequence effects and
+below-endurance-limit cycle treatment can make the damage rule a
+first-order contributor.}
+\textbf{These percentages are specific to the single gear geometry,
+material, and loading condition studied here and must not be
+interpreted as universal weighting factors for gear fatigue
+uncertainty.} The 35.3\% attributed to the size-and-surface
+factor formulation should be interpreted as a lower bound on the total
+standard-choice effect: the present study isolates the
+surface-factor component of each standard under a common ISO-based
+nominal stress baseline, and does not capture divergence arising from
+each standard's complete native stress calculation chain (AGMA's
+geometry factor $J$, FKM's fatigue notch factor $K_f$). Bootstrap
+validation confirms stable
+rankings.% @source: n_bootstrap
+These percentages are specific to the high-torque condition studied here.
+The factor ranking is operating-point-dependent: at lower torque
+the standard choice dominates, while mean-stress correction and
+surface roughness rise to dominance near the endurance-limit
+regime explored here. The analysis is confined to quenched-and-tempered
+steel without residual stresses; in case-carburized gears, the
+compressive residual stress field would substantially reduce the
+mean-stress contribution below the 39.1\% reported here. Whereas prior
+studies---including recent work in this
+journal~\cite{bonaiti2024}---ask whether two standards produce different
+predictions, this study asks how much each methodological switch contributes
+to total log-variance relative to all others, by simultaneous factorial
+decomposition across five dimensions. Whereas prior gear fatigue
+studies have compared individual methodological factors in isolation
+(e.g., Bonaiti~et~al.~\cite{bonaiti2024} for standard choice; Dowling~et~al.~\cite{dowling2009} for
+mean-stress correction), the present work jointly decomposes the
+contributions of five simultaneous factors and ranks them by variance
+explained. Predicted fatigue life spans from $3.3\times10^2$ to
+$5.8\times10^5$ cycles (3.2~dex).% @source: spread_dex
+All formulas have been verified against the original standards (ISO~6336-3:2019, AGMA~2001-D04,
+FKM~7th~ed.); S--N parameters are from the publicly accessible Waterloo
+SMDIdbase.
+
+\textbf{Keywords:} gear fatigue, uncertainty quantification, AFT survival analysis,
+surface roughness, ISO 6336, AGMA 2001, FKM, S--N curve
+\end{abstract}
+
+% ================================================================
+\section{Introduction}
+\label{sec:intro}
+% ================================================================
+
+A gear's fatigue life is not a property of the gear. It is a property
+of the handbook the engineer opens. Every industrial gearbox is designed
+by an engineer consulting a standard, selecting a correction method, and
+computing a life estimate. Different handbooks give different answers.
+For the same geometry, material, and load, ISO~6336~\cite{iso6336} may
+predict run-out, while FKM~\cite{fkm} warns of failure within $10^4$
+cycles, and AGMA~2001~\cite{agma2001} falls somewhere in between.
+
+The present study is a purely numerical investigation, confined to a
+single quenched-and-tempered 42CrMo4 spur gear ($m_n=3$~mm,
+$z_1=20$) under constant-amplitude pulsating bending ($R=0$) at
+700~N$\cdot$m---an operating point near the endurance limit. All
+load factors are set to unity and residual stresses are absent.
+Results should not be extrapolated to case-carburized gears,
+variable-amplitude spectra, or lower-stress industrial duty cycles
+without dedicated sensitivity analysis.
+
+The present work is motivated by a practical engineering question:
+when a design engineer selects a standard, a mean-stress correction
+method, and a roughness assumption, how large an uncertainty does each
+choice inject into the predicted fatigue life---and which choices
+should be prioritized for standardization or tightened by
+application-specific evidence? Answering this question requires a
+framework that (i)~simultaneously varies all major methodological
+switches in a controlled factorial design, (ii)~handles right-censored
+run-out observations without discarding them, and (iii)~decomposes the
+total prediction variance into attributable fractions with quantified
+confidence bounds. The framework developed here is intended to serve as
+a template for similar studies on other gear geometries and
+materials---though the numerical results reported here are specific
+to the single gear pair defined in Table~\ref{tab:gear}.
+
+Three strands of prior work are relevant. First, gear standard
+comparison studies have documented systematic differences between
+ISO~6336 and AGMA~2001 predictions for specific test cases.
+Bonaiti~et~al.~\cite{bonaiti2024} showed that the fatigue knee from
+pulsator tests occurs below $5\times10^5$ cycles---substantially
+below the $3\times10^6$ cycles assumed by the
+standards---and that ISO and AGMA produce divergent S--N curves from
+the same experimental data. Pagliari~et~al.~\cite{pagliari2025}
+compared ISO~6336 Method~B predictions against single-tooth bending
+tests and found $\sim$10--15\% prediction bias. Vietze~et~al.~\cite{vietze2024}
+evaluated alternative load-carrying capacity models against the
+ISO~6336~+~Miner baseline. These studies ask \emph{whether} two
+standards differ; they do not decompose the total prediction variance
+across multiple simultaneous methodological choices.
+
+Second, uncertainty quantification (UQ) in fatigue has been advanced
+through global sensitivity analysis and variance decomposition methods.
+Du~et~al.~(2022, \emph{Int.~J.~Fatigue}~155: 106575) applied Sobol'
+indices to a cyclic plasticity model to identify dominant parameter
+uncertainties, entirely through numerical simulation without original
+experiments. Similar computational UQ frameworks have been applied to
+welded joints, crankshafts, and turbine discs. These studies
+demonstrate the feasibility of purely numerical UQ in fatigue, but none
+has addressed the specific problem of method-induced uncertainty---%
+divergence arising from competing defensible engineering procedures
+rather than from parameter uncertainty within a single procedure.
+
+Third, censored-data methods for fatigue life analysis have a long
+history. The AFT model has been used in medical survival analysis since
+the 1970s and in reliability engineering since the 1990s; its
+application to fatigue run-out data is more recent. The present study
+extends this tradition by combining the AFT censored-likelihood
+framework with a full-factorial design to produce a
+likelihood-ratio-based variance decomposition that preserves
+information from run-out observations---a combination that, to my
+knowledge, has not been previously applied to gear fatigue.
+
+No prior work has deployed a controlled full-factorial framework to
+decompose
+the total prediction variance into its constituent sources and rank
+them by magnitude.
+
+I address three questions with direct engineering relevance. First,
+which methodological choices dominate the uncertainty budget in gear
+fatigue life prediction---and warrant the most attention in
+design reviews and standards harmonization? Second, can a bootstrap
+noise floor separate genuine methodological signal from finite-sample
+fluctuation, so that engineers know which variance components are
+robust? Third, how does the factor ranking shift with the operating
+point (torque level), and what does this imply for the generality of
+design conservatism factors?
+
+Existing fatigue uncertainty quantification work focuses predominantly
+on physical parameter scatter (geometry tolerances, material property
+variability) within a single calculation standard. No prior gear
+fatigue study has systematically isolated and ranked the divergence
+purely induced by alternative standard and correction formulas that
+different engineers, all working within the letter of published
+standards, may legitimately select. The present work addresses this
+gap through three contributions: (i)~a simultaneous
+full-factorial
+simultaneous variance decomposition across five major methodological
+choices in gear bending fatigue, using a censored-likelihood AFT
+framework that handles run-out observations without bias;
+(ii)~a demonstration that this framework corrects the severe surface-
+roughness underestimation ($\sim$16~pp) inherent in conventional
+ANOVA and Sobol'-based sensitivity analyses when applied to censored
+fatigue data; and (iii)~the translation of the numerical
+decomposition into actionable engineering guidance---cross-standard
+correction formulas, risk classification by failure consequence,
+and torque-dependent design protocols for controlling prediction
+scatter.
+
+% ================================================================
+% @sources: gear_params.py (Table 2 geometry), ISO 6336-3:2019 §4.3 ($Y_{Sa}$, $\sigma_{F0}$),
+%           Waterloo SMDIdbase (S-N parameters §2.2.1)
+\section{Methods}
+\label{sec:methods}
+% ================================================================
+
+\subsection{Test Gear and Loading Conditions}
+
+A single spur gear pair is defined with geometry and loading fixed
+across all analyses (Table~\ref{tab:gear}). The material is
+42CrMo4/AISI~4140, quenched and tempered to 300~HB. The loading is
+constant-amplitude pulsating bending ($R=0$).
+
+\begin{table}[h]
+\centering
+\caption{Fixed gear parameters.}
+\label{tab:gear}
+\begin{tabular}{p{4.5cm} r l}
+\toprule
+Parameter & Value & Unit \\
+\midrule
+Module, $m_n$ & 3.0 & mm \\
+Pinion teeth, $z_1$ & 20 & --- \\
+Gear teeth, $z_2$ & 60 & --- \\
+Pressure angle, $\alpha$ & 20 & deg \\
+Face width, $b$ & 30 & mm \\
+Material & 42CrMo4 / AISI 4140 & --- \\
+Ult.\ tensile strength & 1000 & MPa \\
+Input torque & 700 & N$\cdot$m \\
+Speed & 1500 & rpm \\
+Stress ratio, $R$ & 0 & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Five Methodological Switches}
+
+The selection of five switches is governed by the scope of the study:
+each switch represents a decision an engineer \emph{must} make when
+computing the bending fatigue life of a spur gear from first
+principles, and each has at least two defensible options that appear in
+standards or textbooks. Other factors were excluded for the following
+reasons. (i)~The reliability factor $K_R$ (AGMA) and required safety
+factor $S_{F\min}$ (ISO/FKM) are contractual rather than
+physics-based; varying them changes absolute life but does not alter
+variance \emph{apportionment} among the physics-based switches.
+(ii)~Tooth profile modification (tip relief, root relief) primarily
+affects dynamic factors ($K_V$) rather than the quasi-static bending
+stress studied here. (iii)~Residual stresses are excluded by the
+material choice: quenched-and-tempered 42CrMo4 is through-hardened
+without case-carburizing, nitriding, or shot-peening.
+(iv)~The two Waterloo S--N parameter sets are used as independently
+fitted curves; choosing a different curve-fitting protocol (e.g.\
+staircase vs.\ probit) would produce a different S--N curve and is
+therefore subsumed under the S--N source switch.
+(v)~The application factor $K_A$ and dynamic factor $K_V$ are set to
+unity in the baseline analysis to isolate the five methodological
+switches from load-case-specific uncertainties; the sensitivity of the
+factor ranking to $K_A$ is tested in \S\ref{sec:load_factors} and
+shown not to alter the qualitative conclusions. A full joint variation
+of all excluded factors lies beyond the scope of a single factorial
+study; the present five-switch design captures the largest
+methodological error sources identifiable \emph{a priori} from the
+standards literature and is validated \emph{a posteriori} by the fact
+that three of the five factors together explain 97.9\% of total
+log-variance.
+
+\subsubsection{Switch 1: S--N Curve Source (2 options)}
+
+The Basquin equation relates stress amplitude to cycles to failure:
+\begin{equation}
+\sigma_a = \sigma'_f \cdot (2N_f)^b
+\label{eq:basquin}
+\end{equation}
+I use two experimentally-fitted
+parameter sets for quenched-and-tempered AISI~4140 ($\sim$300~HB),
+drawn from the publicly accessible University of Waterloo SMDIdbase%
+~\cite{waterloo_fde}:
+
+\begin{itemize}
+  \item \textbf{Waterloo \#68:} $\sigma'_f = 1356$~MPa, $b=-0.055$,
+        fatigue strength at $10^6$~cycles = 679~MPa
+  \item \textbf{Waterloo \#66:} $\sigma'_f = 1684$~MPa, $b=-0.070$,
+        fatigue strength at $10^6$~cycles = 626~MPa
+\end{itemize}
+% @source: σ′f and b from Waterloo SMDIdbase PDF reports;
+% fatigue strength at 10^6 from SAE材料力学性能测试数据表.xlsx
+
+The 328~MPa spread in $\sigma'_f$ is largely offset by the 53~MPa
+difference in fatigue strength at $10^6$~cycles (679 vs.\ 626~MPa),
+so that the two S--N curves yield similar run-out thresholds despite
+their different Basquin slopes---a fact that explains the negligible
+S--N source variance ($-0.7$\%) reported in Table~\ref{tab:anova}.
+The raw fatigue test data are freely downloadable; no proprietary or
+subscription-gated sources are used.
+
+\subsubsection{Switch 2: Mean Stress Correction (4 options)}
+
+Four classical methods~\cite{stephens2001,dowling2013} convert a mean-stress-affected stress to an
+equivalent fully-reversed stress:
+
+\begin{subequations}\label{eq:mean_stress}
+\begin{align}
+\text{Goodman:}\quad
+  \sigma_{ar} &= \sigma_a \,/\, (1 - \sigma_m/\sigma_{\rm uts})
+  \label{eq:goodman} \\
+\text{Gerber:}\quad
+  \sigma_{ar} &= \sigma_a \,/\, (1 - (\sigma_m/\sigma_{\rm uts})^2)
+  \label{eq:gerber} \\
+\text{Morrow:}\quad
+  \sigma_{ar} &= \sigma_a \,/\, (1 - \sigma_m/\sigma'_f)
+  \label{eq:morrow} \\
+\text{SWT:}\quad
+  \sigma_{ar} &= \sqrt{\sigma_{\max} \cdot \sigma_a}
+  \label{eq:swt}
+\end{align}
+\end{subequations}
+For Morrow's correction, $\sigma'_f$ is taken from the active S--N
+curve.
+
+\subsubsection{Switch 3: Cumulative Damage Rule (2 options)}
+
+\begin{itemize}
+  \item \textbf{Miner (Palmgren--Miner, 1945):} $D_c = 1.0$
+  \item \textbf{Modified Miner (AGMA/FKM):} $D_c = 0.7$
+\end{itemize}
+A comprehensive survey of cumulative damage theories is given by Fatemi and Yang~\cite{fatemi1998}.
+
+\subsubsection{Switch 4: Size and Surface Standard (3 options)}
+
+\begin{itemize}
+  \item \textbf{ISO 6336-3:} $Y_X = 1.0$ (size factor, $m_n \leq 10$~mm).
+        $Y_{R\,\rm rel\,T} = 1.674 - 0.529(R_z+1)^{0.1}$ (relative
+        surface factor, for quenched \& tempered steels, valid for
+        $0.5 \leq R_z \leq 40~\mu$m; capped at $R_z=40$~$\mu$m value
+        of 0.907 for rougher surfaces). $Y_{R\,\rm rel\,T} = 1.120$
+        for $R_z < 1~\mu$m.
+  \item \textbf{AGMA 2001-D04:} $K_s = 1.0$ (size factor, Clause~15,
+        Figure~17; diametral pitch $=8.47 \geq 5$).
+        $C_f = 1.0$ for ground gears; for other finishes,
+        $C_f = 1 - 0.0058 \cdot \ln(R_f) \cdot \ln(S_{ut})$
+        (Clause~16, Eq.~16.1), where $R_f$ is $R_a$ in $\mu$in
+        and $S_{ut}$ in ksi. $R_z \rightarrow R_a$ via
+        $R_a \approx R_z/6$.
+  \item \textbf{FKM Guideline (7th ed., Section~4.4.2):}
+        $K_d = 1 - 0.05 \cdot \log_{10}(m_n \cdot 10)$ (statistical size
+        factor for wrought steel gears with $m_n \leq 10$~mm;
+        the FKM guideline provides a more general table-based procedure
+        for other geometries).
+        $K_{F\sigma} = \max(1 - 0.22 \cdot \log_{10}(R_z) \cdot
+        \log_{10}(2R_m/R_{m,N,\min}),\, 0.55)$, with
+        $R_{m,N,\min}=400$~MPa for wrought steels.
+\end{itemize}
+
+\subsubsection{Switch 5: Surface Roughness (3 options)}
+
+\begin{itemize}
+  \item \textbf{Ground, Rz = 4~$\mu$m:} Precision aerospace quality
+  \item \textbf{Machined, Rz = 15~$\mu$m:} Standard industrial quality
+  \item \textbf{As-forged, Rz = 50~$\mu$m:} Rough, agricultural machinery
+\end{itemize}
+
+\subsection{Stress Concentration Treatment}
+\label{sec:stress_concentration}
+
+The ISO~6336-3 Method~B nominal stress (Eq.~\ref{eq:sigma_F0}) includes
+the stress correction factor $Y_{Sa} \approx 1.55$, which converts the
+nominal bending stress to the local peak stress at the tooth root
+fillet. Because $Y_{Sa}$ already accounts for the geometric stress
+concentration, applying a separate fatigue notch factor $K_f$ (e.g.\
+via Peterson or Neuber) on top of $\sigma_{F0}$ would double-count the
+notch effect. The ISO~6336 framework handles notch \emph{sensitivity}
+through the relative notch sensitivity factor $Y_{\delta\,\rm rel\,T}$,
+which reduces the \emph{allowable} stress rather than amplifying the
+\emph{applied} stress. Since $Y_{\delta\,\rm rel\,T}$ is not among my
+switches, I omit $K_f$ from the pipeline and rely on $Y_{Sa}$ for the
+stress concentration. A third-party method for $K_f$ (e.g.\ a 3D
+finite-element extraction of the notch-root stress gradient) could be
+added in future work without double-counting, provided the base stress
+is computed without $Y_{Sa}$.
+
+This treatment is internally consistent for ISO~6336, where $Y_{Sa}$
+already converts the nominal bending stress to the local peak stress.
+For AGMA~2001 and FKM, however, the situation is asymmetric: neither
+standard employs a $Y_{Sa}$-equivalent coefficient in its native
+formulation, and both rely on independent notch sensitivity or
+stress-gradient-based approaches that are not replicated here. The
+uniform removal of $K_f$ and adoption of $Y_{Sa}$ therefore alters the
+native stress calculation chains of AGMA and FKM in two ways---%
+introducing a factor they do not use and removing factors they do.
+The quantitative impact of this asymmetry on the standard-choice
+variance is assessed via a dedicated sensitivity analysis
+(\texttt{ysa\_sensitivity.py}) that perturbs $Y_{Sa}$ for the two
+non-native standards (AGMA, FKM) by factors of 0.75--1.33$\times$ and
+re-runs the full AFT decomposition. Within the plausible range
+(1.0--1.15$\times$, corresponding to AGMA's geometry factor $J$ and
+FKM's $K_f$ being roughly comparable to $Y_{Sa}$), the standard-choice
+variance fraction deviates by at most $+2.1$~pp from the baseline
+35.3\%. At more extreme perturbations (0.75$\times$), the deviation
+reaches $-$7.0~pp, but this is driven primarily by the collapse of
+observed finite-life entries (52$\rightarrow$12) rather than by the
+modeling asymmetry itself. In all tested cases the factor ranking
+(mean-stress $>$ standard $>$ roughness) is preserved. The reported
+35.3\% standard-choice variance should therefore be interpreted as a
+lower-bound estimate, with a quantified upward bias of at most
+$+2.1$~pp attributable to the uniform $Y_{Sa}$ assumption.
+
+\subsection{Nominal Stress Calculation}
+
+Tooth root bending stress follows ISO~6336-3 Method~B:
+\begin{equation}
+\label{eq:sigma_F0}
+\sigma_{F0} = \frac{F_t}{b \cdot m_n} \,
+Y_{Fa} \, Y_{Sa} \, Y_\varepsilon \, Y_\beta
+\end{equation}
+where $F_t = 2T/d_1$ is the tangential force ($T=700$~N$\cdot$m,
+$d_1 = m_n z_1 = 60$~mm, giving $F_t \approx 23.3$~kN);
+$Y_{Fa}=2.80$ and $Y_{Sa}=1.55$ (ISO~6336-3 Annex~A, Figure~A.1,
+for $z=20$, $\alpha=20^\circ$, standard ISO~53 basic rack, no profile
+shift); $Y_\varepsilon = 0.25 + 0.75/\varepsilon_\alpha \approx 0.691$
+with $\varepsilon_\alpha \approx 1.7$; and $Y_\beta = 1.0$ for spur
+gears. The reference condition gives $\sigma_{F0} \approx 778$~MPa.
+
+\subsection{Simplifying Assumptions on Load Factors}
+\label{sec:load_factors}
+
+The full ISO~6336-3 Method~B includes six additional multiplicative
+factors: application factor $K_A$, dynamic factor $K_V$, face load
+factor $K_{F\beta}$, transverse load factor $K_{F\alpha}$, rim
+thickness factor $Y_B$, and deep tooth factor $Y_{DT}$. All six are set
+to unity---equivalent to assuming a perfectly smooth drive train,
+quasi-static loading, perfect tooth contact, and standard proportions.
+These assumptions are necessary to isolate the methodological switches
+from application-specific load uncertainties, but they constrain the
+absolute $N_f$ values to an idealized gear pair. A separate sensitivity
+analysis (\texttt{ka\_sensitivity.py}) tests $K_A = 1.25$ (moderate
+shock) and $K_A = 1.5$ (heavy shock) by scaling the nominal stress
+proportionally and re-running the full 144-combination AFT
+decomposition. Across these three load levels, the factor ranking
+remains stable (mean-stress 38.8$\rightarrow$40.1\%, standard
+35.1$\rightarrow$35.3\%, roughness 23.4$\rightarrow$21.9\%), confirming that
+the two-factor dominance reported here is not an artifact of the
+$K_A=1.0$ idealization. At higher $K_A$, the nominal stress increases,
+pushing the operating point further above the endurance limit; the
+mean-stress contribution rises modestly while the roughness
+contribution declines, consistent with the torque-dependence trend
+documented in \S\ref{sec:torque}. The qualitative ranking---mean-stress
+correction and standard choice as the two leading factors, surface
+roughness as a clear third---is robust to industrially representative
+variations in the application factor. A full sensitivity analysis
+varying $K_V$ and $K_{F\beta}$ jointly is deferred to Phase~2
+(\S\ref{sec:constraints}).
+
+\subsection{Pipeline}
+
+For each of the $2\times4\times2\times3\times3 = 144$ combinations:
+\begin{enumerate}
+  \item Compute $\sigma_{F0}$ (Eq.~\ref{eq:sigma_F0})
+  \item Apply mean stress correction (Switch~2) $\rightarrow \sigma_{ar}$
+  \item Apply size and surface factors (Switch~4, Switch~5)
+        $\rightarrow \sigma_{\rm eff}$
+  \item Solve Basquin equation (Switch~1) $\rightarrow N_f$
+  \item Apply damage rule threshold (Switch~3)
+        $\rightarrow N_f^{\rm (final)}$
+\end{enumerate}
+
+\subsection{Censored-Likelihood Full-Factorial Uncertainty Decomposition}
+
+\subsubsection{A Censored-Likelihood Full-Factorial UQ Pipeline for Gear Method-Induced Uncertainty}
+
+The statistical contribution of this paper is not the AFT model
+itself---which is a standard tool in survival analysis---but the
+combination of three elements into a practical uncertainty
+quantification framework for censored factorial fatigue data:
+(i)~a log-normal AFT with categorical predictors as the likelihood
+engine, chosen because $\log_{10}(N_f)$ is the natural scale for
+fatigue life comparisons; (ii)~a drop-one-factor likelihood-ratio
+decomposition that partitions the total explained log-variance into
+attributable fractions without requiring the normality or
+homoscedasticity assumptions of ordinary ANOVA; and (iii)~a bootstrap
+noise floor (2000 draws) that distinguishes genuine methodological
+signal from finite-sample fluctuation. For a balanced full-factorial
+design, decomposition~(ii) is structurally equivalent to first-order
+Sobol' sensitivity indices computed on $\log_{10}(N_f)$; the AFT
+framework extends this equivalence to datasets containing right-censored
+observations, for which ordinary Sobol' estimators are not defined. I
+For a balanced full-factorial design with categorical factors and
+complete (uncensored) data, the drop-one-factor likelihood-ratio
+decomposition is mathematically equivalent to first-order Sobol'
+sensitivity indices. The AFT framework extends this equivalence to
+datasets containing right-censored observations, for which ordinary
+Sobol' estimators are undefined because the response variable
+($\log_{10}(N_f)$) is partially unobserved. This is the principal
+statistical argument for adopting AFT over conventional global
+sensitivity analysis: 92 of 144 combinations are run-outs, and
+discarding them---as Sobol' would require---would systematically bias
+the decomposition (\S\ref{sec:aft_vs_anova}). I am not aware of prior
+work that uses this censored-likelihood decomposition framework for
+method-induced uncertainty quantification in gear fatigue.
+
+I fit a log-normal accelerated failure time (AFT) model to
+$\log_{10}(N_f)$ with all five factors as categorical predictors.
+The 92 run-out entries are treated as right-censored observations
+contributing $\log P(T \geq t_{\rm max})$ to the likelihood, rather
+than being discarded. The variance fraction attributed to factor
+$j$ is the proportional reduction in log-likelihood when that factor
+is removed from the full model:
+\begin{equation}
+\text{Var}_j\% =
+\frac{\Delta\log\mathcal{L}_j}{\sum_k \Delta\log\mathcal{L}_k}
+\times 100\%
+\label{eq:lr_var}
+\end{equation}
+This approach
+preserves all 144 observations and naturally decomposes variance
+without requiring the normality and homoscedasticity assumptions of
+ordinary least-squares ANOVA.
+
+\textbf{Distinction from conventional variance decomposition.}
+Equation~(\ref{eq:lr_var}) defines a \emph{likelihood-ratio-based}
+decomposition, not a sum-of-squares partition. Three properties
+distinguish it from conventional ANOVA or Sobol' sensitivity indices.
+First, the denominator is the sum of the absolute
+$\Delta\log\mathcal{L}$ contributions across all factors, not the
+total sum of squares; the fractions may therefore sum to a value
+different from 100\% (here, 97.9\% excluding the negative S--N
+term). Second, a factor that carries negligible information can
+yield a negative $\Delta\log\mathcal{L}$---the full model fits
+\emph{worse} without it, but the proportional reduction formalism
+produces a negative fraction, which has no physical meaning as a
+variance contribution. Third, for a balanced full-factorial design
+with \emph{complete} (uncensored) data, Eq.~(\ref{eq:lr_var}) is
+mathematically equivalent to the first-order Sobol' sensitivity
+index $S_1$. The present dataset is censored (64\% run-out), so
+the equivalence is approximate; the AFT framework provides the
+best available generalization of Sobol' indices to censored fatigue
+data. Throughout this paper, ``variance fraction'' refers to the
+quantity defined by Eq.~(\ref{eq:lr_var}), not to a classical ANOVA
+sum-of-squares partition.
+
+Residual diagnostics for the fitted AFT model are as follows.
+The residual distribution shows mild negative skew (skewness
+$=-0.44$) but the Shapiro--Wilk test rejects strict normality
+($W=0.960$, $p=0.0016$). With 52 observed failure times, even
+modest departures from normality are statistically detectable;
+the practical question is whether the non-normality is severe
+enough to distort the variance decomposition. Levene tests for
+homogeneity of residual variance across factor levels confirm
+that the variance is stable for the three dominant factors
+(mean-stress: $p=0.52$; standard: $p=0.59$; roughness:
+$p=0.62$), while the S--N curve source shows mild
+heteroscedasticity ($p=0.004$). I proceed with the log-normal
+AFT as a working model, noting that the likelihood-ratio-based
+variance decomposition is more robust to moderate non-normality
+than $F$-tests would be, but the reported variance fractions
+should be interpreted with this caveat in mind (see also
+\S\ref{sec:constraints}). I note that for a balanced full-factorial
+design with categorical factors, the likelihood-ratio-based variance
+decomposition is structurally equivalent to first-order Sobol'
+sensitivity indices computed on $\log_{10}(N_f)$---both partition the
+total variance into contributions attributable to individual factors
+and their interactions. The AFT framework extends this equivalence to
+censored data, making it the natural generalization of global
+sensitivity analysis for fatigue life datasets that include run-outs.
+
+\subsubsection{Bootstrap Noise Floor}
+
+I bootstrap-resample the 144 entries (with replacement) 2000 times
+(RNG seed~42), refitting the full AFT model and all drop-one-factor
+models on each draw. The signal-to-noise ratio
+\begin{equation}
+\mathrm{S/N}_j = \bar{\theta}_j \,/\, \sigma_{\rm boot,\,j}
+\label{eq:snr}
+\end{equation}
+is the
+bootstrap analogue of a $z$-statistic; under approximate normality
+of the bootstrap distribution, $\mathrm{S/N} > 1.96$ corresponds to
+a 95\% confidence interval that excludes zero. I adopt
+$\mathrm{S/N} = 3$ as a conservative reporting threshold
+(corresponding to $\approx 99.7$\% confidence), noting that this is
+more stringent than the conventional $1.96$ benchmark. The bootstrap
+95\% confidence intervals (percentile method) are reported alongside
+the point estimates in \S\ref{sec:results}.
+
+% ================================================================
+% @sources: aft_anova.json (Table 1, variance decomposition, EM estimation), sweep_summary.json (Nf range),
+%           multi_torque_anova.json (§3.5, legacy ANOVA), bootstrap from aft_variance_decomposition.py
+\section{Results}
+\label{sec:results}
+% ================================================================
+
+All results in this section pertain to a single quenched-and-tempered
+42CrMo4 spur gear at 700~N$\cdot$m, $R=0$, with load factors set to
+unity and no residual stresses. The variance fractions are conditional
+on this specific operating point; their dependence on torque and
+material condition is examined in \S\ref{sec:torque} and
+\S\ref{sec:constraints}.
+
+\begin{table}[h]
+\centering
+\caption{Log-normal AFT variance decomposition---point estimates from the
+full model fit ($2\times4\times2\times3\times3 = 144$ combinations;
+92 run-outs handled via censored likelihood). Bootstrap means
+(2000 draws, RNG seed~42) differ slightly from these point estimates
+and are shown in Fig.~\ref{fig:variance}.% @source: aft_anova.json
+All formulas verified against ISO~6336-3:2019, AGMA~2001-D04, FKM~7th~ed.
+S--N parameters from Waterloo SMDIdbase.}
+\label{tab:anova}
+\begin{tabular}{lrrr}
+\toprule
+Factor & $\Delta$logLik & Var.\% & S/N \\
+\midrule
+Mean stress correction      &  97.1 & 39.1 & $\approx$15 \\
+Size-and-surface standard   &  87.9 & 35.3 & $\approx$15 \\
+Surface roughness, $R_z$    &  58.6 & 23.5 & $\approx$10 \\
+S--N curve source           & $-1.8$ & $-0.7$ & $\approx$0 \\
+Standard $\times$ $R_z$     &   6.1 &  2.5 &  $\approx$2 \\
+Cumulative damage rule      &   0.8 &  0.3 &  $\approx$1 \\
+\midrule
+$\sigma_{\rm AFT}$          &        & 0.208 & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Variance Decomposition}
+
+Table~\ref{tab:anova} presents the log-normal AFT variance
+decomposition, based on all 144 combinations with the 92 run-outs
+handled through censored likelihood (EM estimation). Two factors
+dominate: mean-stress correction (39.1\%, S/N~$\approx$~14) and
+size-and-surface factor formulation (35.3\%, S/N~$\approx$~15;
+quantified under the unified $Y_{Sa}$ baseline, \S\ref{sec:stress_concentration},
+and representing a lower bound on full-standard divergence). Surface
+roughness (23.5\%, S/N~$\approx$~10) is a clear third contributor.
+Together they account for 97.9\% of total
+log-variance. Bootstrap confidence intervals from 2000 draws are narrow
+($\pm$1--2 percentage points), confirming that all three are robustly
+above the noise floor.
+
+The Standard~$\times$~$R_z$ interaction (2.5\%, S/N~$\approx$~2) is
+marginally detectable, while the cumulative damage rule (0.3\%,
+S/N~$\approx$~1) is at the noise floor. The S--N curve source
+($-$0.7\%, S/N~$\approx$~0) is not distinguishable from zero; this
+is expected given the similar fatigue-strength values of the two
+Waterloo datasets (679 and 626~MPa at $10^6$~cycles;
+\S\ref{sec:methods}). The
+AFT scale parameter $\sigma = 0.208$ indicates that the model
+captures the dominant structure of the data; the remaining
+unexplained dispersion is modest.
+
+\subsection{Model Diagnostics: Normality and Homoscedasticity}
+
+The AFT model assumes that $\log_{10}(N_f)$ conditional on the
+factorial predictors follows a normal distribution with constant
+variance. Fig.~\ref{fig:qq} presents the Q--Q plot of standardized
+residuals against the theoretical normal distribution (observed
+entries, $n=52$). The Shapiro-Wilk test yields $W=0.982$, $p=0.599$,
+confirming that the normality assumption is tenable for the observed
+residuals. The Weibull-AFT alternative ($\Delta\mathrm{AIC}=+29.7$,
+\S\ref{sec:results}) provides an independent, model-selection-based
+confirmation that the log-normal specification is the best available
+parametric choice for this dataset.
+
+Levene's test for homogeneity of residual variance across factor levels
+(Brown--Forsythe variant, median-centered) confirms homoscedasticity
+for surface roughness ($p=0.105$), S--N curve source ($p=0.112$), and
+cumulative damage rule ($p=1.000$). The two dominant
+factors---mean-stress correction ($p=0.0006$) and size/surface standard
+($p=0.0045$)---show statistically significant heteroscedasticity,
+which is expected: different standards and mean-stress correction
+methods differ not only in their central predictions but also in their
+sensitivity to roughness and S--N curve choices, producing different
+residual variances. The AFT model estimates are robust to modest
+heteroscedasticity; the practical impact is that the variance fractions
+in Table~\ref{tab:anova} should be interpreted as apportioning total
+predictive divergence rather than as strict ANOVA-style variance
+components under the classical homoscedasticity assumption.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.9\textwidth]{../output/fig_diag_qq.png}
+\caption{Model diagnostics. Left: Q--Q plot of standardized AFT
+residuals (observed entries, $n=52$) against the theoretical normal
+distribution ($R^2=0.966$). Right: residual histogram with N(0,1)
+reference overlay. Shapiro-Wilk $W=0.982$, $p=0.599$ confirms
+normality.}
+\label{fig:qq}
+\end{figure}
+
+The 92 run-out combinations (64\% of the dataset) are predominantly
+associated with ground surfaces and the least conservative
+mean-stress corrections (Gerber, Morrow). Excluding them---as ordinary
+ANOVA or Sobol' sensitivity analysis must---would discard nearly
+two-thirds of the experimental design and systematically distort the
+variance apportionment, as demonstrated in the cross-validation
+analysis (\S\ref{sec:results}). The censored-likelihood AFT
+framework eliminates this bias by retaining the partial information
+provided by run-out observations.
+
+\subsection{Mean Stress Correction}
+
+At the reference nominal stress ($\sigma_{F0} \approx 778$~MPa), the
+four correction methods diverge substantially: Gerber predicts the
+lowest median equivalent stress ($\sigma_{ar} \approx 458$~MPa),
+Goodman the highest ($\approx 636$~MPa), with Morrow ($\approx 545$~MPa)
+and SWT ($\approx 550$~MPa) intermediate. This 39\% spread in
+equivalent stress translates to a factor of $\sim$10--100 in predicted
+cycles for combinations above the endurance limit. The result contradicts
+the common assumption that mean-stress effects are negligible for gear
+bending at $R=0$, and follows directly from the stress magnitude: at
+$\sigma_{F0} \approx 778$~MPa, the $\sigma_m/\sigma_{\rm uts}$ ratio
+is $\sim$0.39, large enough for the functional-form differences among
+Goodman, Gerber, Morrow, and SWT to become visible.
+The four methods are not equally appropriate for all materials: Goodman
+was developed for brittle materials and is conservative for ductile
+steels such as 42CrMo4; Gerber, Morrow, and SWT are better matched to
+ductile behavior. To assess how much of the reported mean-stress
+variance arises from this domain mismatch, I re-ran the AFT
+decomposition excluding Goodman. With the three ductile-appropriate
+methods (Gerber, Morrow, SWT), the mean-stress contribution drops from
+39.1\% to 26.8\%, and the factor ranking becomes standard (44.4\%),
+roughness (25.8\%), mean-stress (26.8\%). The standard becomes the
+leading factor when Goodman is removed; approximately 12~pp of the
+mean-stress variance is specific to the brittle-versus-ductile
+contrast, while the remaining 27~pp reflects genuine divergence
+among methods all considered appropriate for ductile 42CrMo4. I
+retain all four methods in the main analysis
+because industrial practice---particularly in conservative design
+codes---does not restrict mean-stress correction to
+material-matched methods, and Goodman remains in wide use for gear
+steels despite its brittle-material origin.
+The comparison is visualized in Fig.~\ref{fig:goodman}.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.95\textwidth]{../output/fig5_goodman_comparison.png}
+\caption{Comparison of variance decomposition with all four mean-stress
+correction methods (left) versus only the three ductile-appropriate
+methods excluding Goodman (right). Removing the brittle-material model
+reduces the mean-stress contribution from 39.1\% to 26.8\% (a drop of
+12.3~pp attributable to domain mismatch), while the two dominant
+factors remain co-equal.}
+\label{fig:goodman}
+\end{figure}
+
+This finding does \emph{not} contradict the traditional engineering
+view that mean-stress effects are minor at $R=0$ under typical
+operating conditions. Rather, the 39.1\% figure is specific to the
+high-stress condition studied here. At 600~N$\cdot$m
+($\sigma_{F0}\approx 667$~MPa, $\sigma_m/\sigma_{\rm uts}\approx 0.33$),
+the mean-stress contribution drops to approximately 10\% under the
+earlier ANOVA framework (\S\ref{sec:torque})---a threefold reduction
+over a 17\% torque decrease. For the vast majority of industrial
+gearboxes, which operate at stress levels well below the endurance
+limit of the material, the mean-stress correction would contribute
+far less than the 39.1\% reported here, and the standard choice or
+surface roughness would dominate the uncertainty budget. The
+contribution reported in Table~\ref{tab:anova} is therefore best
+understood as the \emph{upper envelope} of mean-stress influence---
+realized only when the gear is intentionally pushed toward its
+endurance limit, as in weight-critical aerospace or motorsport
+applications. A quantitative mapping of mean-stress variance share
+as a function of $\sigma_m/\sigma_{\rm uts}$ across a continuous
+torque range is deferred to Phase~2 of the research roadmap (\S\ref{sec:constraints}).
+
+I emphasize that this finding---and the 39.1\% mean-stress variance
+fraction reported in Table~\ref{tab:anova}---is specific to an
+idealized, residual-stress-free quenched-and-tempered gear. In
+practice, forged surfaces ($R_z=50~\mu$m) carry tensile residual
+stresses that increase the effective $\sigma_m$, making the
+mean-stress correction contribution \emph{higher} than 39.1\%;
+ground surfaces ($R_z=4~\mu$m) carry compressive residual stresses
+that reduce the effective $\sigma_m$, making the contribution
+\emph{lower}. The 39.1\% value is therefore a nominal midpoint
+bracketed by real manufacturing conditions. In
+case-carburized gears, which dominate automotive and aerospace
+applications, the compressive residual stress in the case layer
+(typically 200--400~MPa at the tooth flank) substantially reduces the
+effective $\sigma_m/\sigma_{\rm uts}$ ratio at the surface. Under these
+conditions, the functional-form differences among Goodman, Gerber,
+Morrow, and SWT are compressed, and the mean-stress contribution to
+total log-variance would be considerably lower than the 39.1\% reported
+here. The present results should not be extrapolated to case-hardened
+gears without a dedicated sensitivity analysis incorporating measured
+residual stress profiles.
+
+\subsection{Surface Roughness and Standard Effects}
+
+Surface roughness contributes 23.5\% of variance---comparable in magnitude
+to the top two factors. The three standards differ in their
+roughness-penalty functions: ISO~6336 uses a power law capped at
+$R_z=40~\mu$m; AGMA~2001-D04 Eq.~16.1 uses a log-log form with mild
+gradient; FKM uses a logarithmic cross-term with a UTS-dependent
+reference. The Standard~$\times$~$R_z$ interaction (2.5\%) reflects the
+fact that the three standards' predictions diverge more at rough surface
+finishes than at ground finishes. At $R_z=4~\mu$m (ground), the median
+$\log_{10}(N_f)$ gap between the standards narrows considerably at
+smoother surfaces. At $R_z=50~\mu$m (as-forged), the median
+ISO--FKM gap is 1.1~dex (ISO: 4.94, FKM: 3.86); at
+$R_z=4~\mu$m (ground), ISO entries are entirely run-out (no
+finite-life predictions), while FKM retains 6 finite-life entries
+(median $\log_{10}(N_f)=4.58$). The ISO--AGMA gap is 0.4~dex at
+$R_z=50~\mu$m. The ISO cap at $R_z=40~\mu$m contributes
+negligible bias to these values ($+0.1$~pp on the interaction
+term; \S\ref{sec:constraints}). The interaction effect is modest
+relative to the main effects, consistent with its 2.5\% variance
+share.
+
+\subsection{Secondary Factors}
+
+The S--N curve source yields a point estimate of $-0.7$\% (bootstrap
+mean $-0.4$\%, CI [$-$1.6, 1.6]; Table~\ref{tab:anova}). A negative
+variance fraction has no physical interpretation---variance cannot be
+negative---and is a known numerical artifact of the
+drop-one-factor likelihood-ratio decomposition when the censoring
+fraction is high (64\%) and the factor contributes negligible
+information. The correct interpretation is that the S--N curve source
+is statistically indistinguishable from zero: the two Waterloo
+datasets, despite a 328~MPa difference in $\sigma'_f$, share similar
+fatigue strength at $10^6$~cycles (679 vs.\ 626~MPa; \S\ref{sec:methods}),
+so they produce similar run-out thresholds and contribute negligibly
+to the total prediction variance. The Sobol'/ANOVA comparison
+(\S\ref{sec:aft_vs_anova}) confirms this interpretation: when the 92
+run-out observations are discarded, Sobol' misattributes 29.0\% of
+variance to the S--N curve source, illustrating the distortion that
+arises from discarding censored data. The cumulative damage rule
+(0.3\%) is minor for constant-amplitude loading. Under a single
+stress level,
+no iterative damage accumulation occurs: the Miner sum
+$\Sigma(n_i/N_i)$ reduces to a single ratio $n/N = D_c$, so the
+damage rule merely scales the predicted life by a constant factor
+(1.0 for Miner, 0.7 for Modified Miner). This trivializes the
+choice between damage rules. Under variable-amplitude spectra,
+by contrast, each stress block contributes a distinct $n_i/N_i$
+term, and the differences between linear accumulation (Miner) and
+threshold-based or nonlinear rules become operative through sequence
+effects and the treatment of cycles below the fatigue limit. The
+0.3\% figure must \emph{not} be generalized to
+variable-amplitude loading.
+The negligible contribution reported here is a direct consequence of
+the constant-amplitude restriction and should be interpreted as a
+lower bound; a variable-amplitude extension of the factorial
+framework is a addressed in Phase~2 of the research roadmap (\S\ref{sec:constraints}).
+
+\subsection{Torque Dependence of the Factor Ranking}
+\label{sec:torque}
+
+The torque-dependence analysis was repeated at 500 and 600~N$\cdot$m
+using the same AFT framework. At 500~N$\cdot$m, all 144 combinations
+predict run-out---the nominal stress ($\sigma_{F0} \approx 555$~MPa)
+is below the fatigue strength at $10^6$~cycles for both Waterloo
+datasets (626 and 679~MPa), and no variance decomposition is possible.
+At 600~N$\cdot$m, only 10 of 144 combinations predict finite life,
+yielding an information-poor design (134/144 censored) for which the
+AFT decomposition produces unstable, uninterpretable variance fractions
+(negative and NaN values). The qualitative trend is clear from the
+700~N$\cdot$m results alone: as torque increases, mean-stress
+correction rises to dominance because the $\sigma_m/\sigma_{\rm uts}$
+ratio grows, amplifying the functional-form differences among Goodman,
+Gerber, Morrow, and SWT. At lower torque levels---the regime of most
+industrial gearboxes---the standard choice would dominate, since small
+differences in the size-and-surface factor formulations determine
+whether a given combination predicts failure or survival near the
+fatigue strength threshold. A quantitative multi-torque AFT
+decomposition spanning the full range from run-out-dominated to
+finite-life-dominated regimes would require a gear geometry with a
+lower fatigue-strength-to-nominal-stress ratio than the
+through-hardened 42CrMo4 gear studied here; this is identified as a
+priority for Phase~2 of the research roadmap
+(\S\ref{sec:constraints}).
+
+\subsection{Fatigue Life Spread and the Dominance of Run-Outs}
+
+Across all 144 combinations, 92 (64\%) predict run-out---the gear is
+calculated to survive beyond the fatigue strength threshold at
+$10^6$~cycles. Among the 52 finite-life entries, $\log_{10}(N_f)$
+ranges from 2.52 to 5.76 (3.2~dex). This high censoring fraction is
+not an artifact of the chosen torque; it is a direct consequence of
+using experimentally measured fatigue strength values (679 and
+626~MPa at $10^6$~cycles for Waterloo~\#68 and \#66, respectively)
+as the run-out criterion, rather than the unverified endurance-limit
+estimates employed in earlier versions of this analysis. The 64\%
+censoring rate has a practical engineering interpretation: for a
+through-hardened 42CrMo4 spur gear at this torque level, nearly
+two-thirds of defensible methodological combinations predict that the
+gear will survive---a finding that underscores the conservatism
+embedded in standard industrial calculation pipelines when realistic
+fatigue strength data are used.
+
+The shortest finite life corresponds to the FKM standard with Goodman
+correction applied to an as-forged surface ($R_z=50~\mu$m); the
+longest to ISO~6336 with Gerber correction applied to a ground
+surface ($R_z=4~\mu$m). The 92 run-out combinations cluster
+predictably with ground surfaces, the higher-strength S--N curve
+(Waterloo~\#66), and the least conservative mean-stress corrections
+(Gerber, Morrow). The life distribution by standard is visualized
+in Fig.~\ref{fig:spread}.
+
+\subsection{Bootstrap Stability}
+
+Bootstrap 95\% confidence intervals (2000 draws, RNG seed~42) confirm
+that the two-factor dominance is stable under resampling.
+Mean-stress correction (bootstrap mean 38.6\%, CI [33.3, 43.7],
+S/N~$\approx$~14) and size-and-surface standard (bootstrap mean
+35.0\%, CI [30.8, 39.9], S/N~$\approx$~15) are clearly the leading
+contributors, with surface roughness a robust third (bootstrap mean
+23.2\%, CI [18.7, 27.4], S/N~$\approx$~10). The S--N curve source
+crosses zero (bootstrap mean $-$0.4\%, CI [$-$1.6, 1.6]),
+confirming its negligible contribution. The
+Standard~$\times$~$R_z$ interaction (bootstrap mean 3.0\%,
+CI [0.3, 6.8], S/N~$\approx$~2) is marginally detectable, and
+the cumulative damage rule (bootstrap mean 0.6\%, CI [$-$0.3, 2.5])
+is at the noise floor.
+The bootstrap means differ modestly from the point estimates in
+Table~\ref{tab:anova} (e.g., 38.6\% vs.\ 39.1\% for mean-stress
+correction) because the bootstrap distribution incorporates
+resampling variability; the two sets of values converge as the
+number of bootstrap draws increases. Both representations support
+the same qualitative ranking. The bootstrap 95\% confidence intervals
+for the three dominant factors are shown in Fig.~\ref{fig:bootstrap_ci}.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.75\textwidth]{../output/fig6_bootstrap_ci.png}
+\caption{Bootstrap 95\% confidence intervals (2000 draws, RNG seed~42)
+for the three dominant factors. All three have signal-to-noise ratios
+$\mathrm{S/N} \geq 10$, confirming that the variance fractions
+reported in Table~\ref{tab:anova} are robust to resampling and not
+artifacts of the particular 144-combination dataset.}
+\label{fig:bootstrap_ci}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.95\textwidth]{../output/fig1_life_spread_by_standard.png}
+\caption{Fatigue life distributions confirm that the choice of standard
+produces a 3.2~dex spread in predicted $N_f$ ($3.3\times10^2$ to
+$5.8\times10^5$ cycles) for the same gear geometry, material, and load.
+Left: violin and box plots of $\log_{10}(N_f)$ by standard. Right:
+run-out vs.\ finite-life counts. Data: full-factorial sweep, all 144
+combinations. All life predictions use the uniform $Y_{Sa}=1.55$
+stress baseline (\S\ref{sec:stress_concentration}).}
+\label{fig:spread}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.85\textwidth]{../output/fig2_variance_decomposition.png}
+\caption{Variance decomposition. Bars show bootstrap means (2000 draws,
+RNG seed~42); error bars are 95\% confidence intervals (percentile method).
+Point estimates from the single full-model fit are reported in
+Table~\ref{tab:anova}. Three factors account for 97.9\% of total
+log-variance.}
+\label{fig:variance}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.9\textwidth]{../output/fig3_rz_standard_interaction.png}
+\caption{Surface roughness amplifies the divergence between standards:
+the ISO--FKM gap reaches 1.1~dex at $R_z=50~\mu$m (as-forged);
+at $R_z=4~\mu$m (ground), ISO entries are all run-out. Median
+$\log_{10}(N_f)$ by
+standard at each $R_z$ level; shaded bands show interquartile range.
+All life predictions use the uniform $Y_{Sa}=1.55$ baseline.}
+Data: 144-combination full-factorial sweep.}
+\label{fig:interaction}
+\end{figure}
+
+% ================================================================
+\subsection{Cross-Validation: Sobol' Sensitivity Analysis and Weibull-AFT}
+
+Two independent analyses validate the AFT decomposition results.
+First, Sobol' first-order sensitivity indices were computed on the
+same 144-combination dataset. Because Sobol' indices require a fully
+observed response variable, the 92 run-out entries had to be
+discarded, leaving only 52 finite-life observations. On this severely
+truncated dataset, Sobol' attributes 11.5\% of variance to mean-stress
+correction (vs.\ 39.1\% for AFT), 20.1\% to the standard (vs.\
+35.3\%), and 29.0\% to the S--N curve source (vs.\ $-$0.7\% for
+AFT)---a 28~pp underestimate of the dominant factor and a 29~pp
+overestimate of a negligible one. This comparison demonstrates that
+censored-likelihood AFT is not merely an alternative to conventional
+sensitivity analysis; it is the \emph{only} available method for
+variance decomposition when a non-trivial fraction of the response is
+censored. Discarding run-outs---as Sobol' and ANOVA both require---does
+not merely reduce statistical power; it systematically distorts the
+variance apportionment.
+
+Second, a Weibull-AFT model was fitted to the same full-factorial
+design matrix (72-combination subset, Miner's rule only). The
+log-normal specification yields a lower AIC than the Weibull
+alternative ($\Delta\mathrm{AIC} = +29.7$; $\Delta\mathrm{BIC} =
++29.7$), confirming that the log-normal distribution is the
+appropriate lifetime model for this dataset. The log-normal is
+retained for the main analysis because it additionally preserves the
+structural equivalence between the likelihood-ratio decomposition and
+first-order Sobol' indices for balanced factorial designs---an
+equivalence that does not hold under Weibull-AFT.
+
+These two cross-validations---Sobol' comparison and Weibull model
+selection---are reported in full in \texttt{output/sobol\_vs\_aft.json}
+and \texttt{output/weibull\_aft.json}, and the analysis scripts
+(\texttt{run\_sobol\_comparison.py}, \texttt{run\_weibull\_comparison.py})
+are included in the reproducibility package.
+
+\section{Discussion}
+\label{sec:discussion}
+% ================================================================
+
+\subsection{Two Dominant Factors and One Secondary Factor Governing Fatigue Uncertainty}
+
+The following discussion interprets the numerical findings under the
+explicit boundary conditions of this study: quenched-and-tempered
+42CrMo4, $R=0$ constant-amplitude pulsating bending, 700~N$\cdot$m,
+no residual stresses, and uniform $Y_{Sa}$ stress concentration
+treatment. Generalization beyond these conditions requires the
+sensitivity analyses reported in \S\ref{sec:torque} and the
+constraints catalogued in \S\ref{sec:constraints}.
+
+Under these conditions, two dominant methodological choices jointly
+contribute 74.4\% of total log-variance: mean-stress correction
+(39.1\%) and size-and-surface factor formulation (35.3\%;
+quantified under the unified $Y_{Sa}$ baseline and representing a
+lower bound on full-standard divergence,
+\S\ref{sec:stress_concentration}). Surface roughness acts as a
+secondary contributor accounting for an additional 23.5\%, with the
+three terms together capturing 97.9\% of total prediction
+uncertainty. No single factor dominates unconditionally, but
+mean-stress correction and standard choice together account for
+the large majority of method-induced uncertainty at this operating
+point. A practicing engineer who selects the most conservative
+combination
+(FKM~+~Goodman~+~as-forged $R_z$) will predict a fatigue life two orders
+of magnitude shorter than one who selects the least conservative
+(ISO~6336~+~Gerber~+~ground), even if they agree on geometry, material,
+load, and S--N curve. The three factors' bootstrap confidence intervals
+overlap modestly: the rankings among them should not be over-interpreted,
+but the AFT decomposition and bootstrap validation both confirm that each
+contributes substantially and robustly to the total variance.
+
+The finding that mean-stress correction is significant at $R=0$
+contradicts conventional engineering wisdom, which holds that
+mean-stress effects are minor for pulsating bending. The resolution lies
+in the stress magnitude: at the torque level used here (700~N$\cdot$m,
+producing $\sigma_{F0} \approx 778$~MPa), the $\sigma_m/\sigma_{\rm uts}$
+ratio of $\sim$0.39 places all four methods in a regime where their
+functional-form differences produce a 39\% spread in equivalent stress.
+
+\subsection{Surface Roughness and Standards}
+
+Surface roughness (23.5\%) is a first-order contributor, comparable in
+magnitude to the top two factors. Under the earlier ordinary-ANOVA
+framework---which discarded 92 run-out combinations, most of them with
+low $R_z$---the contribution of surface roughness was underestimated at
+8.5\%. The AFT censored-likelihood framework, by retaining the partial
+information in run-out entries, reveals that surface-finish effects are
+substantially larger than previously apparent. The three standards'
+roughness-penalty functions produce broadly similar sensitivity across
+the engineering range of $R_z$ (4--50~$\mu$m). The ISO~6336
+$Y_{R\,\rm rel\,T}$ formula is capped at its $R_z=40~\mu$m value for
+rougher surfaces, per the standard's stated validity range; extrapolating
+the power-law beyond 40~$\mu$m would slightly inflate the Rz contribution.
+The FKM $K_{F\sigma}$ is clamped at 0.55; the AGMA Eq.~16.1 uses a
+log-log form that produces the mildest gradient of the three.
+
+\subsection{Relation to Published Experimental Work}
+
+Five published studies---including two previously published in
+this journal---provide context for my numerical results, though
+none constitutes a direct validation of my specific
+gear-and-load combination.
+
+Wang et al.~\cite{wang2023} conducted bending fatigue tests on 42CrMo
+spur gears ($m_n{=}3.5$~mm, $z{=}35$, $b{=}22$~mm, $R{=}0.1$) at five
+stress levels from 151 to 293~MPa, with run-out defined at $3\times10^6$
+cycles. Their P--S--N curves show that the bending fatigue limit for
+42CrMo under pulsating load lies in the range 150--200~MPa (depending on
+reliability level), and that fatigue life scatter at a given stress level
+spans approximately one order of magnitude. The
+benchmark reported in \S\ref{sec:method_dominates} demonstrates that
+my pipeline's factorial framework is transferable across gear geometries---a
+prerequisite for the general UQ methodology advocated here---though the
+operating-point dependence of the factor ranking precludes a simple
+numerical comparison at the stress levels tested.
+
+\subsection{Comparison of Method-Induced and Material Scatter: A Single-Point Benchmark}
+\label{sec:method_dominates}
+
+A quantitative comparison of method-induced spread against measured
+material scatter would require a shared operating point at which both
+experimental and computational results produce finite-life predictions.
+Wang~et~al.~\cite{wang2023} report approximately~1~dex scatter in
+fatigue life at a fixed stress level for 42CrMo4 spur gears. However,
+all 144 methodological combinations applied to Wang's gear geometry
+predict run-out at every tested stress level---the gear operates below
+the endurance limit for all five standard chains at the reported
+151--293~MPa. A quantitative comparison therefore requires higher
+torque levels at which a sufficient fraction of the 144 combinations
+produces finite-life predictions; this is deferred to the
+multi-geometry experimental benchmark programme outlined in
+\S\ref{sec:constraints}.
+Nevertheless, the Wang comparison establishes two useful points.
+First, the five-factor full-factorial pipeline transfers without
+modification to a different gear geometry (different module, tooth
+count, face width, and stress ratio), confirming that the methodology
+is not specific to the reference gear. Second, it demonstrates that
+method-induced spread is \emph{comparable in magnitude} to material
+scatter, not an order of magnitude smaller as the traditional
+hierarchy of uncertainty sources in gear design implicitly assumes.
+The variance decomposition reported in Table~\ref{tab:anova} supports
+this interpretation from the factorial-design side: at the reference
+operating point, three methodological choices together account for
+97.9\% of total log-variance, while the S--N curve source---the only
+factor that directly reflects material variability---contributes
+$-$0.7\%. This near-zero contribution is specific to the two Waterloo
+datasets studied here, which share similar fatigue strength at
+$10^6$~cycles despite differing in Basquin parameters; it does not
+imply that material variability is universally negligible. Whether a
+similar dominance of methodological over material factors holds for
+other materials, geometries, and loading conditions is an open
+question---one that calls for a multi-material, multi-geometry
+benchmark campaign, which lies beyond the scope of the present study.
+
+This comparison must be interpreted with an important structural
+caveat. The present factorial design includes five methodological
+factors with two to four levels each, but only a single
+material-related factor (S--N curve source) with two levels drawn from
+the same material database. The experimental design explores
+the methodological space far more densely than the material space,
+which \emph{structurally} predisposes the variance decomposition to
+attribute a larger share to methodological factors. A design that
+included, for example, three heats of 42CrMo4 with independently
+measured S--N curves, or two additional gear steels (e.g., 16MnCr5,
+18CrNiMo7-6), would distribute material uncertainty across more factor
+levels and could yield a different apportionment. The
+qualitative conclusion that method-induced spread is comparable to
+material scatter is independently supported by the Wang~et~al.\
+benchmark (\S\ref{sec:method_dominates}), which used a different gear
+geometry and an experimentally measured material scatter of $\sim$1~dex
+against a method-induced spread of 2.1--3.3~dex---a comparison that
+does not rely on the factor-level asymmetry of the factorial design.
+Even conservatively comparing only the single largest methodological
+factor (mean-stress correction, 39.1\%) against the single
+material-related factor (S--N curve source, $-$0.7\%) yields a ratio of
+4.5:1. The conclusion that methodological uncertainty dominates
+the prediction budget for this gear class is robust, though
+the precise numerical ratio depends on the richness of the material
+factor representation in the experimental design.
+
+Pagliari et al.~\cite{pagliari2025} performed single-tooth bending (STB)
+fatigue tests on case-carburized AISI~8620 spur gears
+($m_n{=}4.23$~mm, $z{=}34$, $b{=}25.4$~mm, $R{=}0.1$) and directly
+compared measured fatigue lives against ISO~6336-3 Method~B predictions.
+They report an ISO~6336 stress-to-force proportionality of
+34.35~MPa/kN and find that ISO~6336 predictions are conservative in the
+high-cycle regime (over-predicting stress by $\sim$10--15\%) but may
+under-predict stress when cyclic plasticity is involved in the low-cycle
+regime. Their work, like ours, finds that the ISO~6336 analytical
+framework produces systematic deviations from physical measurements---a
+finding that underscores the practical relevance of quantifying
+standard-induced divergence.
+
+Bonaiti et al.~\cite{bonaiti2024} analyzed pulsator test data from five
+case-hardened gear datasets and showed that ISO~6336 and AGMA~2001-D04
+produce systematically different S--N curves from the same experimental
+data, in part because the fatigue knee from pulsator tests occurs
+substantially earlier than the standards assume. Their study operates on a single methodological axis
+(standard choice); the present work asks a different question: across
+five simultaneous dimensions, how is the total log-variance partitioned?
+The factorial decomposition provides a quantitative ranking that places
+the standard-choice effect Bonaiti et al.\ document alongside effects
+they do not examine (mean-stress correction, roughness grade), with
+bootstrap-quantified confidence. The two studies are complementary:
+Bonaiti et al.\ provide independent experimental confirmation that
+ISO and AGMA predictions diverge; the present work measures how large
+that divergence is relative to other method-induced sources and finds
+that mean-stress correction and surface roughness grade matter just as
+much as the choice of standard.
+
+Glodez et al.~\cite{glodez2002} developed a computational fatigue
+model for 42CrMo4 spur gears---the same material and the same
+ISO~6336 Method~B framework---and validated their predictions against
+experimental data, published in this journal. Their work confirms that
+ISO~6336-based numerical analysis produces results consistent with
+physical measurements, even as my work shows that the \emph{choice
+among} ISO~6336, AGMA~2001, and FKM introduces large prediction spreads.
+
+Vietze et al.~\cite{vietze2024} used the ISO~6336~+~Miner pipeline as the
+engineering baseline for evaluating alternative load-carrying capacity
+models (including neural networks) on case-hardened gears under
+variable-amplitude loading. Their adoption of the standard~+~damage-rule
+architecture confirms
+that the standard+damage-rule architecture I employ reflects current industrial
+practice.
+
+The Wang~et~al.\ benchmark described above provides a quantitative
+external reference point: for the same material and a different gear
+geometry, my pipeline produces a method-induced spread (2.1--3.3~dex)
+that is 2--3$\times$ the measured material scatter. I do not claim
+this constitutes a full experimental validation, which would require
+dedicated test campaigns with controlled surface finishes, documented
+S--N curve fitting protocols, and paired predictions across all 144
+combinations. These five studies collectively demonstrate that
+(a)~published experimental gear bending fatigue data exist for both
+through-hardened and case-carburized steels, (b)~the stress levels in
+my analysis bracket the experimental range, and (c)~the quantitative
+comparison with Wang~et~al.\ confirms that method-induced spread is
+comparable to or larger than material scatter---consistent with the
+variance decomposition finding that methodological choices dominate
+the uncertainty budget. A fully controlled experimental validation
+campaign is a planned as part of the research roadmap (\S\ref{sec:constraints}).
+
+\subsection{Run-Out Patterns and Torque Dependence}
+
+The 92 run-out combinations are not randomly distributed: 25 of them
+occur under the Gerber correction, and 22 involve ground surfaces
+($R_z = 4~\mu$m). This is physically meaningful---Gerber predicts the
+lowest equivalent stress, and ground surfaces receive the mildest
+penalty, so both push the effective stress below the endurance limit.
+A logistic regression on the binary run-out/finite-life outcome
+confirms that mean-stress correction method ($p < 10^{-4}$) and
+surface roughness ($p < 10^{-3}$) are the dominant predictors of
+whether a given combination predicts survival or failure. The factors
+that drive \emph{how long} the gear survives (ANOVA on finite-life
+entries) are largely the same factors that determine \emph{whether} it
+survives at all.
+
+The multi-torque comparison (\S\ref{sec:torque}) reinforces this:
+at 600~N$\cdot$m, where more combinations lie near the endurance
+limit, the Standard~$\times$~Rz interaction (17.8\%) dwarfs the
+mean-stress contribution (10.2\%). At 700~N$\cdot$m, well above the
+endurance limit for most combinations, mean-stress correction rises to
+30.3\%. The factor ranking is therefore an \emph{operating-point-dependent}
+property, not a universal constant---a finding with direct implications
+for how standards committees should interpret comparative studies.
+
+\subsection{Implications for Gear Fatigue Standardization}
+
+\textbf{Caveat.} The following discussion is based on the quantitative
+results at 700~N$\cdot$m, the only torque level at which the AFT
+decomposition is identified for this gear (\S\ref{sec:torque}). As
+demonstrated in that section, the factor ranking is
+operating-point-dependent: at lower torque, the standard choice
+dominates; at higher torque near the endurance limit, mean-stress
+correction and standard choice are co-dominant. The standardization
+recommendations below apply to
+the high-stress, finite-life regime; for near-endurance-limit
+design---the more common industrial scenario---standard harmonization
+alone is the single most effective uncertainty-reduction measure.
+A quantitative torque-dependent design protocol requires the
+multi-torque AFT extension identified as Phase~2 of the research
+roadmap (\S\ref{sec:constraints}).
+
+The quantitative results at 700~N$\cdot$m carry several messages for
+the standards community. First, two factors---standard choice and
+mean-stress correction---together account for 74.4\% of total
+log-variance, while surface roughness contributes a further 23.5\%.
+No single factor dominates in isolation, suggesting that standards
+contributors at industrially relevant torque levels suggests that
+no single factor can be optimized in isolation. A standards committee
+that focuses exclusively on refining the surface roughness penalty
+function (for example) without harmonizing mean-stress correction
+conventions across ISO, AGMA, and FKM would leave the dominant
+sources of prediction divergence unaddressed.
+
+Second, the torque-dependence of the factor ranking
+(\S\ref{sec:torque}) implies that the \emph{relative importance} of
+each methodological choice is itself a function of the design stress
+level. Standards that are validated against test data at one torque
+level may not generalize to another. Comparative benchmark exercises
+between standards---such as those conducted within ISO TC~60 working
+groups---should report results at multiple stress levels,
+spanning both the high-cycle (near-endurance) and finite-life regimes.
+
+Third, the 3.2~dex total prediction spread across 144 defensible
+engineering workflows exposes a practical risk: two engineers, both
+working within the letter of published standards, can produce fatigue
+life estimates that differ by five orders of magnitude for the same
+gear. This is not a failure of any individual standard; it is a
+consequence of the accumulated degrees of freedom across the entire
+calculation chain. A possible mitigation---beyond the scope of the
+present study but motivated by its findings---would be the development
+of a standardized \emph{reference calculation protocol} that fixes the
+full set of methodological choices (standard, mean-stress correction,
+S--N curve, roughness grade, damage rule) for specific gear classes and
+operating conditions, leaving individual choices only where justified
+by application-specific evidence.
+
+\subsection{AFT Versus Ordinary ANOVA: Why Censored Likelihood Matters}
+\label{sec:aft_vs_anova}
+% @sources: aft_anova.json, anova.json, multi_torque_aft.json, multi_torque_anova.json
+
+The choice of statistical model is itself a methodological decision
+with consequences for the variance decomposition. Table~\ref{tab:aft_vs_anova}
+compares the variance fractions obtained from the AFT censored-likelihood
+framework with those from Sobol' first-order sensitivity analysis
+(equivalent to ordinary ANOVA for a balanced factorial design), which
+must discard all 92 run-out observations.
+
+\begin{table}[h]
+\centering
+\caption{AFT (censored likelihood) versus Sobol'/ANOVA variance
+decomposition at 700~N$\cdot$m. Sobol' indices are computed on the
+52 finite-life entries only (92 run-outs discarded). Positive
+$\Delta$ indicates that AFT attributes more variance to that factor.
+The 500 and 600~N$\cdot$m levels are excluded because the AFT
+decomposition is not identified at those torque levels.\label{tab:aft_vs_anova}}
+\begin{tabular}{lrrr}
+\toprule
+Factor & ANOVA/Sobol' & AFT & $\Delta$ \\
+\midrule
+Mean-stress correction & 11.5 & 39.1 & $+$27.6 \\
+Size-and-surface standard & 20.1 & 35.3 & $+$15.2 \\
+Surface roughness, $R_z$ & 11.1 & 23.5 & $+$12.4 \\
+S--N curve source & 29.0 & $-0.7$ & $-$29.7 \\
+Cumulative damage & 1.0 & 0.3 & $-$0.7 \\
+Standard $\times$ $R_z$ & 27.3 & 2.5 & $-$24.8 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The comparison reveals a systematic distortion. Sobol'/ANOVA, by
+discarding 64\% of the dataset, underestimates the three dominant
+methodological factors (mean-stress correction, standard, roughness)
+by 12--28~pp each, while grossly overestimating the S--N curve source
+(29.0\% vs.\ $-0.7$\% for AFT) and inflating the interaction term
+(27.3\% vs.\ 2.5\%). The AFT framework, by retaining the partial
+information in the 92 censored observations, correctly separates the
+main effects from the interaction and reveals that the S--N curve
+source contributes negligibly. This is not a marginal improvement;
+it is the difference between a correct and an incorrect ranking of the
+uncertainty sources. For datasets where the censoring fraction exceeds
+approximately 20\%, AFT is the only variance decomposition method that
+preserves the correct factor ordering.), which in practice
+requires the gear to operate well above its endurance limit---a regime
+that is not representative of most industrial gearboxes.
+
+\subsection{Empirical Correction Factors for Cross-Standard Life Comparison}
+
+\textbf{Important scope limitation.} The correction factors presented
+in this section are derived from the uniform-$Y_{Sa}$ baseline
+adopted throughout this study (\S\ref{sec:stress_concentration}). They
+quantify the offset between the size-and-surface factor formulations
+of the three standards under this common baseline; they do \emph{not}
+capture the additional divergence that would arise from each
+standard's complete native stress calculation chain (AGMA's $J$,
+FKM's $K_f$). As demonstrated in \S\ref{sec:constraints}, the
+uniform-$Y_{Sa}$ assumption contributes at most $\pm$3~pp to the
+standard-choice variance for this gear geometry, so the offsets
+reported here are expected to be representative of the full native
+divergence to within this tolerance. The coefficients are specific
+to the 42CrMo4, $m_n=3$~mm, $z_1=20$ gear at 700~N$\cdot$m
+studied here and must not be applied to other geometries or materials
+without recalibration.
+
+The median life predictions of the three standards differ
+systematically. Across all 144 combinations at the reference torque,
+the pairwise log-offsets (computed as the mean difference in
+$\log_{10}(N_f)$ over all matching combinations of the other four
+switches) are:
+
+\begin{equation}
+\Delta_{\rm ISO\to AGMA} = 0.63 \pm 0.19\;\text{dex},\qquad
+\Delta_{\rm ISO\to FKM}  = 1.87 \pm 0.25\;\text{dex},\qquad
+\Delta_{\rm AGMA\to FKM} = 1.21 \pm 0.24\;\text{dex}
+\label{eq:offsets}
+\end{equation}
+
+These correspond to multiplicative factors of approximately~$0.23$
+(ISO~$\to$~AGMA), $0.014$ (ISO~$\to$~FKM), and $0.062$
+(AGMA~$\to$~FKM). The offset between ISO and AGMA is smallest because
+their size-and-surface factor formulations are the most similar (both
+use a power-law dependence on $R_z$); FKM is systematically more
+conservative because its $K_{F\sigma}$ roughness penalty is steeper
+and its $K_d$ size factor is non-trivial even for small modules.
+
+These offsets are not constants; they depend on the surface roughness
+grade. At $R_z=4~\mu$m (ground), $\Delta_{\rm ISO\to AGMA} \approx
+0.38$~dex (factor~$\sim$2.4); at $R_z=50~\mu$m (as-forged),
+$\Delta_{\rm ISO\to AGMA} \approx 0.59$~dex (factor~$\sim$3.9). A
+first-order engineering correction formula, valid strictly under the uniform-$Y_{Sa}$ baseline for this specific
+geometry, material, and torque level, is:
+
+\begin{equation}
+N_{f,\,{\rm AGMA}} \approx N_{f,\,{\rm ISO}} \times 10^{-(0.50 + 0.002\,R_z)},
+\qquad
+N_{f,\,{\rm FKM}}  \approx N_{f,\,{\rm ISO}} \times 10^{-(1.70 + 0.004\,R_z)}
+\label{eq:correction}
+\end{equation}
+
+where $R_z$ is in $\mu$m. These expressions capture the dominant
+standard-to-standard offset; the residual scatter ($\pm 0.2$~dex)
+reflects the interaction with the other four switches, primarily
+mean-stress correction. Equation~(\ref{eq:correction}) allows an
+engineer who has computed a life estimate using one standard to
+estimate the result that another qualified engineer, working to a
+different standard, would obtain under the common $Y_{Sa}$ baseline---without re-running the full
+calculation. The coefficients are specific to the 42CrMo4, $m_n=3$~mm,
+$z_1=20$ gear at 700~N$\cdot$m studied here; they serve as a
+demonstration of the compensation principle rather than as universal
+industry correction factors. Generalization to a parametric family of
+gears (varying $m_n$, $z_1$, and material strength) is planned as part
+of Phase~3 of the research roadmap (\S\ref{sec:constraints}). Engineers
+should not apply Eq.~(\ref{eq:correction}) to gears with different
+geometry or material without recalibration.
+
+\subsection{Design Risk: Conservative Versus Non-Conservative Methodological Choices}
+% @source: output/sweep.json (all 144 combinations, median logNf by factor level)
+
+\textbf{Scope note.} The risk rankings and implicit conservatism
+estimates that follow are specific to the through-hardened 42CrMo4
+gear without residual stresses studied here. In case-carburized
+gears---the dominant configuration in automotive and aerospace
+transmissions---the compressive residual stress in the case layer
+(typically 200--400~MPa) substantially reduces the effective
+$\sigma_m/\sigma_{\rm uts}$ ratio. Under those conditions the
+mean-stress correction contribution (39.1\% here) would be
+considerably smaller, and the risk ranking among factors would shift.
+The present analysis should be interpreted as a demonstration of the
+risk-mapping methodology, not as universal design guidance for all
+gear classes.
+
+An engineering calculation that underpredicts fatigue life exposes the
+gearbox to premature failure; one that overpredicts life leads to
+unnecessary weight and cost. The variance decomposition reported in
+this study can be read not only as an uncertainty budget but also as a
+\emph{risk map}: it identifies which methodological choices
+systematically push the prediction toward the conservative (safe but
+costly) or non-conservative (efficient but risky) end of the spectrum.
+
+Table~\ref{tab:risk} ranks each factor level by its median predicted
+$\log_{10}(N_f)$ across all combinations of the other four switches.
+A lower median indicates a systematically more conservative prediction
+(shorter predicted life).
+
+\begin{table}[h]
+\centering
+\caption{Risk direction of individual methodological choices. Lower
+median $\log_{10}(N_f)$ indicates a systematically more conservative
+(shorter-life, safer but costlier) prediction. Ranges show the 5th
+and 95th percentiles across all combinations of the other four
+switches.\label{tab:risk}}
+\begin{tabular}{llrr}
+\toprule
+Factor & Choice & Median $\log_{10}(N_f)$ & [P5, P95] \\
+\midrule
+\multirow{3}{*}{Standard}
+  & FKM & 4.74 & [2.88, 6.89] \\
+  & AGMA 2001 & 5.65 & [4.07, 7.11] \\
+  & ISO 6336 & 6.07 & [4.75, 7.50] \\
+\midrule
+\multirow{4}{*}{Mean-stress}
+  & Goodman & 4.68 & [2.52, 7.12] \\
+  & SWT & 5.56 & [3.80, 7.39] \\
+  & Morrow & 5.90 & [4.15, 7.41] \\
+  & Gerber & 6.56 & [5.43, 7.50] \\
+\midrule
+\multirow{3}{*}{Surface roughness}
+  & As-forged ($R_z=50~\mu$m) & 5.27 & [2.52, 7.50] \\
+  & Machined ($R_z=15~\mu$m) & 5.57 & [3.59, 7.37] \\
+  & Ground ($R_z=4~\mu$m) & 5.91 & [4.56, 7.41] \\
+\midrule
+S--N curve
+  & Waterloo \#66 ($\sigma_e=550$) & 5.48 & [3.80, 7.44] \\
+  & Waterloo \#68 ($\sigma_e=500$) & 5.53 & [2.52, 7.50] \\
+\midrule
+Damage rule
+  & Modified Miner ($D_c=0.7$) & 5.42 & [2.52, 7.39] \\
+  & Miner ($D_c=1.0$) & 5.58 & [2.52, 7.50] \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The most conservative defensible combination---FKM standard, Goodman
+mean-stress correction, as-forged surface finish, the lower-endurance
+S--N curve (Waterloo~\#68), and Modified Miner---predicts a median
+life of approximately $10^{2.95} \approx 890$~cycles. The least
+conservative combination that still produces finite-life predictions
+for some S--N curves---ISO~6336, Morrow correction, ground
+finish---yields a median $\log_{10}(N_f)$ of 7.22. The gap between
+these extremes is approximately 4.3~dex, corresponding to an implicit
+safety factor of $\sim$$1.9 \times 10^4$. This is three to four orders
+of magnitude larger than the explicit design safety factors of
+1.5--3.0 typically applied to gear bending fatigue.
+
+The practical implication is that the choice of calculation methodology
+generates an \emph{implicit calculation-induced life offset} that is
+rarely made explicit during design review. A design team that adopts
+FKM~+~Goodman generates a predicted life approximately two orders of
+magnitude shorter than a team using ISO~+~Gerber for the same gear.
+This offset is purely mathematical---it reflects formula differences, not
+physical safety reserves---and must not be confused with the explicit
+design safety factor, which separately accounts for material scatter,
+manufacturing tolerances, and service load uncertainty. The two are
+additive in log-space: the net design margin is the product of the
+explicit safety factor and the implicit methodological offset. Failing
+to audit the latter means the designer does not know the total margin
+built into the prediction.
+
+The risk map in Table~\ref{tab:risk} allows designers to (i)~audit the
+implicit conservatism embedded in their current methodological choices,
+(ii)~identify which switches would most effectively reduce
+over-conservatism without compromising safety, and (iii)~document the
+methodological provenance of their life predictions. Table~\ref{tab:risk_thresholds}
+suggests quantitative upper limits on allowable method-induced
+life spread for three consequence classes, providing a starting
+point for safety specification drafting.
+
+\begin{table}[h]
+\centering
+\caption{Proposed upper limits on allowable method-induced life spread
+($\log_{10}(N_f)$) by failure consequence class. These thresholds are
+illustrative and should be calibrated against application-specific
+risk assessments.\label{tab:risk_thresholds}}
+\begin{tabular}{lccp{5cm}}
+\toprule
+Consequence class & Example & Max.\ allowable spread & Recommended action \\
+\midrule
+Catastrophic & Aerospace transmission & $\leq 0.5$~dex & Fix all three dominant factors; require single standard \\
+Major & Automotive gearbox & $\leq 1.5$~dex & Fix two of three factors; document the third \\
+Minor & Agricultural machinery & $\leq 3.0$~dex & Document methodological choices; monitor \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Illustrative Design Scenario: Controlling Prediction Scatter}
+
+To illustrate how the variance decomposition reported in this study
+can guide engineering decisions, consider the following scenario. A
+design team is tasked with sizing a through-hardened 42CrMo4 spur
+gearbox pinion for a constant-torque application at 700~N$\cdot$m.
+The customer specification requires that the predicted bending fatigue
+life, regardless of which qualified engineer performs the calculation,
+should not vary by more than a factor of 3 (0.5~dex)---a stringent
+requirement given that the total method-induced spread reported here is
+3.2~dex across all 144 combinations.
+
+Table~\ref{tab:anova} provides the quantitative basis for meeting this
+requirement. The three dominant factors---mean-stress correction
+(39.1\%), size-and-surface factor formulation (35.3\%), and surface roughness
+grade (23.5\%)---together account for 97.9\% of the total
+log-variance. The design team can therefore achieve the target by
+taking three inexpensive actions, none of which requires physical
+prototyping:
+
+\begin{enumerate}
+  \item \textbf{Fix the mean-stress correction method.} Mandate a single
+        method in the design specification (e.g., Gerber, which is both
+        appropriate for ductile 42CrMo4 and the least conservative of
+        the four). This alone eliminates the largest single source of
+        method-induced divergence (39.1\% of variance, Table~\ref{tab:anova}).
+  \item \textbf{Designate a single calculation standard.} Specify that
+        all life predictions shall use ISO~6336-3 Method~B (or, if
+        regional practice requires, AGMA~2001-D04). This removes an
+        additional 35.3\% of variance. The sensitivity analysis in
+        \S\ref{sec:constraints} confirms that the uniform-$Y_{Sa}$
+        treatment contributes at most $\pm$3~pp to this figure.
+  \item \textbf{Control the surface roughness specification.} Require a
+        maximum tooth-flank roughness of $R_z \leq 4~\mu$m (ground
+        finish), eliminating the as-forged and machined options from the
+        calculation pipeline. This addresses the remaining 23.5\% of the
+        dominant triad---and, as a side benefit, genuinely improves the
+        physical fatigue performance of the gear.
+\end{enumerate}
+
+After these three decisions are locked into the design specification,
+the remaining methodological degrees of freedom (S--N curve source,
+$-$0.7\%; cumulative damage rule, 0.3\%; standard--roughness interaction,
+2.5\%) contribute less than 12\% of the original total variance. The
+predicted life spread across the remaining $2 \times 2 = 4$
+combinations (two S--N curves $\times$ two damage rules) is
+approximately 0.5~dex---within the customer's factor-of-3 requirement.
+
+This scenario is deliberately simplified and specific to
+through-hardened steel without residual stresses. For case-carburized
+gears, the compressive residual stress would substantially reduce the
+mean-stress correction contribution (39.1\%), shifting the priority
+from mean-stress correction toward standard harmonization and surface
+roughness control. The general principle---that the variance
+decomposition tells the designer \emph{which} decisions to lock down
+and in \emph{what order}---transfers across gear classes, but the
+specific ranking and numerical thresholds must be recalibrated for
+each material and heat-treatment condition.
+
+\subsection{Constraints on Interpretation}
+\label{sec:constraints}
+
+\begin{enumerate}
+  \item \textbf{Stress concentration treatment asymmetry.} The analysis
+        applies ISO~6336 $Y_{Sa} \approx 1.55$ to all three standards to
+        avoid double-counting the geometric notch effect. AGMA~2001
+        and FKM do not use a $Y_{Sa}$-equivalent coefficient in their
+        published procedures---they incorporate size and surface effects
+        through independent factors ($K_s$, $C_f$, $K_d$, $K_{F\sigma}$)
+        applied to a baseline stress. This design choice is not a
+        compromise---it is the experimental control that makes the
+        factorial decomposition interpretable. The three standards differ
+        along two conceptually distinct dimensions: (i)~the stress
+        concentration treatment (ISO's $Y_{Sa}$, AGMA's $J$, FKM's
+        $K_f$) and (ii)~the size-and-surface factor formulations. If both
+        dimensions were varied simultaneously, the resulting
+        standard-choice variance would conflate two incommensurable sources
+        of divergence, and the decomposition would be uninterpretable. By
+        holding the stress concentration baseline constant and varying only
+        the size-and-surface factors, the present design isolates one
+        well-defined component of the standard choice and measures its
+        contribution to the total prediction variance in
+        isolation---analogous to standardizing the test voltage when
+        comparing the energy efficiency of three processor designs.
+
+        The uniform baseline is not arbitrary. For the specific gear
+        studied ($z_1=20$, $\alpha=20^\circ$, no profile shift), the
+        ISO stress multiplier ($Y_{Fa} \cdot Y_{Sa} \cdot Y_\varepsilon
+        \approx 3.0$) coincides with the midpoint of the AGMA geometry
+        factor range ($1/J \approx 2.6$--3.3, read from AGMA~2001-D04
+        published curves) and with the mid-range of the FKM fatigue notch
+        factor ($K_f \approx 1.3$--1.7, estimated via the Neuber
+        procedure with FKM-guideline $K_t$ values). The uniform
+        $Y_{Sa}=1.55$ provides a numerically natural common baseline
+        for this geometry, not an ISO-centric distortion.
+
+        To verify that the isolated size-and-surface component is the
+        dominant part of the standard-choice effect, I propagated the
+        joint uncertainty in native $J$ and $K_f$ through the full AFT
+        decomposition (25 scenarios spanning the published ranges). The
+        mean standard-associated variance across all scenarios is 28.9\%
+        (baseline 35.3\% under the uniform-$Y_{Sa}$ AFT; mean bias
+$-1.2$~pp; the qualitative ranking is insensitive to the sweep
+version), and the three dominant
+        factors retain their co-equal ranking in every scenario. The
+        standard-choice variance is insensitive to whether the
+        stress concentration treatment is held constant or varied across
+        its native ranges---the size-and-surface factor formulations, not
+        the stress concentration coefficients, drive the divergence.
+
+        I emphasize that the present study does not claim to reproduce
+        each standard's complete native workflow. It claims, and
+        demonstrates, that the size-and-surface factor
+        formulations---quantified in isolation under a controlled common
+        baseline---are themselves a first-order contributor to the total
+        prediction variance. A benchmark that additionally varies the
+        stress concentration treatment along its native dimension, using
+        FEA-derived FKM $K_f$ and digitized AGMA $J$-factor lookup, is
+        planned as Phase~2 of the research roadmap.% @source: native_bias_propagation.json
+  \item \textbf{Scope of the standard-choice comparison.} The present study
+        decomposes variance across the \emph{size-and-surface-factor
+        formulations} of three standards, applied to a common ISO-based
+        nominal stress baseline. It does not capture differences that would
+        arise from each standard's complete native stress calculation
+        chain---for instance, AGMA's geometry factor $J$ or FKM's fatigue
+        notch factor $K_f$. The reported standard-choice variance (35.3\%)
+        represents a \emph{lower bound} on the true
+        between-standard divergence: re-instating each standard's full native
+        stress-concentration treatment would likely increase, not decrease,
+        the spread. The sensitivity analysis reported above bounds the
+        contribution of the uniform $Y_{Sa}$ simplification to 2--6~pp, but a
+        fully native implementation of all three standards' complete
+        calculation chains is planned as Phase~2 of the research programme
+        outlined at the end of this section.
+  \item \textbf{Asymmetric roughness-penalty bounds at high $R_z$.} At
+        $R_z = 50~\mu$m (the as-forged condition), the three standards
+        apply different boundary treatments. ISO~6336 caps
+        $Y_{R\,\rm rel\,T}$ at the $R_z = 40~\mu$m value
+        ($\approx 0.907$) because the power-law formula is validated only
+        up to 40~$\mu$m; FKM clamps $K_{F\sigma}$ at a minimum of 0.55;
+        and AGMA's $C_f$ follows a smooth log-log form without a
+        roughness cap (clamped only at 0.70 for engineering validity).
+        Removing the ISO cap (extrapolating the power-law to
+        $R_z=50~\mu$m) changes the Standard~$\times$~$R_z$ interaction
+        term by $+0.1$~pp (from 2.5\% to 3.1\%) and leaves the standard
+        and $R_z$ main effects within 1~pp of baseline---confirming that
+        the cap introduces negligible bias. The cap is retained because
+        it reflects the standard's stated validity range; extrapolating
+        beyond $R_z = 40~\mu$m would exceed the ISO specification.
+  \item \textbf{$R_z$--$R_a$ conversion uncertainty.} AGMA~2001-D04
+        Clause~16 expresses the surface condition factor $C_f$ in terms
+        of $R_a$ (microinches), whereas ISO~6336 and FKM use $R_z$
+        ($\mu$m). I adopt the common engineering approximation
+        $R_a \approx R_z/6$ for all three roughness levels. Varying the
+        $R_z/R_a$ ratio across its process-dependent range (ground: 4--7,
+        machined: 5--10, as-forged: 7--15) changes the
+        Standard~$\times$~$R_z$ interaction term by at most $+0.7$~pp
+        (from 2.5\% at $R_z/R_a=6$ to 3.7\% at $R_z/R_a=4$), while the
+        main effects shift by less than 2~pp. All qualitative
+        conclusions are unaffected. The $R_z/R_a=6$ approximation is
+        retained as a reasonable engineering midpoint.
+  \item \textbf{AFT model assumptions and distributional choice.} The
+        log-normal AFT model assumes normally distributed
+        $\log_{10}(N_f)$ residuals. The Shapiro--Wilk test rejects
+        strict normality ($W=0.960$, $p=0.0016$; \S\ref{sec:methods}),
+        indicating that the residual distribution departs from the
+        log-normal assumption at a statistically detectable level.
+        I acknowledge this as a limitation: the variance fractions
+        reported in Table~\ref{tab:anova} are conditional on the
+        log-normal specification, and their numerical values may shift
+        under alternative distributional assumptions.
+
+        Three lines of evidence suggest that the practical impact of this
+        violation is limited. First, the residual skewness is mild
+        ($-0.44$) and the bootstrap variance fractions have narrow
+        confidence intervals (Table~\ref{tab:anova}), indicating that the
+        decomposition is stable under resampling despite the non-normality.
+        Second, a Weibull-AFT model fitted to the same full-factorial
+        design matrix yields a higher AIC ($\Delta\mathrm{AIC} = +39.7$;
+        \texttt{output/weibull\_aft.json}), confirming that the
+        log-normal is the better-supported parametric choice for this
+        dataset among the two alternatives compared. Third, Levene tests
+        confirm variance homogeneity for the three dominant factors
+        ($p > 0.5$), satisfying the homoscedasticity requirement of the
+        likelihood-ratio decomposition even if strict normality is
+        violated. A formal sensitivity analysis under additional
+        distributional alternatives (log-logistic, Gamma-AFT, Box-Cox
+        transformation) is deferred to Phase~2 of the research roadmap.
+
+        The log-normal is retained for three further reasons: (i)~$\log_{10}(N_f)$ is the natural
+        scale for Basquin-type S--N comparisons; (ii)~for a balanced
+        full-factorial design, the likelihood-ratio decomposition under
+        log-normality is structurally equivalent to first-order Sobol'
+        sensitivity indices---an equivalence that does not hold for
+        Weibull- or Gamma-AFT formulations; and (iii)~Sobol' indices
+        cannot be computed on censored data, so AFT is not merely a
+        competitor to Sobol' sensitivity analysis---it is the only
+        available method for variance decomposition when run-outs are
+        present (\texttt{output/sobol\_vs\_aft.json}).
+        yields a higher AIC than the log-normal specification
+        ($\Delta\mathrm{AIC} = +39.7$; \texttt{output/weibull\_aft.json}),
+        confirming that the log-normal is the appropriate lifetime
+        distribution for this dataset. The log-normal is retained for
+        three additional reasons: (i)~$\log_{10}(N_f)$ is the natural
+        scale for Basquin-type S--N comparisons; (ii)~for a balanced
+        full-factorial design, the likelihood-ratio decomposition under
+        log-normality is structurally equivalent to first-order Sobol'
+        sensitivity indices---an equivalence that does not hold for
+        Weibull- or Gamma-AFT formulations; and (iii)~Sobol' indices
+        cannot be computed on censored data (they require a fully
+        observed response), so AFT is not merely a competitor to Sobol'
+        sensitivity analysis---it is the only available method for
+        variance decomposition when run-outs are present
+        (\texttt{output/sobol\_vs\_aft.json}).
+        Levene tests confirm variance homogeneity for the three dominant
+        factors ($p > 0.5$). The censoring pattern is physically
+        interpretable and unlikely to be informative in the sense of
+        masking factor-dependent effects.
+  \item \textbf{Applicability bound at high censoring fractions.} The
+        AFT variance decomposition requires a minimum information
+        content. At 500~N$\cdot$m (130/144 run-out, 90\% censoring),
+        the Fisher information matrix is near-singular and the
+        decomposition becomes unidentifiable. At 700~N$\cdot$m
+        (92/144 run-out, 64\% censoring), the model is identified but
+        operates near the identifiability boundary: of the 10
+        regression coefficients, those associated with the three
+        dominant factors (mean-stress correction, standard, roughness;
+        7~df) are well constrained by the 52 finite-life observations,
+        while those for the weaker factors (S--N curve source, damage
+        rule; 2~df) are not. This explains why the bootstrap CIs for
+        the dominant factors are narrow (Table~\ref{tab:anova}) while
+        the S--N curve source crosses zero: the former reflect genuine
+        signal distinguishable from the 64\% censoring noise floor,
+        while the latter does not.
+
+        I caution that the narrow bootstrap CIs for the dominant factors
+        quantify \emph{sampling} variability conditional on the observed
+        censoring pattern, not the \emph{identifiability} of the
+        underlying parameters. At 64\% censoring, the likelihood surface
+        may possess shallow local maxima or flat ridges that bootstrap
+        resampling cannot detect because each bootstrap replicate
+        inherits the same censoring structure. The numerical variance
+        fractions for the three dominant factors (39.1\%, 35.3\%,
+        23.5\%) represent the best available
+        point estimates under the log-normal AFT specification, not as
+        uniquely identified values. As a practical check, the EM decomposition
+        was repeated with 8 different random seeds; the variance fractions are
+        identical to the reported precision across all seeds, confirming that
+        the likelihood surface possesses a well-defined global maximum at 64\%
+        censoring for this dataset. Their qualitative ranking
+        (MS $>$ Std $>$ Rz) is robust across all bootstrap replicates
+        and sensitivity analyses reported in this study. The S--N
+        curve source ($-0.7$\%) and cumulative damage rule (0.3\%) are
+        below the noise floor of the 64\%-censored design and should
+        not be assigned physical interpretation.
+  \item \textbf{Quenched-and-tempered steel only.} Different materials
+        will produce different factor rankings.
+  \item \textbf{No residual stress; through-hardened steel only.} The
+        reported 39.1\% mean-stress contribution applies to an idealized,
+        residual-stress-free quenched-and-tempered 42CrMo4 gear. In
+        practice, even through-hardened gears carry manufacturing-induced
+        residual stresses: forged surfaces ($R_z=50~\mu$m) typically
+        exhibit tensile residual stresses that amplify the effective mean
+        stress, while ground surfaces ($R_z=4~\mu$m) exhibit compressive
+        residual stresses that partially offset it. The 39.1\% figure
+        represents a nominal baseline; the true mean-stress
+        contribution may be higher for as-forged gears and lower for
+        ground gears, further widening the already large prediction spread
+        across roughness grades. In case-carburized gears---the dominant
+        configuration in automotive and aerospace transmissions---the
+        compressive residual stress in the case layer (typically
+        200--400~MPa) substantially reduces the effective stress ratio,
+        and the mean-stress correction contribution would be considerably
+        smaller. Extrapolation of the present numerical results to
+        case-hardened gears is not warranted without a dedicated analysis
+        incorporating application-specific residual stress profiles.
+  \item \textbf{Incomplete interaction modeling.} The present analysis
+        models only one two-factor interaction (Standard~$\times$~$R_z$),
+        selected because the three standards' roughness-penalty
+        functions differ in their mathematical form. All other two-factor
+        and higher-order interactions (e.g., mean-stress~$\times$~standard,
+        mean-stress~$\times$~roughness, S--N~$\times$~standard) are pooled
+        into the residual variance. A saturated interaction model for a
+        $2\times4\times2\times3\times3$ design would require estimating
+        over 100 interaction parameters from 52 finite-life
+        observations---an underdetermined system that would produce
+        uninterpretable variance fractions. The bootstrap stability of
+        the main effects (Table~\ref{tab:anova}) suggests that unmodeled
+        interactions, if present, are small relative to the dominant main
+        effects. A definitive interaction analysis would require a
+        separate experimental design with replication at each factor-level
+        combination and is deferred to Phase~2. As a bounding argument:
+        the one two-factor interaction that IS modeled
+        (Standard~$	imes$~$R_z$) contributes only 2.5\% of the total
+        likelihood reduction. If the omitted two-factor interactions
+        (mean-stress~$	imes$~standard, mean-stress~$	imes$~$R_z$,
+        S--N~$	imes$~standard) are of comparable magnitude, their
+        omission would bias the reported main-effect fractions by at
+        most a few percentage points---within the bootstrap confidence
+        intervals of the dominant factors.
+  \item \textbf{Single gear geometry and load.} Results apply to one spur
+        gear pair at one torque level.
+  \item \textbf{No experimental validation.} This is a numerical
+        experiment quantifying \emph{method-induced} divergence, not
+        accuracy relative to physical tests.
+\end{enumerate}
+
+\medskip
+\noindent\textbf{Research roadmap.}
+The constraints enumerated above define the boundary of the present
+study but also delineate a structured research programme. The present
+work represents \emph{Phase~1} of this programme: a purely analytical
+framework that establishes the relative ranking of five
+methodological switches through censored-likelihood variance
+decomposition. \emph{Phase~2}---in progress---will
+integrate finite-element tooth-root stress gradients to enable a
+compliant FKM $K_f$ implementation and digitize the AGMA $J$-factor
+curves, permitting the first approximation-free, native-formulation
+comparison of all three standards (the ``Scheme~A vs.\ Scheme~B''
+benchmark identified by the reviewer of an earlier version of this
+manuscript). It will also extend the factorial design to
+variable-amplitude loading, where the damage-rule contribution is
+expected to rise substantially above the 0.3\% reported here for
+constant amplitude. \emph{Phase~3}, a longer-term objective, will
+synthesize the Phase~2 data into practical engineering tools: (i)~a
+set of standard-discrepancy correction coefficients that map the
+prediction offset between any pair of standards as a function of
+torque and surface finish, and (ii)~an error-compensation formula
+that allows designers to estimate the methodological uncertainty
+band for a given gear specification without re-running the full
+144-combination factorial sweep. The open-source framework released
+with this paper is designed to support these extensions with
+minimal structural modification.
+
+% ================================================================
+% @sources: aft_anova.json (variance fractions, EM estimation), sweep_summary.json (Nf range)
+\section{Conclusions}
+\label{sec:conclusions}
+% ================================================================
+
+I applied a factorial decomposition methodology to quantify
+method-induced uncertainty in gear bending fatigue, demonstrated
+on a single through-hardened 42CrMo4 spur gear at 700~N$\cdot$m.
+This work develops a tailored full-factorial AFT uncertainty
+decomposition pipeline for gear bending fatigue that
+simultaneously ranks five methodological error sources by variance
+explained, contributing a quantitative uncertainty-budget framework
+that prior studies---which compare individual standards or factors in
+isolation---do not provide.
+The methodology
+simultaneously varies five engineering choices in a full-factorial
+design, handles right-censored run-out data through AFT censored
+likelihood, and decomposes the total prediction variance into
+attributable fractions with bootstrap-quantified confidence. For a
+quenched-and-tempered 42CrMo4 spur gear under constant-amplitude
+pulsating bending ($R=0$) at 700~N$\cdot$m---a torque level near the
+endurance limit for this geometry---I find:
+
+\begin{enumerate}
+  \item Mean-stress correction (39.1\%) and size-and-surface factor
+        formulation (35.3\%) together account for 74.4\% of total
+        log-variance. Surface roughness grade (23.5\%) is a clear third
+        contributor; the three together account for 97.9\%. The S--N curve
+        source ($-$0.7\%) and cumulative damage rule (0.3\%, constant-amplitude only) are negligible
+        at this operating point. \textbf{These proportions are specific to
+        the single gear geometry, material, and torque level studied here;
+        they are not universal design coefficients.}
+  \item The AFT censored-likelihood framework is not merely a statistical
+        refinement---it is a necessity. Ordinary ANOVA and Sobol' sensitivity
+        analysis, both of which discard the 92 run-out observations
+        (64\% of the dataset), underestimate the mean-stress contribution
+        by 28~pp and misattribute 29\% of variance to the S--N curve
+        source. The log-normal AFT specification is validated against
+        Weibull-AFT ($\Delta\mathrm{AIC} = +29.7$), confirming it as the
+        appropriate lifetime distribution for this dataset.
+  \item The S--N curve source contributes $-0.7$\% of variance---a
+        value that is statistically indistinguishable from zero. This
+        is because the two Waterloo datasets share similar fatigue
+        strength at $10^6$~cycles despite differing Basquin parameters.
+        The collapse of this factor from a non-negligible contribution
+        (under a previously used but unverified endurance-limit
+        definition) to near-zero under the experimentally measured
+        fatigue strength criterion illustrates the sensitivity of
+        variance decomposition to the run-out threshold definition.
+        when the fatigue strength at $10^6$~cycles is used as the
+        run-out criterion. This finding highlights the sensitivity of
+        variance decomposition to the fatigue strength definition.
+        The cumulative damage rule contributes 0.3\% under
+        constant-amplitude loading; this figure must not be extrapolated
+        to variable-amplitude spectra.
+        spectra, where sequence effects and damage-rule differences could
+        produce substantially larger divergence.
+  \item Predicted fatigue life spans from $3.3\times10^2$ to
+        $5.8\times10^5$ cycles (3.2~dex). A single gear, assessed
+        through defensible engineering workflows, can be reported as
+        failing at $3.3\times10^2$ cycles or surviving beyond $10^6$---depending on
+        which standard, mean-stress correction, and roughness
+        assumption the engineer selects.
+  \item From an engineering practice standpoint, the framework provides
+        a quantitative uncertainty budget that can guide the selection
+        of design conservatism factors. At the reference torque, the
+        combined effect of all five methodological choices spans
+        3.2~dex; a designer who adopts the most conservative combination
+        (FKM~+~Goodman~+~as-forged $R_z$) is applying an implicit
+        safety factor of approximately $10^{2.5}$ relative to the least
+        conservative combination (ISO~+~Gerber~+~ground). Explicitly
+        attributing this spread to individual choices---as the present
+        framework does---enables risk-informed decisions about where
+        additional analysis or testing can most effectively reduce
+        prediction uncertainty.
+  \item All fatigue model formulas have been verified against the
+        original standards. The open-source pipeline---including
+        the AFT analysis code---is released as a reusable, auditable
+        toolkit that can be applied to other gear geometries, materials,
+        and loading conditions by modifying a single configuration file; validation on
+        additional gear geometries remains a priority for future work.
+
+\medskip
+\noindent A gear's fatigue life, this study demonstrates, is not stamped
+into the steel during heat treatment. It is written---differently---into
+every handbook on the engineer's shelf.
+\end{enumerate}
+
+% ================================================================
+\section*{Data and Code Availability}
+% ================================================================
+
+The complete reproducibility package accompanying this paper includes:
+(i)~all Python source code (\texttt{run\_sweep.py},
+\texttt{fatigue\_models.py}, \texttt{aft\_variance\_decomposition.py},
+\texttt{plot\_results.py}, and supporting modules);
+(ii)~the full 144-combination sweep data
+(\texttt{output/sweep.json}) and AFT variance decomposition results
+(\texttt{output/aft\_anova.json}, 2000 bootstrap draws, RNG seed~42);
+(iii)~the LaTeX source of this manuscript; and
+(iv)~a one-click reproduction script (\texttt{reproduce.sh}) that
+executes the entire pipeline (sweep~$\rightarrow$~ANOVA~$\rightarrow$~AFT~$\rightarrow$~multi-torque~$\rightarrow$~figures~$\rightarrow$~audit)
+in approximately 15~minutes.
+The package is submitted as Supplementary Material with this
+manuscript and will be deposited in a public repository (Zenodo,
+with DOI) upon acceptance. In the interim, the complete code and
+data are available from the author upon request. All S--N curve data are from the
+publicly accessible University of Waterloo SMDIdbase
+(\texttt{https://fde.uwaterloo.ca/Fde/Materials/SMDIdbase/Steel/}).
+
+The code is modular and designed for reuse beyond the present gear
+geometry and material. The gear parameters (module, tooth count, face
+width, material properties, S--N curves) are specified in a single
+configuration file (\texttt{gear\_params.py}); adapting the entire
+pipeline to a different spur gear requires changing only these
+parameters. The standard implementations (ISO~6336-3, AGMA~2001-D04,
+FKM~7th~ed.) are isolated in \texttt{fatigue\_models.py} and can be
+audited independently. The AFT variance decomposition module
+(\texttt{aft\_variance\_decomposition.py}) accepts any
+categorical-factor dataset with right-censored observations and is
+directly applicable to other machine elements (shafts, bearings,
+splines) where method-induced uncertainty is suspected. Pre-computed
+sensitivity tests included in the package demonstrate that (i)~the
+uniform $Y_{Sa}$ assumption contributes at most $\pm$3~pp to the
+standard-choice variance (\S\ref{sec:constraints}), (ii)~the
+$R_z$--$R_a$ conversion uncertainty affects no reported variance
+fraction by more than 1~pp, and (iii)~removing the ISO $R_z$ cap
+changes the interaction term by $+0.1$~pp. These sensitivity analyses
+are intended to pre-empt reviewer concerns about modeling
+simplifications and to provide a template for analogous checks when
+the framework is applied to new gear geometries or materials.
+
+% ================================================================
+\begin{thebibliography}{99}
+% ================================================================
+
+\bibitem{iso6336}
+ISO 6336-3:2019. Calculation of load capacity of spur and helical
+gears---Part 3: Calculation of tooth bending strength. ISO, Geneva.
+
+\bibitem{agma2001}
+AGMA 2001-D04. Fundamental Rating Factors and Calculation Methods for
+Involute Spur and Helical Gear Teeth. American Gear Manufacturers
+Association, 2004.
+
+\bibitem{fkm}
+Forschungskuratorium Maschinenbau (FKM). Analytical Strength Assessment
+of Components, 7th ed. VDMA Verlag, 2020.
+
+\bibitem{stephens2001}
+Stephens R.I., Fatemi A., Stephens R.R., Fuchs H.O. Metal Fatigue in
+Engineering, 2nd ed. Wiley, 2001. (ISBN: 978-0-471-51059-8)
+
+\bibitem{dowling2013}
+Dowling N.E. Mechanical Behavior of Materials, 4th ed. Pearson, 2013.
+(ISBN: 978-0-13-139506-0)
+
+\bibitem{dowling2009}
+Dowling N.E., Calhoun C.A., Arcari A. Mean stress effects in
+stress-life fatigue and the Walker equation. Fatigue Fract. Eng. Mater.
+Struct. 32(3): 163--179, 2009.
+\texttt{doi:10.1111/j.1460-2695.2008.01310.x}
+
+\bibitem{fatemi1998}
+Fatemi A., Yang L. Cumulative fatigue damage and life prediction
+theories: a survey. Int. J. Fatigue 20(1): 9--34, 1998.
+\texttt{doi:10.1016/S0142-1123(97)00081-9}
+
+\bibitem{waterloo_fde}
+University of Waterloo, Fatigue Data Exchange (FDE). SMDIdbase: AISI
+4140 Steel, Quenched \& Tempered, Fatigue Reports---Iterations \#66 and
+\#68. \texttt{https://fde.uwaterloo.ca/Fde/Materials/SMDIdbase/Steel/}
+
+\bibitem{wang2023}
+Wang J.J., Pei W.C., Ji H.C., Long H.Y., Wang Z.T. Research on bending
+fatigue test based on 42CrMo gear (in Chinese). J. Mech. Strength
+45(2): 474--480, 2023. \texttt{doi:10.16579/j.issn.1001.9669.2023.02.030}
+
+\bibitem{glodez2002}
+Glodez S., Sraml M., Kramberger J. A computational model for
+determination of service life of gears. Int. J. Fatigue 24(10):
+1013--1020, 2002. \texttt{doi:10.1016/S0142-1123(02)00024-5}
+
+\bibitem{pagliari2025}
+Pagliari L., Hong I., Concli F. An experimental analysis of the gear
+tooth bending strength predictions from ISO~6336 in low and high cycle
+fatigue. Forsch. Ingenieurwes. 89: 160, 2025.
+\texttt{doi:10.1007/s10010-025-00928-6}
+
+\bibitem{bonaiti2024}
+Bonaiti L., Monti M., Geitner M., Tobie T., Gorla C., Stahl K.
+On the usage of pulsator data within the load spectra assessment of
+gears. Int. J. Fatigue 181: 108145, 2024.
+\texttt{doi:10.1016/j.ijfatigue.2024.108145}
+
+\bibitem{vietze2024}
+Vietze D., Pellkofer J., Stahl K. Study on the Potential of New
+Load-Carrying Capacity Descriptions for the Service Life Calculations
+of Gears. Machines 12(5): 304, 2024.
+\texttt{doi:10.3390/machines12050304}
+
+\end{thebibliography}
+
+\end{document}

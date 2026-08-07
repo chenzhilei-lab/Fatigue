@@ -1,0 +1,205 @@
+{
+  "description": "Y_Sa modeling asymmetry quantification \u2014 \u5f3a\u5236\u9879\u2462",
+  "method": "Perturb Y_Sa for AGMA and FKM entries by multiplicative factors, recompute Nf and AFT decomposition. ISO entries retain Y_Sa=1.55 (reference).",
+  "baseline_ysa": 1.55,
+  "perturbation_factors": [
+    0.75,
+    0.85,
+    0.9,
+    0.95,
+    1.0,
+    1.05,
+    1.1,
+    1.15,
+    1.25,
+    1.33
+  ],
+  "baseline": {
+    "n_total": 144,
+    "n_censored": 92,
+    "n_observed": 52,
+    "sigma": 0.2084,
+    "logLik": -26.09,
+    "variance_fractions": {
+      "mean_stress_method": 39.1,
+      "size_surface_standard": 35.3,
+      "rz_level": 23.5,
+      "sn_source": -0.7,
+      "damage_method": 0.3,
+      "interaction": 2.5
+    },
+    "total_delta": 248.6839
+  },
+  "sensitivity": {
+    "0.75": {
+      "n_total": 144,
+      "n_censored": 132,
+      "n_observed": 12,
+      "sigma": 0.1366,
+      "logLik": -18.97,
+      "variance_fractions": {
+        "mean_stress_method": 47.2,
+        "size_surface_standard": 28.3,
+        "rz_level": 25.5,
+        "sn_source": -0.2,
+        "damage_method": -0.8,
+        "interaction": 0.0
+      },
+      "total_delta": 46.883
+    },
+    "0.85": {
+      "n_total": 144,
+      "n_censored": 120,
+      "n_observed": 24,
+      "sigma": 0.1324,
+      "logLik": -19.31,
+      "variance_fractions": {
+        "mean_stress_method": 42.8,
+        "size_surface_standard": 28.8,
+        "rz_level": 28.6,
+        "sn_source": -2.2,
+        "damage_method": -1.2,
+        "interaction": 3.2
+      },
+      "total_delta": 108.0162
+    },
+    "0.9": {
+      "n_total": 144,
+      "n_censored": 110,
+      "n_observed": 34,
+      "sigma": 0.15,
+      "logLik": -2.77,
+      "variance_fractions": {
+        "mean_stress_method": 41.6,
+        "size_surface_standard": 30.5,
+        "rz_level": 26.8,
+        "sn_source": 0.4,
+        "damage_method": 0.8,
+        "interaction": 0.0
+      },
+      "total_delta": 189.2234
+    },
+    "0.95": {
+      "n_total": 144,
+      "n_censored": 98,
+      "n_observed": 46,
+      "sigma": 0.1542,
+      "logLik": -6.09,
+      "variance_fractions": {
+        "mean_stress_method": 36.6,
+        "size_surface_standard": 33.0,
+        "rz_level": 27.2,
+        "sn_source": 1.2,
+        "damage_method": 0.6,
+        "interaction": 1.4
+      },
+      "total_delta": 271.111
+    },
+    "1.0": {
+      "n_total": 144,
+      "n_censored": 92,
+      "n_observed": 52,
+      "sigma": 0.2084,
+      "logLik": -26.09,
+      "variance_fractions": {
+        "mean_stress_method": 39.1,
+        "size_surface_standard": 35.3,
+        "rz_level": 23.5,
+        "sn_source": -0.7,
+        "damage_method": 0.3,
+        "interaction": 2.5
+      },
+      "total_delta": 248.6839
+    },
+    "1.05": {
+      "n_total": 144,
+      "n_censored": 92,
+      "n_observed": 52,
+      "sigma": 0.245,
+      "logLik": -35.34,
+      "variance_fractions": {
+        "mean_stress_method": 39.4,
+        "size_surface_standard": 36.3,
+        "rz_level": 22.9,
+        "sn_source": -0.8,
+        "damage_method": 0.2,
+        "interaction": 1.9
+      },
+      "total_delta": 235.0978
+    },
+    "1.1": {
+      "n_total": 144,
+      "n_censored": 92,
+      "n_observed": 52,
+      "sigma": 0.3233,
+      "logLik": -52.0,
+      "variance_fractions": {
+        "mean_stress_method": 40.1,
+        "size_surface_standard": 37.0,
+        "rz_level": 22.1,
+        "sn_source": -0.9,
+        "damage_method": 0.1,
+        "interaction": 1.5
+      },
+      "total_delta": 214.1526
+    },
+    "1.15": {
+      "n_total": 144,
+      "n_censored": 92,
+      "n_observed": 52,
+      "sigma": 0.4068,
+      "logLik": -64.84,
+      "variance_fractions": {
+        "mean_stress_method": 40.5,
+        "size_surface_standard": 37.4,
+        "rz_level": 21.4,
+        "sn_source": -0.6,
+        "damage_method": 0.1,
+        "interaction": 1.2
+      },
+      "total_delta": 200.9356
+    },
+    "1.25": {
+      "n_total": 144,
+      "n_censored": 92,
+      "n_observed": 52,
+      "sigma": 0.5759,
+      "logLik": -83.36,
+      "variance_fractions": {
+        "mean_stress_method": 40.9,
+        "size_surface_standard": 37.6,
+        "rz_level": 20.4,
+        "sn_source": 0.2,
+        "damage_method": 0.0,
+        "interaction": 0.9
+      },
+      "total_delta": 185.4046
+    },
+    "1.33": {
+      "n_total": 144,
+      "n_censored": 92,
+      "n_observed": 52,
+      "sigma": 0.7076,
+      "logLik": -94.06,
+      "variance_fractions": {
+        "mean_stress_method": 41.0,
+        "size_surface_standard": 37.7,
+        "rz_level": 19.8,
+        "sn_source": 0.6,
+        "damage_method": 0.0,
+        "interaction": 0.8
+      },
+      "total_delta": 177.9463
+    }
+  },
+  "summary": {
+    "baseline_standard_variance_%": 35.3,
+    "standard_variance_range_%": [
+      28.3,
+      37.7
+    ],
+    "max_deviation_from_baseline_pp": 7.0,
+    "ranking_preserved": true,
+    "conclusion": "The uniform Y_Sa assumption biases the standard-choice variance by at most \u00b17.0 pp across a Y_Sa perturbation range of 0.75x\u20131.33x. This is modest relative to the 35.3% baseline standard variance and does not change the factor ranking (MS > Std > Rz)."
+  }
+}

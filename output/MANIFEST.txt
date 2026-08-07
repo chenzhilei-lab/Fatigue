@@ -1,0 +1,37 @@
+# MANIFEST - output/ file inventory (MD5 checksums)
+# purpose: consistency anchor; deterministic; run `python phase0_canonical.py --check`
+#          after reproduce.sh to detect any data drift.
+# format: <md5>  <size bytes>  <filename>
+
+1f0fa2026133686a02e1669ee2ec12ed        2500  aft_anova.json
+35d207ef029cc8cb53d1756ec755d14b        2738  aft_diagnostics.json
+947339f31a40a1ac5092cba151a142de        1366  benchmark_wang2023.json
+bb6969c170935ecb221f249294d1366c       35896  canonical_numbers.json
+4eda67eaf3f0f5f2c598d2c3d8e897a1      154947  fig1_life_spread_by_standard.png
+d13017a5b0b827478b4d659ba195dbde      182644  fig2_variance_decomposition.png
+6d18c8afd2ca4f202df076f990e8e9a2      231367  fig3_rz_standard_interaction.png
+26bdb15963e3105c9e9c0919b2973c63      134307  fig6_bootstrap_ci.png
+0782885bea16e55e8945cbca7662af4d      212786  fig7_two_level_comparison.png
+7f9a3b030d59c9bc59a9c4a0de43f058      167926  fig8_multi_sn_sensitivity.png
+8b95e4021b382760992b98584419f731      208370  fig9_sobol_censoring_gradient.png
+c30d5e9ab20c968fa33ae6accc51cda4      226183  fig_diag_qq.png
+6758969dfb8e0e807d6ebc9be06709a5      101959  fig_ka_sensitivity.png
+26e5eb66f2a42cc3a0f7f8b55015ab99      152982  fig_sim_validation.png
+9e62703ad59def3bc62f3f9250ee35f2       72536  fig_ysa_sensitivity.png
+db55990e059b14843776cfe56ee55d55      156683  fig_ysa_sensitivity_curve.png
+6c27f29173513e1cb7b10db7d24922ef        1610  ka_sensitivity.json
+784e1e2b61204e1baec2cb24bac21d96       28576  labels.json
+7597c04ca4b99bd5b23ea89aae89fc5e         753  multi_aft_comparison.json
+e255e7f0daaa8ed9510a2078b69ed33f        3296  multi_sn_sensitivity.json
+c6d7b9443a0100e95dd040d3d0f38dd6        1180  multi_torque_aft.json
+f256ed7b304ec3f1dce043e4e73a0e72        4439  native_bias_propagation.json
+2a6fcb778993239b346071af6bfafccd        1553  native_stress_sensitivity.json
+f476f04e9196226e2059de5905639d35        3212  simulation_validation.json
+d15ef251354e9a96eff4f322f02b4dd1        1287  sobol_censoring_gradient.json
+6977a3db22be289666970f695c1f54a3        2038  sobol_vs_aft.json
+7be2dfb56a63eb0e9d0b5445fc3b54b1       55682  sweep.json
+4311532836b09fba8d8f60d59b4cd2bf         309  sweep_summary.json
+5a96c68c1ba62b7badcd3a0bdcc9da16        4333  threshold_sensitivity.json
+b7001886fdf6e472350e3bf8bbe87908       53277  two_level_variable_amplitude.json
+0865b968e78b89e93264449b5042e53c         916  weibull_aft.json
+507bea8dcf7a4aca03722b34568a900c        5377  ysa_sensitivity.json

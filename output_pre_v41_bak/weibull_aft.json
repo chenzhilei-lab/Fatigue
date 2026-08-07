@@ -1,0 +1,23 @@
+{
+  "description": "Log-normal vs Weibull AFT distribution comparison (72-combo subset, 700 Nm)",
+  "n_entries": 72,
+  "n_observed": 26,
+  "n_censored": 46,
+  "n_parameters": 10,
+  "log_normal": {
+    "logLik": -7.89,
+    "sigma": 0.2515,
+    "AIC": 35.8,
+    "BIC": 48.4
+  },
+  "weibull": {
+    "logLik": -22.72,
+    "sigma": 0.3124,
+    "AIC": 65.4,
+    "BIC": 78.0
+  },
+  "delta_AIC_weibull_minus_lognormal": 29.7,
+  "delta_BIC_weibull_minus_lognormal": 29.7,
+  "preferred_model": "Log-normal AFT",
+  "note": "The comparison uses a 72-combo subset (Miner_original only) with full factorial design matrix (10 beta parameters + 1 sigma). The log-normal distribution is retained for the main analysis because (i) log10(Nf) is the natural scale for Basquin-type S-N comparisons and (ii) the likelihood-ratio decomposition under log-normality is equivalent to Sobol first-order indices for balanced factorial designs."
+}

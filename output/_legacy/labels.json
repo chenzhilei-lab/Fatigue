@@ -1,0 +1,481 @@
+{
+  "n_combinations": {
+    "value": 288,
+    "note": "Total factorial combinations",
+    "source_script": "run_sweep.py",
+    "source_input": "sweep_summary.json"
+  },
+  "n_valid": {
+    "value": 116,
+    "note": "Finite-life entries",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "n_runouts": {
+    "value": 28,
+    "note": "Run-out entries",
+    "source_script": "run_sweep.py",
+    "source_input": "sweep.json"
+  },
+  "min_log10_Nf": {
+    "value": 2.52,
+    "note": "Minimum log10(Nf)",
+    "source_script": "run_sweep.py",
+    "source_input": "sweep.json"
+  },
+  "max_log10_Nf": {
+    "value": 7.5,
+    "note": "Maximum log10(Nf)",
+    "source_script": "run_sweep.py",
+    "source_input": "sweep.json"
+  },
+  "spread_dex": {
+    "value": 4.98,
+    "note": "log10(Nf) spread",
+    "source_script": "run_sweep.py",
+    "source_input": "sweep.json"
+  },
+  "grand_mean_log10_Nf": {
+    "value": 5.46,
+    "note": "Grand mean log10(Nf)",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "n_sn_sources": {
+    "value": 2,
+    "note": "S-N curve sources",
+    "source_script": "run_sweep.py",
+    "source_input": "sweep.json"
+  },
+  "n_kf_methods": {
+    "value": 2,
+    "note": "Kf methods",
+    "source_script": "run_sweep.py",
+    "source_input": "sweep.json"
+  },
+  "n_mean_stress_methods": {
+    "value": 4,
+    "note": "Mean stress methods",
+    "source_script": "run_sweep.py",
+    "source_input": "sweep.json"
+  },
+  "n_damage_methods": {
+    "value": 2,
+    "note": "Damage methods",
+    "source_script": "run_sweep.py",
+    "source_input": "sweep.json"
+  },
+  "n_standards": {
+    "value": 3,
+    "note": "Size/surface standards",
+    "source_script": "run_sweep.py",
+    "source_input": "sweep.json"
+  },
+  "n_rz_levels": {
+    "value": 3,
+    "note": "Surface roughness levels",
+    "source_script": "run_sweep.py",
+    "source_input": "sweep.json"
+  },
+  "sn_source_variance_frac_%": {
+    "value": 0.67,
+    "note": "sn_source ANOVA variance_frac_%",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "sn_source_F": {
+    "value": 2.949978507542802,
+    "note": "sn_source ANOVA F",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "sn_source_p": {
+    "value": 0.08891333326594075,
+    "note": "sn_source ANOVA p",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "sn_source_SS": {
+    "value": 0.8719024671227305,
+    "note": "sn_source ANOVA SS",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "sn_source_df": {
+    "value": 1,
+    "note": "sn_source ANOVA df",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "mean_stress_method_variance_frac_%": {
+    "value": 30.86,
+    "note": "mean_stress_method ANOVA variance_frac_%",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "mean_stress_method_F": {
+    "value": 44.985589261446606,
+    "note": "mean_stress_method ANOVA F",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "mean_stress_method_p": {
+    "value": 0.0,
+    "note": "mean_stress_method ANOVA p",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "mean_stress_method_SS": {
+    "value": 39.888134264438534,
+    "note": "mean_stress_method ANOVA SS",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "mean_stress_method_df": {
+    "value": 3,
+    "note": "mean_stress_method ANOVA df",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "damage_method_variance_frac_%": {
+    "value": 0.54,
+    "note": "damage_method ANOVA variance_frac_%",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "damage_method_F": {
+    "value": 2.3543052395229087,
+    "note": "damage_method ANOVA F",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "damage_method_p": {
+    "value": 0.12803360330923408,
+    "note": "damage_method ANOVA p",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "damage_method_SS": {
+    "value": 0.6958438990153257,
+    "note": "damage_method ANOVA SS",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "damage_method_df": {
+    "value": 1,
+    "note": "damage_method ANOVA df",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "size_surface_standard_variance_frac_%": {
+    "value": 31.07,
+    "note": "size_surface_standard ANOVA variance_frac_%",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "size_surface_standard_F": {
+    "value": 67.94673203621407,
+    "note": "size_surface_standard ANOVA F",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "size_surface_standard_p": {
+    "value": 0.0,
+    "note": "size_surface_standard ANOVA p",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "size_surface_standard_SS": {
+    "value": 40.1649863846966,
+    "note": "size_surface_standard ANOVA SS",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "size_surface_standard_df": {
+    "value": 2,
+    "note": "size_surface_standard ANOVA df",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "rz_level_variance_frac_%": {
+    "value": 8.5,
+    "note": "rz_level ANOVA variance_frac_%",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "rz_level_F": {
+    "value": 18.586108853678088,
+    "note": "rz_level ANOVA F",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "rz_level_p": {
+    "value": 1.3104752516479579e-07,
+    "note": "rz_level ANOVA p",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "rz_level_SS": {
+    "value": 10.986706596199443,
+    "note": "rz_level ANOVA SS",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "rz_level_df": {
+    "value": 2,
+    "note": "rz_level ANOVA df",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "size_surface_standard_x_rz_level_variance_frac_%": {
+    "value": 5.03,
+    "note": "size_surface_standard \u00d7 rz_level ANOVA variance_frac_%",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "size_surface_standard_x_rz_level_F": {
+    "value": 5.4968514972829645,
+    "note": "size_surface_standard \u00d7 rz_level ANOVA F",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "size_surface_standard_x_rz_level_p": {
+    "value": 0.00047672138420706833,
+    "note": "size_surface_standard \u00d7 rz_level ANOVA p",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "size_surface_standard_x_rz_level_SS": {
+    "value": 6.498648542196204,
+    "note": "size_surface_standard \u00d7 rz_level ANOVA SS",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "size_surface_standard_x_rz_level_df": {
+    "value": 4,
+    "note": "size_surface_standard \u00d7 rz_level ANOVA df",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "sn_source_boot_mean": {
+    "value": 1.36,
+    "note": "sn_source bootstrap mean",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "sn_source_boot_std": {
+    "value": 1.69,
+    "note": "sn_source bootstrap std",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "sn_source_boot_ci_95_lower": {
+    "value": 0.0,
+    "note": "sn_source bootstrap ci_95_lower",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "sn_source_boot_ci_95_upper": {
+    "value": 5.65,
+    "note": "sn_source bootstrap ci_95_upper",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "mean_stress_method_boot_mean": {
+    "value": 32.4,
+    "note": "mean_stress_method bootstrap mean",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "mean_stress_method_boot_std": {
+    "value": 7.45,
+    "note": "mean_stress_method bootstrap std",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "mean_stress_method_boot_ci_95_lower": {
+    "value": 18.64,
+    "note": "mean_stress_method bootstrap ci_95_lower",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "mean_stress_method_boot_ci_95_upper": {
+    "value": 47.56,
+    "note": "mean_stress_method bootstrap ci_95_upper",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "damage_method_boot_mean": {
+    "value": 1.29,
+    "note": "damage_method bootstrap mean",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "damage_method_boot_std": {
+    "value": 1.56,
+    "note": "damage_method bootstrap std",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "damage_method_boot_ci_95_lower": {
+    "value": 0.0,
+    "note": "damage_method bootstrap ci_95_lower",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "damage_method_boot_ci_95_upper": {
+    "value": 5.36,
+    "note": "damage_method bootstrap ci_95_upper",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "size_surface_standard_boot_mean": {
+    "value": 32.18,
+    "note": "size_surface_standard bootstrap mean",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "size_surface_standard_boot_std": {
+    "value": 6.3,
+    "note": "size_surface_standard bootstrap std",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "size_surface_standard_boot_ci_95_lower": {
+    "value": 21.11,
+    "note": "size_surface_standard bootstrap ci_95_lower",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "size_surface_standard_boot_ci_95_upper": {
+    "value": 44.87,
+    "note": "size_surface_standard bootstrap ci_95_upper",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "rz_level_boot_mean": {
+    "value": 9.47,
+    "note": "rz_level bootstrap mean",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "rz_level_boot_std": {
+    "value": 5.11,
+    "note": "rz_level bootstrap std",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "rz_level_boot_ci_95_lower": {
+    "value": 0.81,
+    "note": "rz_level bootstrap ci_95_lower",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "rz_level_boot_ci_95_upper": {
+    "value": 20.74,
+    "note": "rz_level bootstrap ci_95_upper",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "size_surface_standard_x_rz_level_boot_mean": {
+    "value": 5.54,
+    "note": "size_surface_standard \u00d7 rz_level bootstrap mean",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "size_surface_standard_x_rz_level_boot_std": {
+    "value": 3.95,
+    "note": "size_surface_standard \u00d7 rz_level bootstrap std",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "size_surface_standard_x_rz_level_boot_ci_95_lower": {
+    "value": 0.0,
+    "note": "size_surface_standard \u00d7 rz_level bootstrap ci_95_lower",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "size_surface_standard_x_rz_level_boot_ci_95_upper": {
+    "value": 13.16,
+    "note": "size_surface_standard \u00d7 rz_level bootstrap ci_95_upper",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "mean_stress_dominates": {
+    "value": 39.0,
+    "note": "Mean stress correction variance fraction",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "standard_second": {
+    "value": 34.5,
+    "note": "Size/surface standard variance fraction",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "rz_third": {
+    "value": 16.7,
+    "note": "Surface roughness variance fraction",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "top_two_combined": {
+    "value": 73.5,
+    "note": "Mean stress + standard combined variance",
+    "source_script": "variance_decomposition.py",
+    "source_input": "anova.json"
+  },
+  "module_mn": {
+    "value": 3.0,
+    "note": "Normal module mm",
+    "source_script": "gear_params.py",
+    "source_input": "sweep_summary.json"
+  },
+  "teeth_pinion": {
+    "value": 20,
+    "note": "Pinion teeth",
+    "source_script": "gear_params.py",
+    "source_input": "sweep_summary.json"
+  },
+  "material": {
+    "value": "42CrMo4/AISI 4140",
+    "note": "Material",
+    "source_script": "gear_params.py",
+    "source_input": "sweep_summary.json"
+  },
+  "uts_MPa": {
+    "value": 1000.0,
+    "note": "Ultimate tensile strength MPa",
+    "source_script": "gear_params.py",
+    "source_input": "sweep_summary.json"
+  },
+  "torque_Nm": {
+    "value": 350.0,
+    "note": "Input torque Nm",
+    "source_script": "gear_params.py",
+    "source_input": "sweep_summary.json"
+  },
+  "stress_ratio_R": {
+    "value": 0.0,
+    "note": "Stress ratio",
+    "source_script": "gear_params.py",
+    "source_input": "sweep_summary.json"
+  },
+  "_meta": {
+    "generated_by": "generate_labels_v2.py",
+    "date": "2026-07-22",
+    "n_labels": 76,
+    "source_files": [
+      "sweep.json",
+      "anova.json",
+      "sweep_summary.json"
+    ],
+    "expected_inputs": {
+      "n_combinations": "sweep_summary.json",
+      "mean_stress_method_variance_frac_%": "anova.json",
+      "size_surface_standard_variance_frac_%": "anova.json",
+      "rz_level_variance_frac_%": "anova.json",
+      "sn_source_variance_frac_%": "anova.json"
+    }
+  }
+}

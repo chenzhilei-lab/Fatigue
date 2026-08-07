@@ -1,0 +1,14 @@
+{
+  "n_combinations": 144,
+  "n_runouts": 28,
+  "n_low_cycle": 11,
+  "n_valid": 116,
+  "min_log10_Nf": 2.5221813336212633,
+  "max_log10_Nf": 7.4978557142944515,
+  "spread_dex": 4.975674380673189,
+  "gear_module_mm": 3.0,
+  "teeth": 20,
+  "material": "42CrMo4 / AISI 4140",
+  "torque_Nm": 350,
+  "speed_rpm": 1500
+}

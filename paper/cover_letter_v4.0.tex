@@ -1,0 +1,118 @@
+% ================================================================
+% cover_letter_v4.0.tex — Cover letter for JMST submission
+% ================================================================
+\documentclass[12pt,a4paper]{article}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,graphicx,hyperref}
+
+\begin{document}
+
+\begin{flushright}
+Zhilei Chen\\
+Guangdong Peizheng College\\
+Data and Computer Science\\
+53 Peizheng Rd., Chini Town, Huadu\\
+Guangzhou, Guangdong 510830, China\\
+E-mail: 2604513@peizheng.edu.cn\\[6pt]
+\today
+\end{flushright}
+
+\vspace{0.5cm}
+
+Editor-in-Chief\\
+Journal of Mechanical Science and Technology (JMST)\\
+Korean Society of Mechanical Engineers
+
+\vspace{0.8cm}
+
+\textbf{Re: Submission of ``Method-Induced Uncertainty in Gear Bending
+Fatigue: Factorial Decomposition of Size-and-Surface Factor Sensitivity
+Under a Common ISO Stress Baseline''}
+
+\vspace{0.5cm}
+
+Dear Editor,
+
+I am pleased to submit the enclosed manuscript for consideration in the
+Journal of Mechanical Science and Technology.
+
+\vspace{0.3cm}
+\noindent\textbf{1. Clear Problem Statement}
+
+When three engineers---using different standards (ISO, AGMA, FKM),
+different mean-stress corrections, and different surface-finish
+assumptions---compute the bending fatigue life of the \emph{same} spur
+gear under the \emph{same} load, their predictions span three orders of
+magnitude. Prior gear fatigue studies have compared individual standards
+or correction methods in isolation (e.g., Bonaiti 2024 for ISO vs.\
+AGMA; Dowling 2009 for mean-stress corrections). The present study
+extends this tradition by simultaneously decomposing the contributions
+of five methodological choices and ranking them by variance explained.
+
+\vspace{0.3cm}
+\noindent\textbf{2. Critical Methodology}
+
+A censored-likelihood AFT survival model is applied to a 144-combination
+full-factorial design (5 factors $\times$ 2--4 levels, 92 run-outs).
+Unlike ordinary ANOVA/Sobol'---which must discard all 92 run-out entries
+and produce systematically distorted variance fractions---the AFT
+framework retains right-censored observations through the EM algorithm.
+Bootstrap (2000 draws), Sobol' sensitivity analysis, Weibull-AFT model
+selection ($\Delta\mathrm{AIC}=+29.7$ in favor of log-normal), and full
+residual diagnostics (Shapiro-Wilk $p=0.599$, Levene's test) confirm the
+model specification. Sensitivity analyses for the $Y_{Sa}$ stress
+concentration assumption ($\leq+2.1$~pp bias) and the application factor
+$K_A$ (1.0--1.5, rankings stable) validate the robustness of the
+findings.
+
+\vspace{0.3cm}
+\noindent\textbf{3. Consequential Findings}
+
+Three factors account for 97.9\% of total log-variance: mean-stress
+correction (39.1\%), size-and-surface standard (35.3\%), and surface
+roughness (23.5\%). The S--N curve source ($-$0.7\%) and cumulative
+damage rule (0.3\%, constant-amplitude only) are negligible. This
+ranking is stable under bootstrap resampling, load-factor variation, and
+alternative stress-concentration treatments. Engineering design
+recommendations---including calibration factors between standards and
+risk-classification criteria---are derived directly from the statistical
+results.
+
+\vspace{0.3cm}
+\noindent\textbf{4. Fit to JMST Scope}
+
+The manuscript aligns with JMST's Solid Mechanics \& Design section.
+It addresses a practical mechanical engineering problem (gear fatigue
+life prediction), employs rigorous statistical methods (censored AFT),
+quantifies engineering uncertainty sources in terms accessible to design
+engineers, and provides a reusable computational framework applicable to
+other machine elements. No physical experiments are required---the
+entire analysis uses publicly available S--N data and freely verifiable
+standard formulas---making the work fully reproducible.
+
+\vspace{0.3cm}
+\noindent\textbf{5. Manuscript Details}
+
+\begin{itemize}
+  \item Manuscript type: Original Article
+  \item Figures: 7; Tables: 3
+  \item Supplementary material: Full reproducibility package (Python
+        code, sweep data, AFT decomposition results, sensitivity
+        analysis scripts)
+  \item The manuscript has been formatted for double-blind review per
+        JMST guidelines
+\end{itemize}
+
+\vspace{0.3cm}
+I confirm that this manuscript has not been published elsewhere and is
+not under consideration by another journal. I have approved the
+manuscript and agree with its submission to JMST.
+
+\vspace{0.5cm}
+\noindent Thank you for considering this submission. I look forward to
+the reviewers' feedback.
+
+\vspace{0.8cm}
+\noindent Sincerely,\\[12pt]
+Zhilei Chen
+\end{document}

@@ -1,0 +1,92 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[margin=2.5cm]{geometry}
+\begin{document}
+
+\begin{flushright}
+Zhilei Chen\\
+Guangdong Peizheng College\\
+53 Peizheng Rd., Chini Town, Huadu\\
+Guangzhou, Guangdong 510830, China\\
+2604513@peizheng.edu.cn\\
+\today
+\end{flushright}
+
+\vspace{1cm}
+
+\noindent
+The Editor\\
+\textit{International Journal of Fatigue}\\
+Elsevier
+
+\vspace{0.5cm}
+
+\noindent Dear Editor,
+
+\medskip
+
+\noindent I am submitting the manuscript entitled ``Method-Induced
+Uncertainty in Gear Bending Fatigue: Factorial Decomposition of
+Size-and-Surface Factor Sensitivity Under a Common ISO Stress
+Baseline'' for consideration for publication in the
+\textit{International Journal of Fatigue}.
+
+This paper addresses a practical problem in gear design: when three
+qualified engineers compute the bending fatigue life of the same spur
+gear---identical geometry, material, and load---their predictions can
+span five orders of magnitude. The divergence originates not from
+material variability but from the methodological choices each engineer
+legitimately makes under the letter of published standards.
+
+The manuscript makes three contributions:
+
+\begin{enumerate}
+  \item \textbf{First full-factorial variance decomposition across five
+    simultaneous engineering choices in gear fatigue.} No prior study
+    has ranked the contributions of standard selection, mean-stress
+    correction method, surface roughness grade, S--N curve source, and
+    cumulative damage rule within a single controlled experimental
+    design. The analysis employs a censored-likelihood AFT framework
+    that preserves information from the 28 run-out observations
+    (19\% of the 144-combination dataset)---unlike conventional ANOVA
+    or Sobol' sensitivity analysis, which must discard them.
+  \item \textbf{Demonstration that method-induced uncertainty dominates
+    the prediction budget.} A quantitative benchmark against published
+    42CrMo4 gear fatigue test data (Wang et al., 2023) shows that the
+    method-induced $\log_{10}(N_f)$ spread (2.1--3.3~dex) is 2--3
+    times larger than the intrinsic material scatter ($\sim$1~dex) at
+    a fixed stress level. The three dominant factors (mean-stress
+    correction, size-and-surface factor formulation, surface roughness)
+    together account for 88.6\% of total log-variance.
+  \item \textbf{Translation of numerical results into actionable
+    engineering guidance.} The paper provides cross-standard empirical
+    correction formulas, a design risk map ranking methodological
+    choices by conservatism direction, consequence-classified
+    uncertainty thresholds, and a step-by-step design protocol for
+    controlling prediction scatter.
+\end{enumerate}
+
+A complete reproducibility package is submitted as Supplementary
+Material, including all Python source code, the 144-combination sweep
+data, and a one-click reproduction script (\texttt{bash reproduce.sh}).
+
+This manuscript has not been published previously and is not under
+consideration elsewhere. All authors have approved the submission. The
+author declares no competing interests. Generative AI tools
+(Claude/Anthropic) were used for language editing and code
+development; all scientific content, analysis decisions, and numerical
+results are the author's own.
+
+I believe this work fits the scope of IJF as a computational
+uncertainty quantification study that addresses a recognized practical
+problem in gear fatigue assessment. I look forward to the reviewers'
+evaluation.
+
+\vspace{0.5cm}
+
+\noindent Sincerely,
+
+\vspace{0.5cm}
+
+\noindent Zhilei Chen
+
+\end{document}
