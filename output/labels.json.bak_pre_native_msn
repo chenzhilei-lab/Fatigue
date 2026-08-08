@@ -645,22 +645,22 @@
     "source_input": "sobol_censoring_gradient.json"
   },
   "msn_baseline_sn_pct": {
-    "value": 2.32,
-    "note": "S-N source share, 2 Waterloo curves, NATIVE chain (%)",
-    "source_script": "multi_sn_native.py",
-    "source_input": "multi_sn_native.json"
+    "value": 2.46,
+    "note": "S-N source share, 2 Waterloo curves (%)",
+    "source_script": "multi_sn_sensitivity.json",
+    "source_input": "multi_sn_sensitivity.json"
   },
   "msn_extended_sn_pct": {
-    "value": 0.71,
-    "note": "S-N source share, 5 curves, NATIVE chain (%)",
-    "source_script": "multi_sn_native.py",
-    "source_input": "multi_sn_native.json"
+    "value": 34.74,
+    "note": "S-N source share, 5 curves (%)",
+    "source_script": "multi_sn_sensitivity.json",
+    "source_input": "multi_sn_sensitivity.json"
   },
   "msn_change_pp": {
-    "value": -1.6,
-    "note": "S-N share change 2->5 curves, NATIVE chain (pp)",
-    "source_script": "multi_sn_native.py",
-    "source_input": "multi_sn_native.json"
+    "value": 32.3,
+    "note": "S-N share change (pp)",
+    "source_script": "multi_sn_sensitivity.json",
+    "source_input": "multi_sn_sensitivity.json"
   },
   "msn_s68_strength": {
     "value": 610.52,
@@ -875,11 +875,5 @@
       "weibull_aft.json",
       "ysa_sensitivity.json"
     ]
-  },
-  "msn_native_std_5curves_pct": {
-    "value": 52.5,
-    "note": "Standard share, 5 curves, NATIVE chain (%)",
-    "source_script": "multi_sn_native.py",
-    "source_input": "multi_sn_native.json"
   }
 }
