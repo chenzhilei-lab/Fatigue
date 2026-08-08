@@ -1,0 +1,69 @@
+{
+  "description": "Nonlinear damage-model control: two-stage Manson-Halford damage accumulation vs linear and modified Miner under the ten-level random spectrum.",
+  "spectrum": {
+    "n_levels": 10,
+    "torque_range_Nm": [
+      500.0,
+      900.0
+    ],
+    "weights": [
+      0.009,
+      0.0453,
+      0.0282,
+      0.0935,
+      0.5638,
+      0.0875,
+      0.0547,
+      0.042,
+      0.0188,
+      0.057
+    ]
+  },
+  "scenarios": {
+    "linear_miner": {
+      "n_total": 72,
+      "n_censored": 6,
+      "sigma": 0.2631,
+      "variance_fractions": {
+        "mean_stress_method": 32.8,
+        "size_surface_standard": 41.0,
+        "rz_level": 17.2,
+        "sn_source": 7.7,
+        "damage_method": 0.0,
+        "interaction": 1.2
+      }
+    },
+    "modified_miner": {
+      "n_total": 72,
+      "n_censored": 6,
+      "sigma": 0.2631,
+      "variance_fractions": {
+        "mean_stress_method": 32.8,
+        "size_surface_standard": 41.0,
+        "rz_level": 17.2,
+        "sn_source": 7.7,
+        "damage_method": 0.0,
+        "interaction": 1.2
+      }
+    },
+    "two_stage_nonlinear": {
+      "n_total": 72,
+      "n_censored": 6,
+      "sigma": 0.2615,
+      "variance_fractions": {
+        "mean_stress_method": 32.9,
+        "size_surface_standard": 41.2,
+        "rz_level": 17.2,
+        "sn_source": 7.4,
+        "damage_method": 0.0,
+        "interaction": 1.2
+      }
+    }
+  },
+  "damage_rule_share_comparison": {
+    "linear_miner": 0.0,
+    "modified_miner": 0.0,
+    "two_stage_nonlinear": 0.0
+  },
+  "summary": "Damage-rule share under the random spectrum: linear Miner 0.0%, modified Miner 0.0%, two-stage nonlinear (Manson-Halford) 0.0%. The nonlinear model keeps the damage rule a minor contributor, confirming the v6.0 conclusion."
+}

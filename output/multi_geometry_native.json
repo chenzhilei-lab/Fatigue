@@ -1,0 +1,116 @@
+{
+  "description": "Multi-geometry NATIVE-chain AFT decomposition (AGMA J midpoint + FKM official K_f + ISO Y_Sa), 7-geometry matrix; torque scaled with m_n^3 to retain finite-life information.",
+  "geometries": {
+    "mn2_z20": {
+      "module": 2.0,
+      "teeth": 20,
+      "torque": 207.40740740740736,
+      "result": {
+        "error": "insufficient observed",
+        "n_censored": 144
+      },
+      "note": "AFT not identified (likely all run-out)"
+    },
+    "mn3_z20": {
+      "module": 3.0,
+      "teeth": 20,
+      "torque": 700.0,
+      "result": {
+        "n_total": 144,
+        "n_censored": 84,
+        "sigma": 0.1747,
+        "variance_fractions": {
+          "mean_stress_method": 18.0,
+          "size_surface_standard": 56.7,
+          "rz_level": 21.5,
+          "sn_source": 2.3,
+          "damage_method": 0.3,
+          "interaction": 1.1
+        }
+      }
+    },
+    "mn4_z20": {
+      "module": 4.0,
+      "teeth": 20,
+      "torque": 1659.259259259259,
+      "result": {
+        "n_total": 144,
+        "n_censored": 10,
+        "sigma": 0.2774,
+        "variance_fractions": {
+          "mean_stress_method": 32.6,
+          "size_surface_standard": 41.0,
+          "rz_level": 15.6,
+          "sn_source": 9.4,
+          "damage_method": 0.2,
+          "interaction": 1.1
+        }
+      }
+    },
+    "mn6_z20": {
+      "module": 6.0,
+      "teeth": 20,
+      "torque": 5600.0,
+      "result": {
+        "n_total": 144,
+        "n_censored": 0,
+        "sigma": 0.4866,
+        "variance_fractions": {
+          "mean_stress_method": 43.7,
+          "size_surface_standard": 19.5,
+          "rz_level": 7.0,
+          "sn_source": 29.1,
+          "damage_method": 0.1,
+          "interaction": 0.5
+        }
+      }
+    },
+    "mn8_z20": {
+      "module": 8.0,
+      "teeth": 20,
+      "torque": 13274.074074074071,
+      "result": {
+        "n_total": 144,
+        "n_censored": 0,
+        "sigma": 0.9377,
+        "variance_fractions": {
+          "mean_stress_method": 53.1,
+          "size_surface_standard": 7.3,
+          "rz_level": 2.5,
+          "sn_source": 36.9,
+          "damage_method": 0.0,
+          "interaction": 0.2
+        }
+      }
+    },
+    "mn3_z14": {
+      "module": 3.0,
+      "teeth": 14,
+      "torque": 700.0,
+      "result": {
+        "n_total": 144,
+        "n_censored": 0,
+        "sigma": 0.3185,
+        "variance_fractions": {
+          "mean_stress_method": 35.9,
+          "size_surface_standard": 34.6,
+          "rz_level": 13.7,
+          "sn_source": 14.5,
+          "damage_method": 0.2,
+          "interaction": 1.0
+        }
+      }
+    },
+    "mn3_z30": {
+      "module": 3.0,
+      "teeth": 30,
+      "torque": 700.0,
+      "result": {
+        "error": "insufficient observed",
+        "n_censored": 144
+      },
+      "note": "AFT not identified (likely all run-out)"
+    }
+  },
+  "summary": "Native-chain factor ranking across 7 gear geometries; see per-geometry variance_fractions."
+}

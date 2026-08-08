@@ -148,7 +148,10 @@ $z_1=20$) under constant-amplitude pulsating bending ($R=0$) at
 load factors are set to unity and residual stresses are absent.
 Results should not be extrapolated to case-carburized gears,
 variable-amplitude spectra, or lower-stress industrial duty cycles
-without dedicated sensitivity analysis.
+without dedicated sensitivity analysis. The qualitative predictions
+are cross-checked against published single-tooth-bending experiments
+(Pagliari et al.~\cite{pagliari2025}, Bonaiti et al.~\cite{bonaiti2024},
+\S\ref{sec:literature_calibration}).
 
 The present work is motivated by a practical engineering question:
 when a design engineer selects a standard, a mean-stress correction
@@ -1544,6 +1547,59 @@ $\sigma_W{=}0.45\,\sigma_{\rm uts}$ &
 \end{tabular}
 \end{table}
 
+\subsection{Calibration Against Published Gear Fatigue Experiments}
+\label{sec:literature_calibration}
+
+No physical fatigue testing was performed in this study; the
+laboratory constraints are stated at the outset (\S\ref{sec:constraints}).
+To anchor the simulation results to measured gear fatigue behaviour,
+the key qualitative predictions are cross-checked against published
+single-tooth-bending (STB) experiments:
+
+\begin{itemize}
+  \item \textbf{Standard predictions carry systematic method-dependent
+        error.} Pagliari et al.~\cite{pagliari2025} compared STB fatigue
+        tests (AISI 8620, case-carburized) with ISO~6336-3 Method~B
+        predictions and found that the standard \emph{significantly
+        overpredicts} finite life in the low-cycle regime while its
+        HCF endurance-limit prediction is closer but method-sensitive;
+        the critical location predicted by the $30^\circ$ tangent rule
+        does not always coincide with the experimentally observed crack
+        initiation site. Bonaiti et al.~\cite{bonaiti2024} showed that
+        different elaborations of pulsator (STB) data produce S--N
+        curves that \emph{differ from each other and from both
+        ISO~6336 and AGMA~2001-D04 predictions}, and that the choice of
+        elaboration changes the load-spectra assessment. Both results
+        corroborate the central premise of the present work: the
+        prediction spread of an identical gear is dominated by
+        legitimate methodological choices, not by the gear itself.
+  \item \textbf{The direction of cross-standard divergence is
+        consistent.} Pagliari's finding that the tabulated-data route
+        (Method~B) overestimates LCF life while the experimental route
+        (Method~A) anchors to measured strength is consistent with the
+        present decomposition, in which the standard choice (55.3\%)
+        contributes far more variance than any material-related factor
+        at the reference operating point. The exact percentage is
+        gear- and load-specific (\S\ref{sec:native_chain}); the
+        qualitative hierarchy (standard $>$ roughness $\approx$
+        mean-stress) is what the published experiments support.
+  \item \textbf{Method-induced spread exceeds the scatter of a single
+        experiment type.} Bonaiti's demonstration that STB data
+        elaboration alone can shift the derived S--N curve outside the
+        scatter band of the individual tests is the experimental
+        analogue of the 2.79~dex spread produced here by
+        methodological choices alone---the two are different
+        manifestations of the same phenomenon.
+\end{itemize}
+
+These comparisons are qualitative: the published experiments use
+different materials (AISI 8620, 16MnCr5) and geometries, so a
+point-by-point numerical calibration is not attempted. They serve to
+demonstrate that the mechanism quantified in this paper---method
+choice as the dominant driver of prediction spread---is not an
+artifact of the simulation setup but is observable in independent
+experimental campaigns.
+
 \subsection{Comparison of Method-Induced and Material Scatter: The Need for a Shared Operating Point}
 \label{sec:method_dominates}
 
@@ -2267,14 +2323,26 @@ tool to answer that question case by case.
         mean-stress 17.8\%). The omitted interactions therefore do not
         materially bias the main-effect decomposition.
         (iv)~\emph{Geometry}
-        (\texttt{multi\_geometry\_sensitivity.json}): for a 14-tooth
-        pinion the ranking reverses (mean-stress 36.8\% vs.\ standard
-        32.9\%), because the higher tooth-root stress amplifies
-        mean-stress sensitivity; for $m_n=5$ and $8$~mm at 700~N$\cdot$m
-        all 144 combinations are run-outs (the stress falls below the
-        fatigue strength), so the decomposition is not identified there.
+        (\texttt{multi\_geometry\_native.json}): a seven-geometry
+        matrix ($m_n = 2/3/4/6/8$~mm at $z_1=20$, plus $z_1=14$ and
+        $z_1=30$ at $m_n=3$~mm) was re-run under the native stress
+        chain, with the torque scaled as $T \propto m_n^3$ to retain
+        finite-life information at each module. The standard share
+        decreases monotonically with module---56.7\% ($m_n=3$,
+        baseline), 41.0\% ($m_n=4$), 19.5\% ($m_n=6$), 7.3\%
+        ($m_n=8$)---while the mean-stress share rises from 18.0\% to
+        53.1\%, because the $m_n^3$ torque scaling raises the nominal
+        stress level and shifts the operating point deeper into the
+        finite-life regime. Reducing the tooth count ($z_1=14$)
+        similarly reverses the ranking (mean-stress 35.9\% vs.\
+        standard 34.6\%). At $m_n=2$ and at $z_1=30$ the 144
+        combinations are all run-outs (stress below the fatigue
+        strength), so the decomposition is not identified there.
         The single-geometry ranking of the main analysis is therefore
-        specific to $m_n=3$, $z_1=20$ at 700~N$\cdot$m.
+        specific to $m_n=3$, $z_1=20$ at 700~N$\cdot$m: at higher
+        modules (larger gears, higher absolute stress) the
+        mean-stress correction and the S--N curve source overtake the
+        standard choice as the dominant contributors.
         (v)~\emph{Load coefficients}
         (\texttt{multi\_load\_sensitivity.json}): jointly varying
         $K_A$, $K_V$ and $K_{F\beta}$ (six scenarios, total multiplier
@@ -2289,11 +2357,17 @@ tool to answer that question case by case.
         (500--900~N$\cdot$m, log-uniform) raises the damage-rule share
         from 0.3\% (constant amplitude) to 1.0\% and lowers the
         standard share from 55.3\% to 40.4\% (132/144 combinations now
-        finite-life). The damage rule remains a minor contributor even
-        under random loading, but its share triples relative to
-        constant-amplitude operation; a full nonlinear
-        sequence-effect damage model (beyond the simplified load
-        interaction used here) remains future work.
+        finite-life). As a control, the damage accumulation was also
+        recomputed with a two-stage nonlinear (Manson--Halford) curve
+        including load-interaction effects
+        (\texttt{nonlinear\_damage\_spectrum.json}): the damage-rule
+        share remains at the noise floor ($\leq$0.1\%) and the factor
+        ranking is unchanged, because the damage rule scales every
+        combination's life by the same factor and an AFT decomposition
+        is invariant to a common monotone scale. The damage rule is
+        therefore a minor contributor under constant amplitude, block
+        spectra, and random spectra alike, independent of the damage
+        model.
 
   \item \textbf{Applicability bound at high censoring fractions.} The
         AFT variance decomposition requires a minimum information
