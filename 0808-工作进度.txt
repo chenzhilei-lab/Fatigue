@@ -111,3 +111,16 @@ z=14 反转；m_n=2/z=30 全 run-out——几何适用边界声明已写入 §4.12
 正文 3 处（§4.3/§4.12/图注）旧 34.7%/33.6% 全部更新为原生链数字
 短板 2 从"文字披露"升级为"原生链下水平跨度敏感性证明"
 【验证】38 页 0 error / 0 undefined / overfull<14pt / paper_check PASS
+
+================================================================================
+0808 v6.0 意见04 收尾 + fig8 管线一致性（2026-08-08 续作）
+================================================================================
+【fig8 管线一致性】旧 fig8（Peterson 管线，S-N 2.5->34.7%）与原生链主结果不可比：
+- make_fig8_native.py 用 output/multi_sn_native.json 重新生成 fig8_multi_sn_sensitivity_native.png
+- 面板 a 显示 S-N 2.3%->0.7%、标准 56.7%->52.5%（原生链），排名不变
+- labels.json 的 msn_* 标签更新为原生链值（0.71/-1.6/52.5）
+- 论文 fig8 引用切换至新图
+【验证】38 页 0 error / 0 undefined / overfull<14pt / paper_check PASS
+【git】cb17683 已推送（含 fig8 新图 + labels 更新）
+【待办】意见04 Response to Reviewers 回复信（尚未起草）
+【待办】复现包 v6.0 zip 需更新（补 multi_sn_native/fkm_official/multi_geometry_native 等新脚本与 json）
