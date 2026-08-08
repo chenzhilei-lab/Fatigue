@@ -1,0 +1,67 @@
+{
+  "description": "5-level S-N sweep under the NATIVE chain (AGMA J midpoint + FKM official K_f + ISO Y_Sa), the same pipeline as the v6.0 primary result; 2-curve (144) and 5-curve (360) decompositions.",
+  "pipeline": "native (FKM K_f=1.8676 official, ratio 1.2049; AGMA J ratio 1.0129)",
+  "note_consistency": "Replaces multi_sn_sensitivity.json (Peterson pipeline, 8/5) for all comparisons against the native-chain primary result.",
+  "synthetic_curves": {
+    "Synthetic_42CrMo4_HighStrength": {
+      "uts": 1660.0,
+      "sigma_w_1e6": 747.0,
+      "b": -0.06
+    },
+    "Synthetic_42CrMo4_Classic500": {
+      "uts": 1322.0,
+      "sigma_w_1e6": 594.9,
+      "b": -0.06
+    },
+    "Synthetic_42CrMo4_Classic560": {
+      "uts": 1151.0,
+      "sigma_w_1e6": 518.0,
+      "b": -0.055
+    }
+  },
+  "native_2curves_144": {
+    "shares_%": {
+      "mean_stress_method": 17.98,
+      "size_surface_standard": 56.73,
+      "rz_level": 21.54,
+      "sn_source": 2.32,
+      "damage_method": 0.31,
+      "size_surface_standard x rz_level": 1.12
+    },
+    "n_censored": 84,
+    "n_total": 144
+  },
+  "native_5curves_360": {
+    "shares_%": {
+      "mean_stress_method": 25.64,
+      "size_surface_standard": 52.49,
+      "rz_level": 18.36,
+      "sn_source": 0.71,
+      "damage_method": 0.17,
+      "size_surface_standard x rz_level": 2.63
+    },
+    "n_censored": 194,
+    "n_total": 360
+  },
+  "comparison": {
+    "standard_2v_5": [
+      56.7,
+      52.5
+    ],
+    "sn_2v_5": [
+      2.3,
+      0.7
+    ],
+    "ranking_2curves": [
+      "size_surface_standard",
+      "rz_level",
+      "mean_stress_method"
+    ],
+    "ranking_5curves": [
+      "size_surface_standard",
+      "mean_stress_method",
+      "rz_level"
+    ]
+  },
+  "summary": "Native chain: 2 curves -> std 56.7%, S-N 2.3%; 5 curves -> std 52.5%, S-N 0.7%. Under the native chain the material span (5 heat treatments) approaches but does not overtake the standard choice."
+}

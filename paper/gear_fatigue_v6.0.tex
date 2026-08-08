@@ -1637,27 +1637,37 @@ the similarity of the two selected datasets, not the unimportance of
 material variability in general (\S\ref{sec:constraints}).
 
 To quantify this boundary, a supplementary analysis
-(\texttt{multi\_sn\_sensitivity.py}) extends the S--N factor to five
+(\texttt{multi\_sn\_native.py}) extends the S--N factor to five
 levels spanning the realistic quenched-and-tempered 42CrMo4
 heat-treatment range (UTS 1151--1660~MPa; synthetic curves anchored
 to the Ulrich et al.~\cite{ulrich2025} tempering series with the FKM
 $\sigma_W = 0.45\,\sigma_{\rm uts}$ rule;
-Fig.~\ref{fig:multi_sn}). In this 360-combination design the S--N
-curve source share rises from 2.5\% to 34.7\%, statistically tied
-with the size-and-surface standard (33.6\%) as the leading factor.
-The 2.5\% in Table~\ref{tab:anova} is therefore a direct consequence
-of selecting two nearly identical S--N curves (610.5 vs.\ 609.9~MPa
-at $10^6$~cycles), not evidence that material variability is
-unimportant: spanning the realistic heat-treatment range makes the
-S--N source co-dominant with the standard choice.
+Fig.~\ref{fig:multi_sn}). This analysis uses the \emph{native}
+stress chain (\S\ref{sec:native_chain})---the same pipeline as the
+primary result---so the numbers are directly comparable with
+Table~\ref{tab:native_chain}. In this 360-combination native-chain
+design the S--N curve source share remains small (2.5\% to 0.7\%)
+and the size-and-surface standard stays dominant (52.5\%), i.e.\
+widening the material span from two nearly identical curves to five
+heat treatments does \emph{not} overturn the ranking. The low S--N
+share reflects that four of the five curves place the reference
+operating point either fully above or fully below the endurance
+limit (64 run-outs for the strongest state, 10 for the weakest),
+so the material factor acts mostly as a run-out switch rather than a
+continuous log-life shifter at 700~N$\cdot$m. The 2.5\% in
+Table~\ref{tab:anova} is therefore not evidence that material
+variability is unimportant in general---the five-curve span does
+shift lives substantially---but under the native chain it remains
+secondary to the standard choice at this operating point.
 
 \begin{figure}[ht]
 \centering
 \includegraphics[width=\columnwidth]{../output/fig8_multi_sn_sensitivity.png}
-\caption{Multi S--N curve sensitivity. Left:
-the S--N curve source variance share rises from 2.5\% (two nearly
-identical Waterloo curves) to 34.7\% when the design spans five
-quenched-and-tempered heat treatments. Right: the five fatigue
+\caption{Multi S--N curve sensitivity (native chain). Left:
+the S--N curve source variance share stays small (2.5\% for two
+nearly identical Waterloo curves; 0.7\% for five
+quenched-and-tempered heat treatments) while the size-and-surface
+standard remains dominant (56.7\% and 52.5\%). Right: the five fatigue
 strengths at $10^6$~cycles (747/610/595/610/518~MPa for the
 high-strength, \#68, classic-500, \#66, classic-560 states).}
 \label{fig:multi_sn}
@@ -2015,20 +2025,27 @@ structural constraint in mind:
         structurally predisposes the decomposition to attribute a
         larger share to methodological factors. The finding that
         method-induced variance exceeds material variance at this
-        operating point cannot be separated from this design choice.
+        operating point is therefore contingent on the factor-level
+        selection; the sensitivity analysis below quantifies whether
+        a wider material span overturns it.
         A multi-SN-curve sensitivity analysis
-        (\texttt{multi\_sn\_sensitivity.py}) quantifies the magnitude
+        (\texttt{multi\_sn\_native.py}, native chain)
+        quantifies the magnitude
         of this effect: extending the design from the 2 nearly-identical
         Waterloo curves to 5 S--N curves spanning realistic 42CrMo4
         heat-treatment states (synthetic curves anchored to the
         Ulrich et al.\ 2025 tempering series, with fatigue strengths
-        at $10^6$~cycles from 422 to 747~MPa) raises the S--N source
-        variance share from 2.5\% to 34.7\% (+32.3~pp;
-        Fig.~\ref{fig:multi_sn}). The S--N source becomes the leading
-        factor in the enriched design. This confirms that the baseline
-        2.5\% S--N share is a lower bound reflecting the limited
-        material-factor representation, not evidence that material
-        variability is unimportant.
+        at $10^6$~cycles from 518 to 747~MPa) leaves the S--N source
+        variance share small (2.5\% to 0.7\%;
+        Fig.~\ref{fig:multi_sn}) and the size-and-surface standard
+        dominant (52.5\%) under the native chain. The S--N source does
+        not overturn the ranking in the enriched design; the material
+        factor acts mostly as a run-out switch at this operating
+        point. This confirms that the baseline
+        2.5\% S--N share is not evidence that material
+        variability is unimportant---the five-curve span shifts lives
+        substantially---but the standard choice remains the dominant
+        contributor at 700~N$\cdot$m.
 
   \item The factor ranking reported here (Std dominant,
         MS $\approx$ Rz) is therefore \emph{contingent on the factor
