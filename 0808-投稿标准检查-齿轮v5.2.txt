@@ -1,0 +1,36 @@
+﻿================================================================================
+齿轮 v5.2 投稿标准检查（2026-08-08，按 D:\Papers\工作标准.txt + 投稿前的几道关卡\）
+================================================================================
+
+## 检查对象
+paper/gear_fatigue_v5.1.tex（37 页，JMST 目标）→ 检查后另存 v5.2
+
+## 12 项检查结果
+| 检查 | 结果 |
+|---|---|
+| A 引用完整性 | ⚠️ iso6336/agma2001 未 \cite → 已补（v5.2） |
+| B 文献验证 | ✅ 12/13 在线确证；wang2023（中文期刊《机械强度》）Crossref 无记录、搜索无命中 → 需 CNKI 人工核实；2 MINOR（fatemi1998 标题缩写、ulrich2025 作者顺序） |
+| C 机器味 | ✅ 0 命中 |
+| D 重复行 | ⚠️ L1287/L1651 整句重复 → Discussion 处已改写（v5.2）；L84/L2684 首尾钩子呼应（刻意，保留） |
+| E &amp; 污染 | ✅ 0 |
+| F 双盲 | ✅ 正文无作者信息 |
+| G notebook | ✅ 0 |
+| H 图/占位符 | ✅ 10 张图全部存在，无 placeholder |
+| I 钩子/比喻 | ✅ 开头比喻钩子 + 结尾呼应 |
+| J Excel 数字表 | ✅ 数字来源-齿轮疲劳v4.8.csv/.xlsx 覆盖 v5.1 核心数字（55.3/22.6/18.2/2.5/1.2/0.3，源 aft_anova.json） |
+| K 编译 | ✅ 0 error / 0 undefined / 5 个小 overfull（<20pt） |
+| L Cover letter | ⚠️ "11 figures" 应为 10（已改 v5.2）；ΔAIC=+77.1、Shapiro-Wilk W=0.962/p=0.056 有脚本来源（output/aft_diagnostics.json）✓；AI 声明为统一句 ✓ |
+
+## 修改（v5.2 另存，未覆盖 v5.1）
+1. L51 补 \cite{iso6336} \cite{agma2001}
+2. Discussion 重复句改写（"dominates the method-induced uncertainty budget...next-largest contributors"）
+3. cover_letter_v5.2_jmst.tex："11 figures" → "10 figures"
+
+## 验证
+- gear_fatigue_v5.2.pdf：37 页，0 error / 0 undefined
+- paper_check.py paper/gear_fatigue_v5.2.tex：[PASS]（MATCH 35 / Orphan 0）
+- uncited bibitems: none
+- cover_letter_v5.2_jmst.pdf：1 页 0 error
+
+## 遗留
+- wang2023（中文期刊）在线无法确证，投稿前建议作者在 CNKI/万方核实卷页 45(2): 474-480

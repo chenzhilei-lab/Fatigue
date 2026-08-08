@@ -1,4 +1,4 @@
-﻿# Gear Fatigue UQ — Reproducibility Package (v5.1)
+# Gear Fatigue UQ — Reproducibility Package (v5.2)
 
 **Paper:** Method-Induced Uncertainty in Gear Bending Fatigue: Factorial Decomposition of Size-and-Surface Factor Sensitivity Under a Common ISO Stress Baseline  
 **Author:** Zhilei Chen (Guangdong Peizheng College)  
@@ -22,7 +22,7 @@ validation → figures → labels/audit → canonical/MANIFEST check. ~20 minute
 ## File Tree
 
 ```
-├── reproduce.sh              # One-click reproduction (v5.1)
+├── reproduce.sh              # One-click reproduction (v5.2)
 ├── README.md
 ├── generate_labels_v3.py     # Rebuild output/labels.json + number-source ledger
 ├── phase0_canonical.py    # Canonical numbers + MANIFEST (deterministic anchor)

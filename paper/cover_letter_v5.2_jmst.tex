@@ -1,0 +1,100 @@
+% ================================================================
+% cover_letter_v5.0_jmst.tex -- Cover Letter for Journal of Mechanical
+%                               Science and Technology (JMST)
+% v5.0: initial submission letter for gear_fatigue_v5.0 (JMST target).
+% All numbers match the manuscript v5.0:
+%   144 combinations / 84 run-outs / 60 finite-life
+%   55.3 / 22.6 / 18.2 / 2.5 / 1.2 / 0.3 %
+%   bootstrap 2000 (seed 42), Shapiro-Wilk W=0.962 p=0.056,
+%   DeltaAIC = +77.1, 10 figures, 6 tables.
+% No Dowling citation. AI statement included.
+% ================================================================
+\documentclass[12pt,a4paper]{article}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{times}
+\usepackage{hyperref}
+\pagestyle{plain}
+
+\begin{document}
+
+\begin{flushright}
+Zhilei Chen\\
+Guangdong Peizheng College, Data and Computer Science,\\
+53 Peizheng Rd., Chini Town, Huadu, Guangzhou,\\
+Guangdong 510830, China\\
+E-mail: 2604513@peizheng.edu.cn\\[4pt]
+\today
+\end{flushright}
+
+\vspace{2mm}
+
+\begin{flushleft}
+Editor-in-Chief\\
+\textit{Journal of Mechanical Science and Technology} (JMST)\\
+Korean Society of Mechanical Engineers
+\end{flushleft}
+
+\vspace{4mm}
+
+Dear Editor-in-Chief,
+
+I am pleased to submit the enclosed manuscript, entitled
+
+\begin{center}
+\itshape ``Method-Induced Uncertainty in Gear Bending Fatigue:\\
+Factorial Decomposition of Size-and-Surface Factor Sensitivity\\
+Under a Common ISO Stress Baseline'',
+\end{center}
+
+for consideration for publication as an original research article in
+the \textit{Journal of Mechanical Science and Technology}.
+
+The manuscript quantifies how much of the scatter in gear
+bending-fatigue life estimates is inherited from the analyst's
+methodological choices rather than from the material itself. A
+144-combination full-factorial design spanning five methodological
+switches---S--N curve source, mean-stress correction, cumulative
+damage rule, size-and-surface standard, and surface roughness---is
+decomposed with a censored-likelihood accelerated failure-time (AFT)
+model. Because 84 of the 144 combinations are run-outs (58\% of the
+dataset), ordinary ANOVA/Sobol' approaches, which must discard
+censored entries, systematically distort the ranking; the AFT
+framework retains all observations through the EM algorithm. The
+decomposition attributes the method-induced variance to six
+contributions---55.3\%, 22.6\%, 18.2\%, 2.5\%, 1.2\%, and 0.3\%---with
+bootstrap resampling (2000 resamples, seed 42) confirming the
+stability of the ranking. A Shapiro--Wilk test ($W=0.962$, $p=0.056$)
+supports the residual-normality assumption, and a model-selection
+comparison ($\Delta$AIC $= +77.1$) confirms the log-normal AFT
+specification over the Weibull alternative. The paper reports 10
+figures and 6 tables.
+
+We believe these results are directly relevant to JMST's readership in
+mechanical design and fatigue assessment: they show that a large
+fraction of reported fatigue-life scatter can be traced to factor
+choice and calibration, and they provide a reproducible
+variance-decomposition workflow (Python scripts, seed-fixed
+randomness, Monte Carlo validation, and a complete reproducibility
+package) that any fatigue-engineering laboratory can apply to its own
+gear geometries, materials, and loading conditions.
+
+This manuscript is original, has not been published previously, and is
+not under consideration by any other journal. The author declares no
+competing interests.
+
+Generative AI tools assisted with LaTeX formatting, Python code
+implementation, and English language editing.
+
+Thank you for your consideration. I look forward to the reviewers'
+feedback.
+
+\vspace{4mm}
+
+Sincerely,
+
+\vspace{6mm}
+
+Zhilei Chen\\
+Guangdong Peizheng College, Data and Computer Science
+
+\end{document}
