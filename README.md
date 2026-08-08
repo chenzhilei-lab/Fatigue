@@ -1,13 +1,13 @@
 # 齿轮疲劳 UQ — 方法不确定性分解论文
 
-## 当前版本：v5.2（JMST 投稿）
+## 当前版本：v5.4（JMST 投稿，复审小修后接受）
 
 ### 投稿信息
 - 目标期刊：*Journal of Mechanical Science and Technology* (KSME/Springer)
-- 论文：`paper/gear_fatigue_v5.2.tex` + `paper/gear_fatigue_v5.2.pdf`（37 页）
-- 复现包：`reproducibility_package/`（一键复现）或 `gear_fatigue_uq_reproducibility_v5.2_jmst.zip`
-- 审计状态：`python paper_check.py paper/gear_fatigue_v5.2.tex` → **PASS**（35 MATCH / 0 MISMATCH，271 traced / 0 orphan）
-- 编译状态：`bash paper/check_compile.sh gear_fatigue_v5.2` → **PASS**（无硬错误、无 undefined、>20pt overfull 清零）
+- 论文：`paper/gear_fatigue_v5.4.tex` + `paper/gear_fatigue_v5.4.pdf`（38 页）
+- 复现包：`reproducibility_package/`（一键复现）或 `gear_fatigue_uq_reproducibility_v5.4_jmst.zip`
+- 审计状态：`python paper_check.py paper/gear_fatigue_v5.4.tex` → **PASS**（35 MATCH / 0 MISMATCH，275 traced / 0 orphan）
+- 编译状态：`bash paper/check_compile.sh gear_fatigue_v5.4` → **PASS**（无硬错误、无 undefined、overfull 均 <20pt）
 
 ### v5.2 关键结果（AFT 删失似然，EM 估计，common-σ）
 | 因素 | 方差占比 |
@@ -22,13 +22,13 @@
 三个因素合计 96.1% 的总对数方差。σ_aft = 0.175。Monte Carlo 验证（500 数据集）：|bias| ≤ 3.4 pp，top-3 秩恢复 98.2%（Spearman ρ = 0.973）。
 
 ### 版本链（全部保留）
-v1.0 → v2.0 → v2.1 → v2.2 → v2.3 → v2.4 → v2.5 → v2.6 → v2.7 → v2.8 → v3.0 … → v4.0 … → v5.0 → v5.1 → **v5.2**
+v1.0 → v2.0 → v2.1 → v2.2 → v2.3 → v2.4 → v2.5 → v2.6 → v2.7 → v2.8 → v3.0 … → v4.0 … → v5.0 → v5.1 → v5.2 → v5.3 → **v5.4**
 
 ### 复现
 ```bash
 cd reproducibility_package
 bash reproduce.sh        # ~20 分钟，12 步：sweep → AFT 分解 → 敏感性 → MC 验证 → 出图 → 审计
-python paper_check.py paper/gear_fatigue_v5.2.tex   # 数据来源审计
+python paper_check.py paper/gear_fatigue_v5.4.tex   # 数据来源审计
 ```
 
 ### 证据链

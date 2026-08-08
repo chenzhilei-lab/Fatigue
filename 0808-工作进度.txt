@@ -1,0 +1,45 @@
+================================================================================
+齿轮论文 v5.4 工作进度（2026-08-08）
+================================================================================
+【当前状态】
+- 终稿: paper/gear_fatigue_v5.4.tex / .pdf（38 页，0 error / 0 undefined，paper_check [PASS] MATCH 35 / Orphan 0）
+- 目标期刊: JMST（Journal of Materials Science & Technology）；作者 Zhilei Chen；投稿邮箱 2604513@peizheng.edu.cn
+- 版本链: v1.0(7/22) → v2.x(10版) → v3.x(8版) → v4.x(10版) → v5.0~v5.4(5版)，共 34 版
+- 意见来源: 真人审稿 5 轮（7/23、7/30、8/5、8/7、8/8）+ AI 模拟 2 轮（Codex 0803/0805）+ 内部审计多份
+
+【0808 审稿意见01 → v5.3 修正（11 处，数字零改动）】
+1. 引言 55.3% 补下界限定（统一 ISO 基线 + 全标准分歧下界）
+2. 引言 AFT "without bias" → 非信息删失假设
+3. 4.7 "only method" → 所比较方法中唯一
+4. 4.12 同上 + 补删失感知 GSA 文献说明
+5. Fig.1 caption 2.79 dex 补 finite-life 限定（60 条目）
+6. 结论 item 4 同上
+7. 结论 item 5 同上
+8. 结论 55-Percent Problem 补工况/基线下界
+9. 摘要 MC 句补 58% 删失 ~7pp 保守下界
+10. Fig.3 caption 补 ISO 40μm 截断
+11. 4.6 补大模数尺寸因子限制
+- 对照表: 0808-审稿意见逐条修正对照表.md（25 条已回应 + 11 处新增）
+
+【0808 审稿意见02（复审: 小修后接受）→ v5.4 修正】
+- 必改 1 处: sec:stress_concentration Fig.S1 描述澄清——share 非单调（38.8% @YSa=1.16 → 峰值 55.3% @1.55 → 52.8% @2.06），源数据 output/ysa_sensitivity.json 逐点核实
+- 无则加勉核查: 普适性表述已区分（L83/L152/L1288/L1367）；tab:aft_vs_anova/tab:risk 无 overfull
+
+【关键数字（定稿）】
+- 55.3% / 22.6% / 18.2% 方差份额；ΔAIC=+77.1（log-normal 胜出）；Shapiro-Wilk W=0.9616 p=0.056
+- 2.79 dex（10^2.79=616.6，安全系数 620）；安全系数 640→750→620 历次对齐
+- 10 figures / 6 tables；42CrMo4；700 N·m R=0；Rz=4/15/50μm；Waterloo SMDI dbase
+
+【待办（定稿动作）】
+1. 更新复现包 zip（gear_fatigue_uq_reproducibility_v5.2_jmst.zip → 内含 v5.2 需升级到 v5.4）
+2. git 提交 + push v5.4（仓库 chenzhilei-lab/Fatigue，当前 HEAD 1767743）
+3. wang2023 文献（机械强度 45(2):474-480，中文）需 CNKI 人工核实
+4. 用户跨机复现（另一台电脑跑 reproduce.sh）
+5. 肉眼检查 v5.4 pdf 约 1 小时
+6. 投稿当天重编译 cover letter（\today 日期）
+
+【修改脚本存档】
+- D:\Papers\六月\Fireball\_apply_reviewer_fixes.py（第一批 7 处）
+- D:\Papers\六月\Fireball\_apply_reviewer_fixes2.py（第二批 4 处，修正缩进锚点）
+- D:\Papers\六月\Fireball\_apply_reviewer2_fix.py（v5.4 Fig.S1 澄清）
+================================================================================
