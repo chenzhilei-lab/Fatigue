@@ -31,9 +31,9 @@
 - 10 figures / 6 tables；42CrMo4；700 N·m R=0；Rz=4/15/50μm；Waterloo SMDI dbase
 
 【待办（定稿动作）】
-1. 更新复现包 zip（gear_fatigue_uq_reproducibility_v5.2_jmst.zip → 内含 v5.2 需升级到 v5.4）
-2. git 提交 + push v5.4（仓库 chenzhilei-lab/Fatigue，当前 HEAD 1767743）
-3. wang2023 文献（机械强度 45(2):474-480，中文）需 CNKI 人工核实
+1. ✅ 更新复现包 zip → gear_fatigue_uq_reproducibility_v5.4_jmst.zip（另存新包，v5.2 保留）【2026-08-08 续作完成】
+2. ✅ git 提交 + push v5.4（commit 5470434，origin/master 已同步）【2026-08-08 续作完成】
+3. ✅ wang2023 文献（机械强度 45(2):474-480，中文）→ CNKI 已人工核实：《基于 42CrMo 齿轮的弯曲疲劳试验研究》王嘉军等，与 bibitem 逐项一致【2026-08-08 续作完成】
 4. 用户跨机复现（另一台电脑跑 reproduce.sh）
 5. 肉眼检查 v5.4 pdf 约 1 小时
 6. 投稿当天重编译 cover letter（\today 日期）
