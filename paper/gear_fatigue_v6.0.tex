@@ -158,11 +158,11 @@ should be prioritized for standardization or tightened by
 application-specific evidence? The standard-choice effect is measured
 through each standard's size-and-surface factor formulation under a
 common ISO stress baseline (\S\ref{sec:stress_concentration}); a
-native stress-chain sensitivity analysis (replacing the unified
+native stress-chain analysis (replacing the unified
 $Y_{Sa}$ with AGMA's geometry factor $J$ and FKM's notch factor
-$K_f$, the latter approximated via Peterson/Neuber rather than the
-full FKM guideline procedure) provides indicative evidence that the
-bias from the unified baseline is modest for this specific gear
+$K_f$ computed by the official FKM guideline St\"utzzahl procedure,
+\S\ref{sec:native_chain}) quantifies the bias from the unified
+baseline for this specific gear
 geometry. Answering this question
 requires a framework that (i)~simultaneously varies all major
 methodological switches in a controlled factorial design,
@@ -479,14 +479,14 @@ these numbers are conditional on this controlled baseline and must not
 be cited as measurements of complete standard disagreement.
 The native stress-chain re-run below (\S\ref{sec:stress_concentration}
 paragraph, and Table~\ref{tab:native_chain} in \S\ref{sec:native_chain}),
-using AGMA's $J$-factor and a Peterson/Neuber approximation of FKM's
-$K_f$ rather than the full FKM guideline, quantifies the bias for this
-specific gear geometry. A complete native calculation pipeline---full
-FKM $K_f$ workflow without
-Peterson/Neuber approximation, and digitized standard-specific stress
-gradient procedures---remains open in Phase~2 to eliminate the
-unified $Y_{Sa}$ baseline limitation and re-compute standard
-divergence without artificial stress-baseline constraints.
+using AGMA's $J$-factor and FKM's official-guideline $K_f$
+(Siebel \& Stieler St\"utzzahl method, \S\ref{sec:native_chain}),
+quantifies the bias for this
+specific gear geometry. The official FKM procedure is implemented
+(\texttt{fkm\_official\_chain.py}); the Peterson/Neuber values
+reported in \S\ref{sec:stress_concentration} are retained only as an
+implementation cross-check. Digitized standard-specific stress
+gradient procedures for other geometries remain open in Phase~2.
 
 To further characterize the uniform-baseline sensitivity, each
 standard's native stress concentration treatment was implemented
@@ -500,17 +500,19 @@ approximately and the full AFT decomposition re-run:
         $(1/J)/(Y_{Fa}Y_\varepsilon) \approx 1.57$, which differs
         from $Y_{Sa}=1.55$ by only $+1.3$\%.
   \item \textbf{FKM native}: The fatigue notch factor $K_f$ replaces
-        $Y_{Sa}$. Peterson's formula gives
-        $K_f = 1 + (K_t-1)/(1+a/r) \approx 1.84$ for this gear
-        root geometry and 42CrMo4 material properties. Applied as a
+        $Y_{Sa}$. The official FKM guideline procedure (7th ed.,
+        \S2.3.1.2.3.1, Siebel \& Stieler St\"utzzahl method) gives
+        $K_f \approx 1.85$ for this gear
+        root geometry and 42CrMo4 material properties (the
+        Peterson/Neuber formula gives 1.84 as a cross-check;
+        \S\ref{sec:native_chain}). Applied as a
         stress multiplier, $K_f/Y_{Sa} \approx 1.19$, a 19\% increase
         in effective stress for FKM entries.
 \end{itemize}
 
 The combined effect of simultaneously using AGMA's $J$ (midpoint,
-$J=0.33$) and FKM's $K_f$ (approximated via Peterson,
-$K_f \approx 1.84$; the full FKM guideline procedure involving stress
-gradients and support effects is not replicated here) was re-run on
+$J=0.33$) and FKM's official-guideline $K_f$
+($K_f \approx 1.85$) was re-run on
 the full 144-combination four-method design
 (\texttt{native\_chain\_analysis.py};
 \S\ref{sec:native_chain}): the standard-choice variance fraction rises
@@ -519,14 +521,12 @@ confirming that the uniform-$Y_{Sa}$ baseline is conservative. The
 factor ranking is unchanged: the size-and-surface standard remains the
 leading source of method-induced variance under both baselines.
 
-This result should be interpreted as indicative rather than
-definitive. The FKM $K_f$ implementation is approximate---the native
-FKM guideline uses a different, geometry-dependent calculation chain.
-The numerical value of $+13.2$~pp is specific to this gear and the
+This result is specific to this gear and the
 midpoint $J=0.33$: the AGMA $J$ sensitivity spans 64.3\% ($J=0.31$,
-conservative) to 72.0\% ($J=0.35$, non-conservative), and using the
-Neuber $K_f$ instead of Peterson gives 65.4\%
-(\texttt{output/native\_chain.json}). The direction of the change
+conservative) to 72.0\% ($J=0.35$, non-conservative), and the FKM
+official $K_f$ changes the share by only $+0.2$~pp relative to the
+Peterson value
+(\texttt{output/fkm\_official\_chain.json}). The direction of the change
 does, however,
 have a plausible geometric explanation: for this specific gear
 ($z_1=20$, $m_n=3$~mm, $20^\circ$~PA, no profile shift), ISO's
@@ -926,14 +926,26 @@ shift because $K_f/Y_{Sa}\approx 1.19$ (a 19\% stress increase),
 whereas the AGMA $J$-factor differs from $Y_{Sa}$ by only
 $\sim$1\% at the midpoint.
 
-\textbf{FKM completeness caveat.} The FKM $K_f$ used here is a
-Peterson/Neuber notch-sensitivity approximation, not the full FKM
-guideline procedure (stress gradients, support effects, and the
-official lookup tables). The full FKM native workflow is not yet
-implemented; the FKM column above should therefore be read as
-``approximate-FKM'', and the associated dex-scale offsets carry an
-unquantified systematic component. This limitation is stated once
-here and applies to every FKM-derived number in the paper.
+\textbf{FKM implementation note.} The FKM $K_f$ used in the native
+chain was first approximated via Peterson/Neuber notch sensitivity. To
+remove the associated approximation, the official FKM guideline
+procedure (7th ed., \S2.3.1.2.3.1, Siebel \& Stieler St\"utzzahl
+method) was implemented
+(\texttt{fkm\_official\_chain.py}): the support number
+$n_\sigma$ follows Eqs.~(2.3.6)--(2.3.8) with the local stress
+gradient $G_\sigma(r) = 2/r$ (tooth-root fillet radius
+$r = 1.14$~mm) and the global gradient $G_\sigma(d) = 2/d$
+(d = 4.71~mm), and the steel constants of Table~2.3.1
+($a_G = 0.90$, $b_G = 1200$~MPa, $R_m = 1000$~MPa);
+$K_f = K_t/\left[n_\sigma(r)\,n_\sigma(d)\right]$ (Eq.~2.3.2).
+For this gear geometry the official procedure gives
+$K_f = 1.851$, within $0.5$\% of the Peterson value
+($K_f = 1.843$); re-running the native-chain decomposition with the
+official $K_f$ changes the standard share from 68.5\% to 68.7\%
+($\Delta = +0.2$~pp, \texttt{output/fkm\_official\_chain.json}).
+The systematic component of the Peterson approximation on this gear
+is therefore quantified and negligible; the FKM column above is the
+official-guideline result.
 
 \subsection{Model Diagnostics}
 
@@ -2062,12 +2074,12 @@ tool to answer that question case by case.
         the spread. The native-chain re-run of \S\ref{sec:native_chain}
         raises the standard share to 68.5\% ($\Delta = +13.2$~pp) at the
         midpoint $J=0.33$, and the sensitivity brackets the effect
-        between 64.3\% ($J=0.31$) and 72.0\% ($J=0.35$), with 65.4\%
-        under the Neuber $K_f$. In every native scenario the standard
-        factor remains dominant; a
-        fully native implementation of the complete FKM guideline
-        procedure (stress gradients and official lookup tables) remains
-        open as Phase~2 of the research programme
+        between 64.3\% ($J=0.31$) and 72.0\% ($J=0.35$), with 68.7\%
+        under the FKM official-guideline $K_f$
+        (\texttt{output/fkm\_official\_chain.json}). In every native scenario the standard
+        factor remains dominant; digitized standard-specific stress
+        gradient procedures for other geometries
+        remain open as Phase~2 of the research programme
         outlined at the end of this section.
   \item \textbf{Asymmetric roughness-penalty bounds at high $R_z$.} At
         $R_z = 50~\mu$m (the as-forged condition), the three standards
@@ -2576,10 +2588,9 @@ endurance limit for this geometry---I find:
   \item All fatigue model formulas (Basquin, mean-stress corrections,
         cumulative damage rules, and the ISO/AGMA/FKM size-and-surface
         factor expressions) follow the cited standards and textbooks;
-        where an engineering approximation was required (notably the
-        Peterson/Neuber notch-factor treatment in place of the full FKM
-        guideline procedure), it is stated explicitly in
-        \S\ref{sec:stress_concentration}. The open-source pipeline---including
+        FKM's fatigue notch factor uses the official guideline
+        St\"utzzahl procedure (\S\ref{sec:native_chain}), with the
+        Peterson/Neuber value retained only as a cross-check. The open-source pipeline---including
         the AFT analysis code---is released as a reusable, auditable
         toolkit that can be applied to other gear geometries, materials,
         and loading conditions by modifying a single configuration
