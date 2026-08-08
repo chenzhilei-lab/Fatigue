@@ -1,0 +1,57 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[UTF8]{ctex} % 如需中文，保留；纯英文可删除此行
+\begin{document}
+
+\section{FKM-Richtlinie 7. Auflage Tabelle 2.3.5 局部相对应力梯度公式}
+\subsection{1 缺口弯曲工况 $G_\sigma$ 解析公式（轴/板材圆角缺口）}
+FKM规范表2.3.5对应的局部相对应力梯度计算公式：
+\begin{equation}
+G_{\sigma}(r) = \frac{2.3}{r} \cdot \bigl(1+\varphi\bigr)
+\end{equation}
+\textbf{符号说明：}
+\begin{itemize}
+    \item $G_{\sigma}(r)$：局部相对正应力梯度，单位 $\mathrm{mm}^{-1}$；
+    \item $r$：缺口圆角半径（齿根圆角/轴过渡圆角），单位 $\mathrm{mm}$；
+    \item $\varphi$：几何修正系数，由缺口相对深度 $t/r$、截面宽窄比 $D/d$（或 $B/b$）查表2.3.5得到。
+\end{equation}
+
+\subsection{2 全局截面应力梯度（光滑圆轴，无缺口）}
+光滑圆轴纯弯曲/扭转全局应力梯度：
+\begin{equation}
+G_{\sigma}(d) = G_{\tau}(d) = \frac{2}{d}
+\end{equation}
+$d$ 为圆轴直径，仅适用于无光滑轴，\textbf{禁止用于齿轮齿根、带缺口构件}。
+
+\subsection{3 支撑系数 $n_\sigma$ 整套计算公式（配套Tabelle 2.3.1）}
+根据相对应力梯度 $G_\sigma$ 分三段计算Siebel \& Stieler支撑系数：
+\begin{align*}
+&G_\sigma \le 0.1\ \mathrm{mm}^{-1}: \\
+n_{\sigma} &= 1 + G_{\sigma}\cdot \mathrm{mm} \cdot 10^{-\left(a_G - 0.5 + \dfrac{R_m}{b_G\cdot \mathrm{MPa}}\right)} \\[6pt]
+&0.1 < G_\sigma \le 1\ \mathrm{mm}^{-1}: \\
+n_{\sigma} &= 1 + \sqrt{G_{\sigma}\cdot \mathrm{mm}} \cdot 10^{-\left(a_G + \dfrac{R_m}{b_G\cdot \mathrm{MPa}}\right)} \\[6pt]
+&G_\sigma > 1\ \mathrm{mm}^{-1}: \\
+n_{\sigma} &= 1 + \sqrt[4]{G_{\sigma}\cdot \mathrm{mm}} \cdot 10^{-\left(a_G + \dfrac{R_m}{b_G\cdot \mathrm{MPa}}\right)}
+\end{align*}
+若计算得到 $n_\sigma < 1$，规范强制取 $n_\sigma=1$。
+
+\subsubsection{Tabelle 2.3.1 材料常数 $a_G, b_G$}
+\begin{center}
+\begin{tabular}{lcc}
+材料组别 & $a_G$ & $b_G\ (\mathrm{MPa})$ \\
+\hline
+Stahl 钢材 & 0.90 & 1200 \\
+Stahlguss GS 铸钢 & 0.80 & 800 \\
+GJS 球墨铸铁 & 0.75 & 400 \\
+GJM 可锻铸铁 & 0.70 & 400 \\
+GJL 灰铸铁 & 0.65 & 400 \\
+铝锻/铝铸件 & 0.90 & 400 \\
+\end{tabular}
+\end{center}
+
+\subsection{4 工程区分说明（齿轮齿根适用）}
+齿轮齿根属于带圆角缺口构件，\textbf{必须使用式(1) $G_{\sigma}=2.3/r\cdot(1+\varphi)$，不可使用光滑圆轴式(2) $G_\sigma=2/d$}。
+已知齿根圆角 $r=1.14\ \mathrm{mm}$，代入前需查表获取几何系数 $\varphi$。
+
+\end{document}

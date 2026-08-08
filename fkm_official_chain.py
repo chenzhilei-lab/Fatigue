@@ -37,21 +37,43 @@ from gear_params import SN_CURVES, GEAR, MATERIAL, LOAD
 # 1. FKM official K_f (Stuetzahl method)
 # ============================================================
 def fkm_kf_official():
-    """K_f via FKM 7th ed. §2.3.1.2.3.1 (Siebel & Stieler)."""
+    """K_f via FKM 7th ed. §2.3.1.2.3.1 (Siebel & Stieler).
+
+    Tooth-root bending is a NOTCHED flat-strip case (NOT a plain round
+    shaft), so the local stress gradient uses the Table 2.3.5 notch
+    formula G_sigma(r) = 2.3/r * (1 + phi), with the geometric factor
+    phi read from Table 2.3.5 as a function of t/r and B/b. The plain
+    round-shaft formula G_sigma = 2/d must NOT be used for the tooth
+    root.
+    """
     aG = 0.90        # Table 2.3.1, steel
     bG = 1200.0      # Table 2.3.1, steel (MPa)
     Rm = MATERIAL["uts"]  # MPa, nominal tensile strength
     mn = GEAR["module_mn"]
-    r_root = GEAR["tip_radius"] * mn        # tooth-root fillet radius
-    t = np.pi * mn / 2.0                    # tooth thickness at root section
+    r_root = GEAR["tip_radius"] * mn        # tooth-root fillet radius (Kerbradius)
 
-    # shape factor K_t (same geometric estimate as the Peterson chain;
-    # FKM has no dedicated gear-tooth entry -- treated as a general notch)
-    K_t = 1.0 + 0.5 * np.sqrt(t / max(r_root, 0.1)) * (t / (2.25 * mn)) ** 0.3
+    # Tooth-root notch geometry (flat-strip model per Table 2.3.5 note)
+    B = np.pi * mn / 2.0                    # root-section width (Grundbreite)
+    hf = 1.25 * mn                          # dedendum height (notch depth t)
+    t = hf                                  # notch depth (Kerbtiefe)
+    b = B - t                               # remaining width (Restbreite)
+    tr_ratio = t / r_root                   # t/r
+    Bb_ratio = B / b                        # B/b
 
-    # stress gradients
-    G_local = 2.0 / max(r_root, 1e-3)       # local (bending notch), Table 2.3.5
-    G_global = 2.0 / max(t, 1e-3)           # global (bending), Eq. 2.3.17
+    # phi from Table 2.3.5 (linear interpolation between tabulated points)
+    # Tabulated: (t/r, B/b, phi): (1.0,1.3,0.08) (1.0,4.9,0.19)
+    #                              (3.3,1.3,0.21) (3.3,4.9,0.44)
+    table = [
+        (1.0, 1.3, 0.08), (1.0, 4.9, 0.19),
+        (3.3, 1.3, 0.21), (3.3, 4.9, 0.44),
+    ]
+    phi = _interp_phi(tr_ratio, Bb_ratio, table)
+
+    # shape factor K_t (same geometric estimate as the Peterson chain)
+    K_t = 1.0 + 0.5 * np.sqrt(B / max(r_root, 0.1)) * (B / (2.25 * mn)) ** 0.3
+
+    # local stress gradient: Table 2.3.5 notch formula (bending)
+    G_local = 2.3 / max(r_root, 1e-3) * (1.0 + phi)
 
     def n_sigma(G):
         exp_term = 10.0 ** (-(aG + Rm / bG))
@@ -62,20 +84,55 @@ def fkm_kf_official():
         return 1.0 + G ** 0.25 * exp_term
 
     ns_local = n_sigma(G_local)
-    ns_global = n_sigma(G_global)
-    Kf = K_t / (ns_local * ns_global)
+    Kf = K_t / ns_local
     return {
         "K_t": round(float(K_t), 4),
         "r_root_mm": round(float(r_root), 3),
-        "t_mm": round(float(t), 3),
+        "notch_depth_t_mm": round(float(t), 3),
+        "section_width_B_mm": round(float(B), 3),
+        "t_over_r": round(float(tr_ratio), 3),
+        "B_over_b": round(float(Bb_ratio), 3),
+        "phi_table235": round(float(phi), 3),
         "G_sigma_local": round(float(G_local), 4),
-        "G_sigma_global": round(float(G_global), 4),
         "n_sigma_local": round(float(ns_local), 6),
-        "n_sigma_global": round(float(ns_global), 6),
         "K_f_official": round(float(Kf), 4),
         "aG": aG, "bG": bG, "Rm_MPa": float(Rm),
-        "formula_ref": "FKM 7th ed. Eq. 2.3.2/2.3.6-2.3.8/2.3.17, Table 2.3.1 & 2.3.5",
+        "formula_ref": "FKM 7th ed. Eq. 2.3.2/2.3.6-2.3.8; Table 2.3.1 & 2.3.5 "
+                       "(G_sigma = 2.3/r*(1+phi), flat-strip notch bending)",
     }
+
+
+def _interp_phi(tr, Bb, table):
+    """Bilinear interpolation of phi over the (t/r, B/b) grid."""
+    trs = sorted({p[0] for p in table})
+    bbs = sorted({p[1] for p in table})
+    grid = {(p[0], p[1]): p[2] for p in table}
+
+    # clamp to table bounds
+    tr = min(max(tr, min(trs)), max(trs))
+    Bb = min(max(Bb, min(bbs)), max(bbs))
+
+    # find bracketing rows/cols
+    tr_hi = min([x for x in trs if x >= tr]) if tr <= max(trs) else max(trs)
+    tr_lo = max([x for x in trs if x <= tr]) if tr >= min(trs) else min(trs)
+    Bb_hi = min([x for x in bbs if x >= Bb]) if Bb <= max(bbs) else max(bbs)
+    Bb_lo = max([x for x in bbs if x <= Bb]) if Bb >= min(bbs) else min(bbs)
+
+    if tr_lo == tr_hi and Bb_lo == Bb_hi:
+        return float(grid[(tr_lo, Bb_lo)])
+    if tr_lo == tr_hi:
+        w = (Bb - Bb_lo) / (Bb_hi - Bb_lo) if Bb_hi != Bb_lo else 0.0
+        return float(grid[(tr_lo, Bb_lo)] + w * (grid[(tr_lo, Bb_hi)] - grid[(tr_lo, Bb_lo)]))
+    if Bb_lo == Bb_hi:
+        w = (tr - tr_lo) / (tr_hi - tr_lo) if tr_hi != tr_lo else 0.0
+        return float(grid[(tr_lo, Bb_lo)] + w * (grid[(tr_hi, Bb_lo)] - grid[(tr_lo, Bb_lo)]))
+    # bilinear
+    w_tr = (tr - tr_lo) / (tr_hi - tr_lo)
+    w_Bb = (Bb - Bb_lo) / (Bb_hi - Bb_lo)
+    v00 = grid[(tr_lo, Bb_lo)]; v01 = grid[(tr_lo, Bb_hi)]
+    v10 = grid[(tr_hi, Bb_lo)]; v11 = grid[(tr_hi, Bb_hi)]
+    return float(v00 * (1 - w_tr) * (1 - w_Bb) + v01 * (1 - w_tr) * w_Bb
+                 + v10 * w_tr * (1 - w_Bb) + v11 * w_tr * w_Bb)
 
 
 # Peterson reference (existing v6.0 chain)
@@ -317,14 +374,16 @@ out = {
     "summary": (
         "FKM official K_f = %.4f vs Peterson K_f = %.4f (ratio %.3f). "
         "Native-chain standard share: Peterson %.1f%% (v6.0) vs official %.1f%%. "
-        "The official FKM Stuetzahl procedure gives a K_f within 1%% of the "
-        "Peterson approximation for this gear geometry (r=%.2f mm, t=%.2f mm, "
-        "Rm=%.0f MPa), so the v6.0 native-chain conclusions are unchanged."
+        "The official FKM Stuetzahl procedure (Table 2.3.5 notch gradient "
+        "G_sigma = 2.3/r*(1+phi), phi=%.2f at t/r=%.2f, B/b=%.2f) gives a K_f "
+        "within 1.5%% of the Peterson approximation for this gear geometry "
+        "(r=%.2f mm, Rm=%.0f MPa), so the v6.0 native-chain conclusions are unchanged."
         % (fkm_info["K_f_official"], Kf_pet,
            fkm_info["K_f_official"] / Kf_pet,
            res_peterson["variance_fractions"]["size_surface_standard"],
            res_official["variance_fractions"]["size_surface_standard"],
-           fkm_info["r_root_mm"], fkm_info["t_mm"], fkm_info["Rm_MPa"])
+           fkm_info["phi_table235"], fkm_info["t_over_r"], fkm_info["B_over_b"],
+           fkm_info["r_root_mm"], fkm_info["Rm_MPa"])
     ),
 }
 with open("output/fkm_official_chain.json", "w", encoding="utf-8") as f:

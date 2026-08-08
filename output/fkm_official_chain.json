@@ -3,22 +3,24 @@
   "fkm_official_parameters": {
     "K_t": 1.9127,
     "r_root_mm": 1.14,
-    "t_mm": 4.712,
-    "G_sigma_local": 1.7544,
-    "G_sigma_global": 0.4244,
-    "n_sigma_local": 1.021267,
-    "n_sigma_global": 1.012038,
-    "K_f_official": 1.8506,
+    "notch_depth_t_mm": 3.75,
+    "section_width_B_mm": 4.712,
+    "t_over_r": 3.289,
+    "B_over_b": 4.897,
+    "phi_table235": 0.439,
+    "G_sigma_local": 2.9025,
+    "n_sigma_local": 1.024119,
+    "K_f_official": 1.8676,
     "aG": 0.9,
     "bG": 1200.0,
     "Rm_MPa": 1000.0,
-    "formula_ref": "FKM 7th ed. Eq. 2.3.2/2.3.6-2.3.8/2.3.17, Table 2.3.1 & 2.3.5"
+    "formula_ref": "FKM 7th ed. Eq. 2.3.2/2.3.6-2.3.8; Table 2.3.1 & 2.3.5 (G_sigma = 2.3/r*(1+phi), flat-strip notch bending)"
   },
   "peterson_reference": {
     "K_t": 1.9127,
     "K_f": 1.8426
   },
-  "ratio_official_over_peterson": 1.0043,
+  "ratio_official_over_peterson": 1.0136,
   "baseline_uniform_ysa": {
     "n_total": 144,
     "n_censored": 84,
@@ -36,13 +38,13 @@
   "native_chain_fkm_official": {
     "n_total": 144,
     "n_censored": 84,
-    "sigma": 0.2312,
-    "logLik": -21.39,
+    "sigma": 0.2372,
+    "logLik": -23.44,
     "variance_fractions": {
       "mean_stress_method": 16.0,
-      "size_surface_standard": 68.7,
-      "rz_level": 12.0,
-      "sn_source": 2.3,
+      "size_surface_standard": 69.1,
+      "rz_level": 11.7,
+      "sn_source": 2.2,
       "damage_method": 0.1,
       "interaction": 0.8
     }
@@ -63,9 +65,9 @@
   },
   "std_share_comparison": {
     "baseline": 55.3,
-    "official": 68.7,
+    "official": 69.1,
     "peterson_v60": 68.5,
-    "delta_official_vs_peterson_pp": 0.2
+    "delta_official_vs_peterson_pp": 0.6
   },
-  "summary": "FKM official K_f = 1.8506 vs Peterson K_f = 1.8426 (ratio 1.004). Native-chain standard share: Peterson 68.5% (v6.0) vs official 68.7%. The official FKM Stuetzahl procedure gives a K_f within 1% of the Peterson approximation for this gear geometry (r=1.14 mm, t=4.71 mm, Rm=1000 MPa), so the v6.0 native-chain conclusions are unchanged."
+  "summary": "FKM official K_f = 1.8676 vs Peterson K_f = 1.8426 (ratio 1.014). Native-chain standard share: Peterson 68.5% (v6.0) vs official 69.1%. The official FKM Stuetzahl procedure (Table 2.3.5 notch gradient G_sigma = 2.3/r*(1+phi), phi=0.44 at t/r=3.29, B/b=4.90) gives a K_f within 1.5% of the Peterson approximation for this gear geometry (r=1.14 mm, Rm=1000 MPa), so the v6.0 native-chain conclusions are unchanged."
 }

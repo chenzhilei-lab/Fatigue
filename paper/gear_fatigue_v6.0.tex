@@ -502,7 +502,7 @@ approximately and the full AFT decomposition re-run:
   \item \textbf{FKM native}: The fatigue notch factor $K_f$ replaces
         $Y_{Sa}$. The official FKM guideline procedure (7th ed.,
         \S2.3.1.2.3.1, Siebel \& Stieler St\"utzzahl method) gives
-        $K_f \approx 1.85$ for this gear
+        $K_f \approx 1.87$ for this gear
         root geometry and 42CrMo4 material properties (the
         Peterson/Neuber formula gives 1.84 as a cross-check;
         \S\ref{sec:native_chain}). Applied as a
@@ -512,7 +512,7 @@ approximately and the full AFT decomposition re-run:
 
 The combined effect of simultaneously using AGMA's $J$ (midpoint,
 $J=0.33$) and FKM's official-guideline $K_f$
-($K_f \approx 1.85$) was re-run on
+($K_f \approx 1.87$) was re-run on
 the full 144-combination four-method design
 (\texttt{native\_chain\_analysis.py};
 \S\ref{sec:native_chain}): the standard-choice variance fraction rises
@@ -524,7 +524,7 @@ leading source of method-induced variance under both baselines.
 This result is specific to this gear and the
 midpoint $J=0.33$: the AGMA $J$ sensitivity spans 64.3\% ($J=0.31$,
 conservative) to 72.0\% ($J=0.35$, non-conservative), and the FKM
-official $K_f$ changes the share by only $+0.2$~pp relative to the
+official $K_f$ changes the share by only $+0.6$~pp relative to the
 Peterson value
 (\texttt{output/fkm\_official\_chain.json}). The direction of the change
 does, however,
@@ -933,16 +933,22 @@ procedure (7th ed., \S2.3.1.2.3.1, Siebel \& Stieler St\"utzzahl
 method) was implemented
 (\texttt{fkm\_official\_chain.py}): the support number
 $n_\sigma$ follows Eqs.~(2.3.6)--(2.3.8) with the local stress
-gradient $G_\sigma(r) = 2/r$ (tooth-root fillet radius
-$r = 1.14$~mm) and the global gradient $G_\sigma(d) = 2/d$
-(d = 4.71~mm), and the steel constants of Table~2.3.1
-($a_G = 0.90$, $b_G = 1200$~MPa, $R_m = 1000$~MPa);
-$K_f = K_t/\left[n_\sigma(r)\,n_\sigma(d)\right]$ (Eq.~2.3.2).
+gradient for a notched flat strip under bending
+(Table~2.3.5), $G_\sigma(r) = (2.3/r)(1+\varphi)$, where
+$r = 1.14$~mm is the tooth-root fillet radius and
+$\varphi = 0.44$ is the geometric factor read from Table~2.3.5 at
+$t/r = 3.3$ (notch depth $t = 3.75$~mm) and
+$B/b = 4.9$ (section width $B = 4.71$~mm, remaining width
+$b = 0.96$~mm); the steel constants of Table~2.3.1 are
+$a_G = 0.90$, $b_G = 1200$~MPa, $R_m = 1000$~MPa;
+$K_f = K_t/n_\sigma(r)$ (Eq.~2.3.2; the plain round-shaft global
+gradient $G_\sigma = 2/d$ is not applicable to the notched tooth
+root).
 For this gear geometry the official procedure gives
-$K_f = 1.851$, within $0.5$\% of the Peterson value
+$K_f = 1.868$, within $1.5$\% of the Peterson value
 ($K_f = 1.843$); re-running the native-chain decomposition with the
-official $K_f$ changes the standard share from 68.5\% to 68.7\%
-($\Delta = +0.2$~pp, \texttt{output/fkm\_official\_chain.json}).
+official $K_f$ changes the standard share from 68.5\% to 69.1\%
+($\Delta = +0.6$~pp, \texttt{output/fkm\_official\_chain.json}).
 The systematic component of the Peterson approximation on this gear
 is therefore quantified and negligible; the FKM column above is the
 official-guideline result.
@@ -2074,7 +2080,7 @@ tool to answer that question case by case.
         the spread. The native-chain re-run of \S\ref{sec:native_chain}
         raises the standard share to 68.5\% ($\Delta = +13.2$~pp) at the
         midpoint $J=0.33$, and the sensitivity brackets the effect
-        between 64.3\% ($J=0.31$) and 72.0\% ($J=0.35$), with 68.7\%
+        between 64.3\% ($J=0.31$) and 72.0\% ($J=0.35$), with 69.1\%
         under the FKM official-guideline $K_f$
         (\texttt{output/fkm\_official\_chain.json}). In every native scenario the standard
         factor remains dominant; digitized standard-specific stress

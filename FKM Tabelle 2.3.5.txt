@@ -1,0 +1,17 @@
+\subsection{FKM Tabelle 2.3.5 Geometriefaktor $\varphi$}
+Für gekerbte Rund- und Flachstäbe unter Biegung lautet die relative Spannungsgradientenformel:
+\begin{equation}
+G_{\sigma}(r)=\frac{2.3}{r}\cdot(1+\varphi)
+\end{equation}
+Dabei ist $r$ der Kerbradius, $\varphi$ der geometrische Korrekturfaktor abhängig von $t/r$ (Kerbtiefe/Kerbradius) und $B/b$ (Grundbreite/Restbreite) nach Tabelle 2.3.5:
+\begin{center}
+\begin{tabular}{ccc}
+$t/r$ & $B/b$ & $\varphi$ \\
+\hline
+1.0 & 1.3 & 0.08 \\
+1.0 & 4.9 & 0.19 \\
+3.3 & 1.3 & 0.21 \\
+3.3 & 4.9 & 0.44
+\end{tabular}
+\end{center}
+Für Zwischenwerte von $t/r$ und $B/b$ erfolgt lineare Interpolation. Zahnfußkerben entsprechen dem Flachstabmodell dieser Tabelle.
