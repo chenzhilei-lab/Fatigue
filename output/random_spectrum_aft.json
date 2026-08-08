@@ -1,0 +1,69 @@
+{
+  "description": "Random variable-amplitude spectrum (10 log-uniform levels, load-interaction sequence factor 1.15): full 144-combination AFT decomposition vs constant-amplitude reference.",
+  "spectrum": {
+    "n_levels": 10,
+    "torque_range_Nm": [
+      500.0,
+      900.0
+    ],
+    "levels": [
+      500.0,
+      533.7,
+      569.8,
+      608.2,
+      649.3,
+      693.1,
+      739.9,
+      789.8,
+      843.1,
+      900.0
+    ],
+    "weights": [
+      0.009,
+      0.0453,
+      0.0282,
+      0.0935,
+      0.5638,
+      0.0875,
+      0.0547,
+      0.042,
+      0.0188,
+      0.057
+    ],
+    "sequence_factor_high_low": 1.15,
+    "finite_life_combos": 132
+  },
+  "constant_amplitude_reference": {
+    "n_total": 144,
+    "n_censored": 84,
+    "sigma": 0.1745,
+    "logLik": 11.32,
+    "variance_fractions": {
+      "mean_stress_method": 18.2,
+      "size_surface_standard": 55.3,
+      "rz_level": 22.6,
+      "sn_source": 2.5,
+      "damage_method": 0.3,
+      "interaction": 1.2
+    }
+  },
+  "random_spectrum": {
+    "n_total": 144,
+    "n_censored": 12,
+    "sigma": 0.2678,
+    "logLik": -19.25,
+    "variance_fractions": {
+      "mean_stress_method": 32.8,
+      "size_surface_standard": 40.4,
+      "rz_level": 17.1,
+      "sn_source": 7.3,
+      "damage_method": 1.0,
+      "interaction": 1.3
+    }
+  },
+  "damage_rule_share_comparison": {
+    "constant_amplitude_pct": 0.3,
+    "random_spectrum_pct": 1.0
+  },
+  "summary": "Damage-rule variance share: constant amplitude 0.3% vs random spectrum 1.0%. Standard share: 55.3% vs 40.4%."
+}

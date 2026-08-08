@@ -1,0 +1,879 @@
+{
+  "n_combinations": {
+    "value": 144,
+    "note": "Total factorial combinations (5 factors x 2-4 levels)",
+    "source_script": "sweep_summary.json",
+    "source_input": "sweep_summary.json"
+  },
+  "n_runouts": {
+    "value": 84,
+    "note": "Run-out (censored) entries",
+    "source_script": "sweep_summary.json",
+    "source_input": "sweep_summary.json"
+  },
+  "n_valid": {
+    "value": 60,
+    "note": "Finite-life (observed) entries",
+    "source_script": "sweep_summary.json",
+    "source_input": "sweep_summary.json"
+  },
+  "n_low_cycle": {
+    "value": 9,
+    "note": "Low-cycle entries (<10^4)",
+    "source_script": "sweep_summary.json",
+    "source_input": "sweep_summary.json"
+  },
+  "min_log10_Nf": {
+    "value": 3.13,
+    "note": "Minimum log10(Nf)",
+    "source_script": "sweep_summary.json",
+    "source_input": "sweep_summary.json"
+  },
+  "max_log10_Nf": {
+    "value": 5.92,
+    "note": "Maximum log10(Nf)",
+    "source_script": "sweep_summary.json",
+    "source_input": "sweep_summary.json"
+  },
+  "spread_dex": {
+    "value": 2.79,
+    "note": "log10(Nf) spread (dex)",
+    "source_script": "sweep_summary.json",
+    "source_input": "sweep_summary.json"
+  },
+  "module_mn": {
+    "value": 3.0,
+    "note": "Normal module (mm)",
+    "source_script": "sweep_summary.json",
+    "source_input": "sweep_summary.json"
+  },
+  "teeth_pinion": {
+    "value": 20,
+    "note": "Pinion teeth z1",
+    "source_script": "sweep_summary.json",
+    "source_input": "sweep_summary.json"
+  },
+  "material": {
+    "value": "42CrMo4 / AISI 4140",
+    "note": "Material",
+    "source_script": "sweep_summary.json",
+    "source_input": "sweep_summary.json"
+  },
+  "torque_Nm": {
+    "value": 700,
+    "note": "Reference input torque (Nm)",
+    "source_script": "sweep_summary.json",
+    "source_input": "sweep_summary.json"
+  },
+  "mean_stress_method_var_pct": {
+    "value": 18.2,
+    "note": "mean_stress_method variance fraction (%)",
+    "source_script": "aft_anova.json",
+    "source_input": "aft_anova.json"
+  },
+  "mean_stress_method_dloglik": {
+    "value": 324.21,
+    "note": "mean_stress_method delta log-likelihood",
+    "source_script": "aft_anova.json",
+    "source_input": "aft_anova.json"
+  },
+  "size_surface_standard_var_pct": {
+    "value": 55.3,
+    "note": "size_surface_standard variance fraction (%)",
+    "source_script": "aft_anova.json",
+    "source_input": "aft_anova.json"
+  },
+  "size_surface_standard_dloglik": {
+    "value": 985.71,
+    "note": "size_surface_standard delta log-likelihood",
+    "source_script": "aft_anova.json",
+    "source_input": "aft_anova.json"
+  },
+  "rz_level_var_pct": {
+    "value": 22.6,
+    "note": "rz_level variance fraction (%)",
+    "source_script": "aft_anova.json",
+    "source_input": "aft_anova.json"
+  },
+  "rz_level_dloglik": {
+    "value": 403.31,
+    "note": "rz_level delta log-likelihood",
+    "source_script": "aft_anova.json",
+    "source_input": "aft_anova.json"
+  },
+  "sn_source_var_pct": {
+    "value": 2.5,
+    "note": "sn_source variance fraction (%)",
+    "source_script": "aft_anova.json",
+    "source_input": "aft_anova.json"
+  },
+  "sn_source_dloglik": {
+    "value": 43.9,
+    "note": "sn_source delta log-likelihood",
+    "source_script": "aft_anova.json",
+    "source_input": "aft_anova.json"
+  },
+  "damage_method_var_pct": {
+    "value": 0.3,
+    "note": "damage_method variance fraction (%)",
+    "source_script": "aft_anova.json",
+    "source_input": "aft_anova.json"
+  },
+  "damage_method_dloglik": {
+    "value": 5.88,
+    "note": "damage_method delta log-likelihood",
+    "source_script": "aft_anova.json",
+    "source_input": "aft_anova.json"
+  },
+  "size_surface_standard_x_rz_level_var_pct": {
+    "value": 1.2,
+    "note": "size_surface_standard x rz_level variance fraction (%)",
+    "source_script": "aft_anova.json",
+    "source_input": "aft_anova.json"
+  },
+  "size_surface_standard_x_rz_level_dloglik": {
+    "value": 20.54,
+    "note": "size_surface_standard x rz_level delta log-likelihood",
+    "source_script": "aft_anova.json",
+    "source_input": "aft_anova.json"
+  },
+  "n_censored": {
+    "value": 84,
+    "note": "Censored (run-out) count in AFT",
+    "source_script": "aft_anova.json",
+    "source_input": "aft_anova.json"
+  },
+  "n_observed": {
+    "value": 60,
+    "note": "Observed (finite) count in AFT",
+    "source_script": "aft_anova.json",
+    "source_input": "aft_anova.json"
+  },
+  "sigma_aft": {
+    "value": 0.1745,
+    "note": "AFT log-normal sigma",
+    "source_script": "aft_anova.json",
+    "source_input": "aft_anova.json"
+  },
+  "logLik_full": {
+    "value": 11.32,
+    "note": "Full-model log-likelihood",
+    "source_script": "aft_anova.json",
+    "source_input": "aft_anova.json"
+  },
+  "bootstrap_n": {
+    "value": 2000,
+    "note": "Bootstrap draws",
+    "source_script": "aft_anova.json",
+    "source_input": "aft_anova.json"
+  },
+  "bootstrap_seed": {
+    "value": 42,
+    "note": "Bootstrap RNG seed",
+    "source_script": "aft_anova.json",
+    "source_input": "aft_anova.json"
+  },
+  "mean_stress_method_boot_mean": {
+    "value": 18.19,
+    "note": "mean_stress_method bootstrap mean (%)",
+    "source_script": "aft_anova.json",
+    "source_input": "aft_anova.json"
+  },
+  "mean_stress_method_boot_sn": {
+    "value": 5.0,
+    "note": "mean_stress_method bootstrap S/N ratio",
+    "source_script": "aft_anova.json",
+    "source_input": "aft_anova.json"
+  },
+  "size_surface_standard_boot_mean": {
+    "value": 55.65,
+    "note": "size_surface_standard bootstrap mean (%)",
+    "source_script": "aft_anova.json",
+    "source_input": "aft_anova.json"
+  },
+  "size_surface_standard_boot_sn": {
+    "value": 15.0,
+    "note": "size_surface_standard bootstrap S/N ratio",
+    "source_script": "aft_anova.json",
+    "source_input": "aft_anova.json"
+  },
+  "rz_level_boot_mean": {
+    "value": 22.3,
+    "note": "rz_level bootstrap mean (%)",
+    "source_script": "aft_anova.json",
+    "source_input": "aft_anova.json"
+  },
+  "rz_level_boot_sn": {
+    "value": 8.0,
+    "note": "rz_level bootstrap S/N ratio",
+    "source_script": "aft_anova.json",
+    "source_input": "aft_anova.json"
+  },
+  "sn_source_boot_mean": {
+    "value": 2.39,
+    "note": "sn_source bootstrap mean (%)",
+    "source_script": "aft_anova.json",
+    "source_input": "aft_anova.json"
+  },
+  "sn_source_boot_sn": {
+    "value": 4.0,
+    "note": "sn_source bootstrap S/N ratio",
+    "source_script": "aft_anova.json",
+    "source_input": "aft_anova.json"
+  },
+  "damage_method_boot_mean": {
+    "value": 0.35,
+    "note": "damage_method bootstrap mean (%)",
+    "source_script": "aft_anova.json",
+    "source_input": "aft_anova.json"
+  },
+  "damage_method_boot_sn": {
+    "value": 2.0,
+    "note": "damage_method bootstrap S/N ratio",
+    "source_script": "aft_anova.json",
+    "source_input": "aft_anova.json"
+  },
+  "size_surface_standard_x_rz_level_boot_mean": {
+    "value": 1.12,
+    "note": "size_surface_standard x rz_level bootstrap mean (%)",
+    "source_script": "aft_anova.json",
+    "source_input": "aft_anova.json"
+  },
+  "size_surface_standard_x_rz_level_boot_sn": {
+    "value": 4.0,
+    "note": "size_surface_standard x rz_level bootstrap S/N ratio",
+    "source_script": "aft_anova.json",
+    "source_input": "aft_anova.json"
+  },
+  "shapiro_W": {
+    "value": 0.96,
+    "note": "Shapiro-Wilk W (observed residuals)",
+    "source_script": "aft_diagnostics.json",
+    "source_input": "aft_diagnostics.json"
+  },
+  "shapiro_p": {
+    "value": 0.056,
+    "note": "Shapiro-Wilk p-value",
+    "source_script": "aft_diagnostics.json",
+    "source_input": "aft_diagnostics.json"
+  },
+  "qq_R2": {
+    "value": 0.97,
+    "note": "QQ-plot R^2",
+    "source_script": "aft_diagnostics.json",
+    "source_input": "aft_diagnostics.json"
+  },
+  "cox_snell_mean": {
+    "value": 0.4467,
+    "note": "Cox-Snell residual mean",
+    "source_script": "aft_diagnostics.json",
+    "source_input": "aft_diagnostics.json"
+  },
+  "cox_snell_KS": {
+    "value": 0.51,
+    "note": "Cox-Snell KS vs Exp(1)",
+    "source_script": "aft_diagnostics.json",
+    "source_input": "aft_diagnostics.json"
+  },
+  "martingale_mean": {
+    "value": -0.03,
+    "note": "Martingale residual mean",
+    "source_script": "aft_diagnostics.json",
+    "source_input": "aft_diagnostics.json"
+  },
+  "martingale_range": {
+    "value": [
+      -2.15,
+      0.99
+    ],
+    "note": "Martingale residual range",
+    "source_script": "aft_diagnostics.json",
+    "source_input": "aft_diagnostics.json"
+  },
+  "levene_mean_stress_method_p": {
+    "value": 0.6273,
+    "note": "Levene p (mean_stress_method)",
+    "source_script": "aft_diagnostics.json",
+    "source_input": "aft_diagnostics.json"
+  },
+  "levene_size_surface_standard_p": {
+    "value": 0.226,
+    "note": "Levene p (size_surface_standard)",
+    "source_script": "aft_diagnostics.json",
+    "source_input": "aft_diagnostics.json"
+  },
+  "levene_rz_level_p": {
+    "value": 0.0795,
+    "note": "Levene p (rz_level)",
+    "source_script": "aft_diagnostics.json",
+    "source_input": "aft_diagnostics.json"
+  },
+  "levene_sn_source_p": {
+    "value": 0.5394,
+    "note": "Levene p (sn_source)",
+    "source_script": "aft_diagnostics.json",
+    "source_input": "aft_diagnostics.json"
+  },
+  "levene_damage_method_p": {
+    "value": 1.0,
+    "note": "Levene p (damage_method)",
+    "source_script": "aft_diagnostics.json",
+    "source_input": "aft_diagnostics.json"
+  },
+  "weibull_deltaAIC": {
+    "value": 77.1,
+    "note": "Weibull-AFT vs log-normal delta AIC",
+    "source_script": "weibull_aft.json",
+    "source_input": "weibull_aft.json"
+  },
+  "lognormal_AIC": {
+    "value": 12.2,
+    "note": "Log-normal AFT AIC",
+    "source_script": "multi_aft_comparison.json",
+    "source_input": "multi_aft_comparison.json"
+  },
+  "loglogistic_AIC": {
+    "value": 8.1,
+    "note": "Log-logistic AFT AIC",
+    "source_script": "multi_aft_comparison.json",
+    "source_input": "multi_aft_comparison.json"
+  },
+  "gamma_AIC": {
+    "value": 1022.1,
+    "note": "Gamma AFT AIC",
+    "source_script": "multi_aft_comparison.json",
+    "source_input": "multi_aft_comparison.json"
+  },
+  "sobol_delta_mean_stress_method": {
+    "value": -15.6,
+    "note": "Sobol' S1 minus AFT (pp): mean_stress_method",
+    "source_script": "sobol_vs_aft.json",
+    "source_input": "sobol_vs_aft.json"
+  },
+  "sobol_delta_size_surface_standard": {
+    "value": -26.6,
+    "note": "Sobol' S1 minus AFT (pp): size_surface_standard",
+    "source_script": "sobol_vs_aft.json",
+    "source_input": "sobol_vs_aft.json"
+  },
+  "sobol_delta_rz_level": {
+    "value": -7.6,
+    "note": "Sobol' S1 minus AFT (pp): rz_level",
+    "source_script": "sobol_vs_aft.json",
+    "source_input": "sobol_vs_aft.json"
+  },
+  "sobol_delta_sn_source": {
+    "value": 0.4,
+    "note": "Sobol' S1 minus AFT (pp): sn_source",
+    "source_script": "sobol_vs_aft.json",
+    "source_input": "sobol_vs_aft.json"
+  },
+  "sobol_delta_damage_method": {
+    "value": 0.6,
+    "note": "Sobol' S1 minus AFT (pp): damage_method",
+    "source_script": "sobol_vs_aft.json",
+    "source_input": "sobol_vs_aft.json"
+  },
+  "ysa_baseline_std_pct": {
+    "value": 55.3,
+    "note": "Standard variance at baseline Y_Sa=1.55 (%)",
+    "source_script": "ysa_sensitivity.json",
+    "source_input": "ysa_sensitivity.json"
+  },
+  "ysa_max_dev_pp": {
+    "value": 1.1,
+    "note": "Max |deviation| of standard share over 0.95-1.15x perturbation (pp)",
+    "source_script": "ysa_sensitivity.json",
+    "source_input": "ysa_sensitivity.json"
+  },
+  "native_baseline_std_pct": {
+    "value": 52.1,
+    "note": "Standard share, 108-combo subset, uniform Y_Sa (%)",
+    "source_script": "native_stress_sensitivity.json",
+    "source_input": "native_stress_sensitivity.json"
+  },
+  "native_combined_std_pct": {
+    "value": 64.4,
+    "note": "Standard share with native J/Kf (%)",
+    "source_script": "native_stress_sensitivity.json",
+    "source_input": "native_stress_sensitivity.json"
+  },
+  "native_delta_pp": {
+    "value": 12.3,
+    "note": "Native minus baseline standard share (pp)",
+    "source_script": "native_stress_sensitivity.json",
+    "source_input": "native_stress_sensitivity.json"
+  },
+  "kt_gear": {
+    "value": 1.91,
+    "note": "Gear root stress concentration Kt",
+    "source_script": "native_stress_sensitivity.json",
+    "source_input": "native_stress_sensitivity.json"
+  },
+  "kf_peterson": {
+    "value": 1.84,
+    "note": "FKM notch factor Kf (Peterson)",
+    "source_script": "native_stress_sensitivity.json",
+    "source_input": "native_stress_sensitivity.json"
+  },
+  "kf_neuber": {
+    "value": 1.75,
+    "note": "FKM notch factor Kf (Neuber)",
+    "source_script": "native_stress_sensitivity.json",
+    "source_input": "native_stress_sensitivity.json"
+  },
+  "agma_J_midpoint": {
+    "value": 0.33,
+    "note": "AGMA geometry factor J (midpoint)",
+    "source_script": "native_stress_sensitivity.json",
+    "source_input": "native_stress_sensitivity.json"
+  },
+  "nbp_mean_bias_pp": {
+    "value": -7.3,
+    "note": "Native-chain mean bias of standard share (pp)",
+    "source_script": "native_bias_propagation.json",
+    "source_input": "native_bias_propagation.json"
+  },
+  "nbp_max_abs_bias_pp": {
+    "value": 27.7,
+    "note": "Native-chain max |bias| (pp)",
+    "source_script": "native_bias_propagation.json",
+    "source_input": "native_bias_propagation.json"
+  },
+  "nbp_native_mean_std": {
+    "value": 48.0,
+    "note": "Native-chain mean standard share (%)",
+    "source_script": "native_bias_propagation.json",
+    "source_input": "native_bias_propagation.json"
+  },
+  "t500_finite": {
+    "value": 4,
+    "note": "Finite-life entries at 500 Nm",
+    "source_script": "multi_torque_aft.json",
+    "source_input": "multi_torque_aft.json"
+  },
+  "t500_censored": {
+    "value": 140,
+    "note": "Censored entries at 500 Nm",
+    "source_script": "multi_torque_aft.json",
+    "source_input": "multi_torque_aft.json"
+  },
+  "t600_finite": {
+    "value": 16,
+    "note": "Finite-life entries at 600 Nm",
+    "source_script": "multi_torque_aft.json",
+    "source_input": "multi_torque_aft.json"
+  },
+  "t600_censored": {
+    "value": 128,
+    "note": "Censored entries at 600 Nm",
+    "source_script": "multi_torque_aft.json",
+    "source_input": "multi_torque_aft.json"
+  },
+  "t600_std_pct": {
+    "value": 40.1,
+    "note": "Standard share at 600 Nm (%)",
+    "source_script": "multi_torque_aft.json",
+    "source_input": "multi_torque_aft.json"
+  },
+  "t600_rz_pct": {
+    "value": 34.1,
+    "note": "Roughness share at 600 Nm (%)",
+    "source_script": "multi_torque_aft.json",
+    "source_input": "multi_torque_aft.json"
+  },
+  "t600_ms_pct": {
+    "value": 17.9,
+    "note": "Mean-stress share at 600 Nm (%)",
+    "source_script": "multi_torque_aft.json",
+    "source_input": "multi_torque_aft.json"
+  },
+  "mc_n_sims": {
+    "value": 500,
+    "note": "Monte Carlo simulations",
+    "source_script": "simulation_validation.json",
+    "source_input": "simulation_validation.json"
+  },
+  "mc_max_abs_bias_pp": {
+    "value": 3.4,
+    "note": "Max |bias| of recovered shares (pp)",
+    "source_script": "simulation_validation.json",
+    "source_input": "simulation_validation.json"
+  },
+  "mc_top3_recovery": {
+    "value": 98,
+    "note": "Top-3 rank recovery (%)",
+    "source_script": "simulation_validation.json",
+    "source_input": "simulation_validation.json"
+  },
+  "mc_R2": {
+    "value": 0.9933,
+    "note": "LR-vs-Sobol pooled R^2",
+    "source_script": "simulation_validation.json",
+    "source_input": "simulation_validation.json"
+  },
+  "mc_cov_min": {
+    "value": 92,
+    "note": "Bootstrap coverage minimum (%)",
+    "source_script": "simulation_validation.json",
+    "source_input": "simulation_validation.json"
+  },
+  "mc_cov_max": {
+    "value": 99,
+    "note": "Bootstrap coverage maximum (%)",
+    "source_script": "simulation_validation.json",
+    "source_input": "simulation_validation.json"
+  },
+  "mc_bias_58pct": {
+    "value": -7.01,
+    "note": "Dominant-factor bias at 58% censoring (pp)",
+    "source_script": "simulation_validation.json",
+    "source_input": "simulation_validation.json"
+  },
+  "tl_constant_spread": {
+    "value": 2.79,
+    "note": "Constant-amplitude spread (dex)",
+    "source_script": "two_level_variable_amplitude.json",
+    "source_input": "two_level_variable_amplitude.json"
+  },
+  "tl_block_spread": {
+    "value": 4.25,
+    "note": "Two-level block spread (dex)",
+    "source_script": "two_level_variable_amplitude.json",
+    "source_input": "two_level_variable_amplitude.json"
+  },
+  "tl_block_finite": {
+    "value": 106,
+    "note": "Finite entries under block loading",
+    "source_script": "two_level_variable_amplitude.json",
+    "source_input": "two_level_variable_amplitude.json"
+  },
+  "tl_block_runout": {
+    "value": 38,
+    "note": "Run-outs under block loading",
+    "source_script": "two_level_variable_amplitude.json",
+    "source_input": "two_level_variable_amplitude.json"
+  },
+  "tl_block_mean_stress_method_pct": {
+    "value": 25.33,
+    "note": "mean_stress_method share under block loading (%)",
+    "source_script": "two_level_variable_amplitude.json",
+    "source_input": "two_level_variable_amplitude.json"
+  },
+  "tl_block_size_surface_standard_pct": {
+    "value": 47.38,
+    "note": "size_surface_standard share under block loading (%)",
+    "source_script": "two_level_variable_amplitude.json",
+    "source_input": "two_level_variable_amplitude.json"
+  },
+  "tl_block_sn_source_pct": {
+    "value": 4.97,
+    "note": "sn_source share under block loading (%)",
+    "source_script": "two_level_variable_amplitude.json",
+    "source_input": "two_level_variable_amplitude.json"
+  },
+  "tl_block_damage_method_pct": {
+    "value": 0.28,
+    "note": "damage_method share under block loading (%)",
+    "source_script": "two_level_variable_amplitude.json",
+    "source_input": "two_level_variable_amplitude.json"
+  },
+  "tl_damage_diff": {
+    "value": 0.155,
+    "note": "Damage-rule pair |log10 diff|",
+    "source_script": "two_level_variable_amplitude.json",
+    "source_input": "two_level_variable_amplitude.json"
+  },
+  "sg_600_gap_pp": {
+    "value": 40.1,
+    "note": "Sobol-AFT gap at 600 Nm (pp)",
+    "source_script": "sobol_censoring_gradient.json",
+    "source_input": "sobol_censoring_gradient.json"
+  },
+  "sg_600_cens_pct": {
+    "value": 88.9,
+    "note": "Censoring at 600 Nm (%)",
+    "source_script": "sobol_censoring_gradient.json",
+    "source_input": "sobol_censoring_gradient.json"
+  },
+  "sg_650_gap_pp": {
+    "value": 34.0,
+    "note": "Sobol-AFT gap at 650 Nm (pp)",
+    "source_script": "sobol_censoring_gradient.json",
+    "source_input": "sobol_censoring_gradient.json"
+  },
+  "sg_650_cens_pct": {
+    "value": 76.4,
+    "note": "Censoring at 650 Nm (%)",
+    "source_script": "sobol_censoring_gradient.json",
+    "source_input": "sobol_censoring_gradient.json"
+  },
+  "sg_700_gap_pp": {
+    "value": 26.5,
+    "note": "Sobol-AFT gap at 700 Nm (pp)",
+    "source_script": "sobol_censoring_gradient.json",
+    "source_input": "sobol_censoring_gradient.json"
+  },
+  "sg_700_cens_pct": {
+    "value": 58.3,
+    "note": "Censoring at 700 Nm (%)",
+    "source_script": "sobol_censoring_gradient.json",
+    "source_input": "sobol_censoring_gradient.json"
+  },
+  "sg_750_gap_pp": {
+    "value": 12.1,
+    "note": "Sobol-AFT gap at 750 Nm (pp)",
+    "source_script": "sobol_censoring_gradient.json",
+    "source_input": "sobol_censoring_gradient.json"
+  },
+  "sg_750_cens_pct": {
+    "value": 41.7,
+    "note": "Censoring at 750 Nm (%)",
+    "source_script": "sobol_censoring_gradient.json",
+    "source_input": "sobol_censoring_gradient.json"
+  },
+  "sg_800_gap_pp": {
+    "value": -0.9,
+    "note": "Sobol-AFT gap at 800 Nm (pp)",
+    "source_script": "sobol_censoring_gradient.json",
+    "source_input": "sobol_censoring_gradient.json"
+  },
+  "sg_800_cens_pct": {
+    "value": 26.4,
+    "note": "Censoring at 800 Nm (%)",
+    "source_script": "sobol_censoring_gradient.json",
+    "source_input": "sobol_censoring_gradient.json"
+  },
+  "msn_baseline_sn_pct": {
+    "value": 2.46,
+    "note": "S-N source share, 2 Waterloo curves (%)",
+    "source_script": "multi_sn_sensitivity.json",
+    "source_input": "multi_sn_sensitivity.json"
+  },
+  "msn_extended_sn_pct": {
+    "value": 34.74,
+    "note": "S-N source share, 5 curves (%)",
+    "source_script": "multi_sn_sensitivity.json",
+    "source_input": "multi_sn_sensitivity.json"
+  },
+  "msn_change_pp": {
+    "value": 32.3,
+    "note": "S-N share change (pp)",
+    "source_script": "multi_sn_sensitivity.json",
+    "source_input": "multi_sn_sensitivity.json"
+  },
+  "msn_s68_strength": {
+    "value": 610.52,
+    "note": "Waterloo #68 fatigue strength at 1e6 (MPa)",
+    "source_script": "multi_sn_sensitivity.json",
+    "source_input": "multi_sn_sensitivity.json"
+  },
+  "msn_s66_strength": {
+    "value": 609.92,
+    "note": "Waterloo #66 fatigue strength at 1e6 (MPa)",
+    "source_script": "multi_sn_sensitivity.json",
+    "source_input": "multi_sn_sensitivity.json"
+  },
+  "msn_high_strength": {
+    "value": 747.0,
+    "note": "Synthetic high-strength 1e6 strength (MPa)",
+    "source_script": "multi_sn_sensitivity.json",
+    "source_input": "multi_sn_sensitivity.json"
+  },
+  "msn_classic500": {
+    "value": 594.9,
+    "note": "Synthetic classic-500 1e6 strength (MPa)",
+    "source_script": "multi_sn_sensitivity.json",
+    "source_input": "multi_sn_sensitivity.json"
+  },
+  "msn_classic560": {
+    "value": 518.0,
+    "note": "Synthetic classic-560 1e6 strength (MPa)",
+    "source_script": "multi_sn_sensitivity.json",
+    "source_input": "multi_sn_sensitivity.json"
+  },
+  "ka10_censored": {
+    "value": 84,
+    "note": "Censored entries at K_A=1.0",
+    "source_script": "ka_sensitivity.json",
+    "source_input": "ka_sensitivity.json"
+  },
+  "ka125_censored": {
+    "value": 20,
+    "note": "Censored entries at K_A=1.25",
+    "source_script": "ka_sensitivity.json",
+    "source_input": "ka_sensitivity.json"
+  },
+  "ka15_censored": {
+    "value": 4,
+    "note": "Censored entries at K_A=1.5",
+    "source_script": "ka_sensitivity.json",
+    "source_input": "ka_sensitivity.json"
+  },
+  "ka125_sn_pct": {
+    "value": 5.1,
+    "note": "S-N share at K_A=1.25 (%)",
+    "source_script": "ka_sensitivity.json",
+    "source_input": "ka_sensitivity.json"
+  },
+  "ka15_sn_pct": {
+    "value": 8.9,
+    "note": "S-N share at K_A=1.5 (%)",
+    "source_script": "ka_sensitivity.json",
+    "source_input": "ka_sensitivity.json"
+  },
+  "thr_1e6_cens_pct": {
+    "value": 58.3,
+    "note": "Censoring at 1e6 threshold (%)",
+    "source_script": "threshold_sensitivity.json",
+    "source_input": "threshold_sensitivity.json"
+  },
+  "thr_3e6_cens_pct": {
+    "value": 45.8,
+    "note": "Censoring at 3e6 threshold, Basquin-only (%)",
+    "source_script": "threshold_sensitivity.json",
+    "source_input": "threshold_sensitivity.json"
+  },
+  "thr_5e6_cens_pct": {
+    "value": 40.3,
+    "note": "Censoring at 5e6 threshold, Basquin-only (%)",
+    "source_script": "threshold_sensitivity.json",
+    "source_input": "threshold_sensitivity.json"
+  },
+  "thr_none_cens_pct": {
+    "value": 0.0,
+    "note": "Censoring with no threshold, Basquin-only (%)",
+    "source_script": "threshold_sensitivity.json",
+    "source_input": "threshold_sensitivity.json"
+  },
+  "wang_m": {
+    "value": 6,
+    "note": "Wang test gear module (mm)",
+    "source_script": "benchmark_wang2023.json",
+    "source_input": "benchmark_wang2023.json"
+  },
+  "wang_z": {
+    "value": 20,
+    "note": "Wang test gear teeth",
+    "source_script": "benchmark_wang2023.json",
+    "source_input": "benchmark_wang2023.json"
+  },
+  "wang_b": {
+    "value": 25,
+    "note": "Wang test gear face width (mm)",
+    "source_script": "benchmark_wang2023.json",
+    "source_input": "benchmark_wang2023.json"
+  },
+  "wang_stress_max": {
+    "value": 292.95,
+    "note": "Wang highest stress level (MPa)",
+    "source_script": "benchmark_wang2023.json",
+    "source_input": "benchmark_wang2023.json"
+  },
+  "wang_stress_min": {
+    "value": 150.74,
+    "note": "Wang lowest stress level (MPa)",
+    "source_script": "benchmark_wang2023.json",
+    "source_input": "benchmark_wang2023.json"
+  },
+  "wang_limit_max": {
+    "value": 167.23,
+    "note": "Wang fatigue limit upper (MPa)",
+    "source_script": "benchmark_wang2023.json",
+    "source_input": "benchmark_wang2023.json"
+  },
+  "wang_limit_min": {
+    "value": 144.1,
+    "note": "Wang fatigue limit lower (MPa)",
+    "source_script": "benchmark_wang2023.json",
+    "source_input": "benchmark_wang2023.json"
+  },
+  "wang_scatter_dex": {
+    "value": "0.4-0.6 (Tab. 3, levels I-IV)",
+    "note": "Wang reported life scatter (dex)",
+    "source_script": "benchmark_wang2023.json",
+    "source_input": "benchmark_wang2023.json"
+  },
+  "ulrich_P50_endurance": {
+    "value": 624.5,
+    "note": "Ulrich et al. 2025 P50 endurance limit, unnotched R=-1 staircase (MPa)",
+    "source_script": "paper/ref_papers/ulrich2025_42CrMo4_s10010-025-00818-x.pdf",
+    "source_input": ""
+  },
+  "ulrich_improvement_pct": {
+    "value": "26-51",
+    "note": "Ulrich 2025 strength improvement vs conventional QT (%)",
+    "source_script": "paper/ref_papers/ulrich2025_42CrMo4_s10010-025-00818-x.pdf",
+    "source_input": ""
+  },
+  "ulrich_uts_range": {
+    "value": "1322-1660",
+    "note": "Ulrich 2025 tempering-series UTS range (MPa)",
+    "source_script": "paper/ref_papers/ulrich2025_42CrMo4_s10010-025-00818-x.pdf",
+    "source_input": ""
+  },
+  "w68_sigma_f": {
+    "value": 1356.0,
+    "note": "Waterloo #68 Basquin sigma_f' (MPa)",
+    "source_script": "multi_sn_sensitivity.json + ref_papers/Iter_068.pdf",
+    "source_input": "multi_sn_sensitivity.json"
+  },
+  "w68_b": {
+    "value": -0.055,
+    "note": "Waterloo #68 Basquin exponent b",
+    "source_script": "multi_sn_sensitivity.json + ref_papers/Iter_068.pdf",
+    "source_input": "multi_sn_sensitivity.json"
+  },
+  "w66_sigma_f": {
+    "value": 1684.0,
+    "note": "Waterloo #66 Basquin sigma_f' (MPa)",
+    "source_script": "multi_sn_sensitivity.json + ref_papers/Iter_066.pdf",
+    "source_input": "multi_sn_sensitivity.json"
+  },
+  "w66_b": {
+    "value": -0.07,
+    "note": "Waterloo #66 Basquin exponent b",
+    "source_script": "multi_sn_sensitivity.json + ref_papers/Iter_066.pdf",
+    "source_input": "multi_sn_sensitivity.json"
+  },
+  "w68_uts": {
+    "value": 1355.7,
+    "note": "Waterloo #68 measured UTS (MPa)",
+    "source_script": "multi_sn_sensitivity.json + ref_papers/Iter_068.pdf",
+    "source_input": "multi_sn_sensitivity.json"
+  },
+  "w66_uts": {
+    "value": 1537.0,
+    "note": "Waterloo #66 measured UTS (MPa)",
+    "source_script": "multi_sn_sensitivity.json + ref_papers/Iter_066.pdf",
+    "source_input": "multi_sn_sensitivity.json"
+  },
+  "_meta": {
+    "generated_by": "generate_labels_v3.py",
+    "date": "2026-08-06",
+    "paper_version": "v4.8/v4.9",
+    "n_labels": 140,
+    "source_files": [
+      "aft_anova.json",
+      "aft_diagnostics.json",
+      "benchmark_wang2023.json",
+      "ka_sensitivity.json",
+      "multi_aft_comparison.json",
+      "multi_sn_sensitivity.json",
+      "multi_sn_sensitivity.json + ref_papers/Iter_066.pdf",
+      "multi_sn_sensitivity.json + ref_papers/Iter_068.pdf",
+      "multi_torque_aft.json",
+      "native_bias_propagation.json",
+      "native_stress_sensitivity.json",
+      "paper/ref_papers/ulrich2025_42CrMo4_s10010-025-00818-x.pdf",
+      "simulation_validation.json",
+      "sobol_censoring_gradient.json",
+      "sobol_vs_aft.json",
+      "sweep_summary.json",
+      "threshold_sensitivity.json",
+      "two_level_variable_amplitude.json",
+      "weibull_aft.json",
+      "ysa_sensitivity.json"
+    ]
+  }
+}

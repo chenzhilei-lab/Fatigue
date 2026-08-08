@@ -1,0 +1,59 @@
+{
+  "description": "Complete second-order interaction decomposition: full 144-combination AFT with all 10 pairwise interaction terms.",
+  "benchmark_main_plus_stdxrz": {
+    "terms": {
+      "mean_stress_method": 709.868910839709,
+      "size_surface_standard": 137.60537965910456,
+      "rz_level": 0.5010108889089366,
+      "sn_source": 94.77060441738764,
+      "damage_method": 13.201002450015306,
+      "size_surface_standardxrz_level": 48.48427526385797
+    },
+    "fractions": {
+      "mean_stress_method": 70.7,
+      "size_surface_standard": 13.7,
+      "rz_level": 0.0,
+      "sn_source": 9.4,
+      "damage_method": 1.3,
+      "size_surface_standardxrz_level": 4.8
+    }
+  },
+  "full_second_order": {
+    "terms": {
+      "mean_stress_method": 9278.50285155623,
+      "size_surface_standard": 27931.280761230093,
+      "rz_level": 12051.186752710499,
+      "sn_source": 1627.344346374303,
+      "damage_method": 176.1089520182186,
+      "mean_stress_methodxsize_surface_standard": 5.613816827728584,
+      "mean_stress_methodxrz_level": -0.1965843480599574,
+      "mean_stress_methodxsn_source": 362.10426968188585,
+      "mean_stress_methodxdamage_method": 0.0022386341198341597,
+      "size_surface_standardxrz_level": 487.2159977104501,
+      "size_surface_standardxsn_source": 62.25911345207773,
+      "size_surface_standardxdamage_method": 3.205608467441351,
+      "rz_levelxsn_source": 59.52866295087115,
+      "rz_levelxdamage_method": 0.3357017034173566,
+      "sn_sourcexdamage_method": 0.6969234733200835
+    },
+    "fractions": {
+      "mean_stress_method": 17.8,
+      "size_surface_standard": 53.7,
+      "rz_level": 23.2,
+      "sn_source": 3.1,
+      "damage_method": 0.3,
+      "mean_stress_methodxsize_surface_standard": 0.0,
+      "mean_stress_methodxrz_level": 0.0,
+      "mean_stress_methodxsn_source": 0.7,
+      "mean_stress_methodxdamage_method": 0.0,
+      "size_surface_standardxrz_level": 0.9,
+      "size_surface_standardxsn_source": 0.1,
+      "size_surface_standardxdamage_method": 0.0,
+      "rz_levelxsn_source": 0.1,
+      "rz_levelxdamage_method": 0.0,
+      "sn_sourcexdamage_method": 0.0
+    },
+    "total_interaction_pct": 1.8
+  },
+  "summary": "Benchmark: std x Rz interaction 4.8%. Full second-order model: total interaction share 1.8% (std x Rz 0.9%; mean-stress x std 0.0%; mean-stress x Rz 0.0%)."
+}

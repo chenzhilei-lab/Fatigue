@@ -1,0 +1,54 @@
+{
+  "description": "Multi-geometry sensitivity: full 144-combination sweep + AFT decomposition for m_n=3/z=20 (baseline), m_n=8/z=20, m_n=3/z=14.",
+  "geometries": {
+    "baseline_mn3_z20": {
+      "label": "m_n=3 mm, z=20 (baseline)",
+      "result": {
+        "n_total": 144,
+        "n_censored": 84,
+        "sigma": 0.1745,
+        "variance_fractions": {
+          "mean_stress_method": 18.2,
+          "size_surface_standard": 55.3,
+          "rz_level": 22.6,
+          "sn_source": 2.5,
+          "damage_method": 0.3,
+          "interaction": 1.2
+        }
+      }
+    },
+    "large_module_mn8_z20": {
+      "label": "m_n=8 mm, z=20 (ISO Y_X != 1)",
+      "result": {
+        "error": "insufficient observed",
+        "n_censored": 144
+      },
+      "note": "AFT decomposition not identified (likely all run-out)"
+    },
+    "mid_module_mn5_z20": {
+      "label": "m_n=5 mm, z=20 (intermediate)",
+      "result": {
+        "error": "insufficient observed",
+        "n_censored": 144
+      },
+      "note": "AFT decomposition not identified (likely all run-out)"
+    },
+    "low_teeth_mn3_z14": {
+      "label": "m_n=3 mm, z=14 (AGMA J shifts)",
+      "result": {
+        "n_total": 144,
+        "n_censored": 0,
+        "sigma": 0.3185,
+        "variance_fractions": {
+          "mean_stress_method": 36.8,
+          "size_surface_standard": 32.9,
+          "rz_level": 14.1,
+          "sn_source": 14.9,
+          "damage_method": 0.2,
+          "interaction": 1.1
+        }
+      }
+    }
+  },
+  "summary": "Factor ranking and variance shares for three gear geometries; see per-geometry variance_fractions."
+}

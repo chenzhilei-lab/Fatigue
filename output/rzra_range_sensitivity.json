@@ -1,0 +1,100 @@
+{
+  "description": "Rz/Ra conversion ratio sweep: full 144-combination AFT decomposition with AGMA C_f re-evaluated at Rz/Ra = 4/6/10/20.",
+  "baseline_ratio_6": {
+    "n_total": 144,
+    "n_censored": 84,
+    "sigma": 0.1745,
+    "logLik": 11.32,
+    "variance_fractions": {
+      "mean_stress_method": 18.2,
+      "size_surface_standard": 55.3,
+      "rz_level": 22.6,
+      "sn_source": 2.5,
+      "damage_method": 0.3,
+      "interaction": 1.2
+    }
+  },
+  "ratios": {
+    "4": {
+      "ratio": 4,
+      "result": {
+        "n_total": 144,
+        "n_censored": 84,
+        "sigma": 0.1727,
+        "logLik": 11.35,
+        "variance_fractions": {
+          "mean_stress_method": 18.7,
+          "size_surface_standard": 53.8,
+          "rz_level": 23.5,
+          "sn_source": 2.6,
+          "damage_method": 0.3,
+          "interaction": 1.1
+        }
+      },
+      "rz_var_pct": 23.5,
+      "standard_var_pct": 53.8
+    },
+    "6": {
+      "ratio": 6,
+      "result": {
+        "n_total": 144,
+        "n_censored": 84,
+        "sigma": 0.1745,
+        "logLik": 11.32,
+        "variance_fractions": {
+          "mean_stress_method": 18.2,
+          "size_surface_standard": 55.3,
+          "rz_level": 22.6,
+          "sn_source": 2.5,
+          "damage_method": 0.3,
+          "interaction": 1.2
+        }
+      },
+      "rz_var_pct": 22.6,
+      "standard_var_pct": 55.3
+    },
+    "10": {
+      "ratio": 10,
+      "result": {
+        "n_total": 144,
+        "n_censored": 86,
+        "sigma": 0.1726,
+        "logLik": 7.09,
+        "variance_fractions": {
+          "mean_stress_method": 17.5,
+          "size_surface_standard": 57.1,
+          "rz_level": 21.6,
+          "sn_source": 2.3,
+          "damage_method": 0.3,
+          "interaction": 1.2
+        }
+      },
+      "rz_var_pct": 21.6,
+      "standard_var_pct": 57.1
+    },
+    "20": {
+      "ratio": 20,
+      "result": {
+        "n_total": 144,
+        "n_censored": 92,
+        "sigma": 0.1688,
+        "logLik": 5.73,
+        "variance_fractions": {
+          "mean_stress_method": 16.8,
+          "size_surface_standard": 60.0,
+          "rz_level": 20.4,
+          "sn_source": 1.7,
+          "damage_method": 0.3,
+          "interaction": 0.8
+        }
+      },
+      "rz_var_pct": 20.4,
+      "standard_var_pct": 60.0
+    }
+  },
+  "rz_share_range_pct": [
+    20.4,
+    23.5
+  ],
+  "summary": "Roughness variance share: baseline (Rz/Ra=6) 22.6%; range across Rz/Ra = 4--20: 20.4--23.5%. Standard share range: 53.8--60.0%."
+}

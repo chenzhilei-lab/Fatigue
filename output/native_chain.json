@@ -1,0 +1,191 @@
+{
+  "description": "Native three-standard chain AFT decomposition (v6.0 main result) — AGMA J-factor and FKM K_f replace the unified Y_Sa for those standards; ISO keeps native Y_Sa",
+  "gear": {
+    "module_mn": 3.0,
+    "teeth": 20,
+    "torque_Nm": 700.0,
+    "R": 0.0
+  },
+  "native_multipliers": {
+    "iso_y_sa": 1.55,
+    "agma_j_range": {
+      "J_low_conservative": {
+        "J": 0.31,
+        "ratio_to_unified": 1.0774
+      },
+      "J_midpoint": {
+        "J": 0.33,
+        "ratio_to_unified": 1.0129
+      },
+      "J_high_nonconservative": {
+        "J": 0.35,
+        "ratio_to_unified": 0.9548
+      }
+    },
+    "fkm_kf_range": {
+      "Kf_Peterson": {
+        "K_f": 1.84,
+        "ratio_to_unified": 1.1888
+      },
+      "Kf_Neuber": {
+        "K_f": 1.75,
+        "ratio_to_unified": 1.1265
+      }
+    }
+  },
+  "baseline_uniform_ysa": {
+    "n_total": 144,
+    "n_censored": 84,
+    "sigma": 0.1745,
+    "logLik": 11.32,
+    "variance_fractions": {
+      "mean_stress_method": 18.2,
+      "size_surface_standard": 55.3,
+      "rz_level": 22.6,
+      "sn_source": 2.5,
+      "damage_method": 0.3,
+      "interaction": 1.2
+    },
+    "dLL": {
+      "mean_stress_method": 324.2,
+      "size_surface_standard": 985.7,
+      "rz_level": 403.3,
+      "sn_source": 43.9,
+      "damage_method": 5.9
+    }
+  },
+  "native_agma_only": {
+    "n_total": 144,
+    "n_censored": 84,
+    "sigma": 0.1736,
+    "logLik": 11.16,
+    "variance_fractions": {
+      "mean_stress_method": 18.6,
+      "size_surface_standard": 54.0,
+      "rz_level": 23.3,
+      "sn_source": 2.6,
+      "damage_method": 0.3,
+      "interaction": 1.1
+    },
+    "dLL": {
+      "mean_stress_method": 334.1,
+      "size_surface_standard": 968.2,
+      "rz_level": 418.3,
+      "sn_source": 46.8,
+      "damage_method": 5.9
+    }
+  },
+  "native_fkm_only": {
+    "n_total": 144,
+    "n_censored": 84,
+    "sigma": 0.2357,
+    "logLik": -22.74,
+    "variance_fractions": {
+      "mean_stress_method": 16.0,
+      "size_surface_standard": 69.2,
+      "rz_level": 11.8,
+      "sn_source": 2.1,
+      "damage_method": 0.1,
+      "interaction": 0.8
+    },
+    "dLL": {
+      "mean_stress_method": 388.6,
+      "size_surface_standard": 1683.8,
+      "rz_level": 286.1,
+      "sn_source": 51.2,
+      "damage_method": 2.9
+    }
+  },
+  "native_chain_main": {
+    "n_total": 144,
+    "n_censored": 84,
+    "sigma": 0.2285,
+    "logLik": -20.4,
+    "variance_fractions": {
+      "mean_stress_method": 16.1,
+      "size_surface_standard": 68.5,
+      "rz_level": 12.2,
+      "sn_source": 2.3,
+      "damage_method": 0.1,
+      "interaction": 0.8
+    },
+    "dLL": {
+      "mean_stress_method": 395.3,
+      "size_surface_standard": 1683.9,
+      "rz_level": 299.7,
+      "sn_source": 55.6,
+      "damage_method": 3.1
+    }
+  },
+  "sensitivity": {
+    "agma_J_low": {
+      "n_total": 144,
+      "n_censored": 84,
+      "sigma": 0.1999,
+      "logLik": -9.08,
+      "variance_fractions": {
+        "mean_stress_method": 16.7,
+        "size_surface_standard": 64.3,
+        "rz_level": 14.7,
+        "sn_source": 3.2,
+        "damage_method": 0.2,
+        "interaction": 0.9
+      },
+      "dLL": {
+        "mean_stress_method": 413.6,
+        "size_surface_standard": 1596.7,
+        "rz_level": 365.6,
+        "sn_source": 80.5,
+        "damage_method": 4.3
+      }
+    },
+    "agma_J_high": {
+      "n_total": 144,
+      "n_censored": 92,
+      "sigma": 0.2465,
+      "logLik": -27.56,
+      "variance_fractions": {
+        "mean_stress_method": 15.2,
+        "size_surface_standard": 72.0,
+        "rz_level": 10.6,
+        "sn_source": 1.6,
+        "damage_method": 0.1,
+        "interaction": 0.6
+      },
+      "dLL": {
+        "mean_stress_method": 363.1,
+        "size_surface_standard": 1723.2,
+        "rz_level": 253.8,
+        "sn_source": 37.9,
+        "damage_method": 2.1
+      }
+    },
+    "fkm_neuber": {
+      "n_total": 144,
+      "n_censored": 84,
+      "sigma": 0.2,
+      "logLik": -8.04,
+      "variance_fractions": {
+        "mean_stress_method": 16.6,
+        "size_surface_standard": 65.4,
+        "rz_level": 14.5,
+        "sn_source": 2.4,
+        "damage_method": 0.2,
+        "interaction": 0.9
+      },
+      "dLL": {
+        "mean_stress_method": 407.4,
+        "size_surface_standard": 1609.9,
+        "rz_level": 357.1,
+        "sn_source": 59.0,
+        "damage_method": 4.3
+      }
+    }
+  },
+  "deltas_pp": {
+    "native_vs_baseline_standard": 13.2,
+    "agma_only_vs_baseline_standard": -1.3,
+    "fkm_only_vs_baseline_standard": 13.9
+  },
+  "summary": "Uniform-Y_Sa baseline: standard variance 55.3%. Native three-standard chain (AGMA J=0.33 midpoint + FKM K_f(Peterson)=1.84): standard variance 68.5% (Δ=+13.2pp). AGMA J sensitivity 64.3--72.0%; FKM Neuber alternative 65.4%."
+}

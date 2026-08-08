@@ -1,0 +1,81 @@
+{
+  "description": "Residual stress sensitivity: full 144-combination AFT decomposition under ground/machined/as-forged residual stress states applied to mean stress.",
+  "baseline_0MPa": {
+    "n_total": 144,
+    "n_censored": 84,
+    "sigma": 0.1745,
+    "logLik": 11.32,
+    "variance_fractions": {
+      "mean_stress_method": 18.2,
+      "size_surface_standard": 55.3,
+      "rz_level": 22.6,
+      "sn_source": 2.5,
+      "damage_method": 0.3,
+      "interaction": 1.2
+    }
+  },
+  "states": {
+    "ground_-300MPa": {
+      "sigma_res_MPa": -300.0,
+      "label": "ground (-300 MPa compressive)",
+      "result": {
+        "n_total": 144,
+        "n_censored": 112,
+        "sigma": 0.1663,
+        "logLik": -0.24,
+        "variance_fractions": {
+          "mean_stress_method": 43.7,
+          "size_surface_standard": 38.2,
+          "rz_level": 16.2,
+          "sn_source": 0.2,
+          "damage_method": 0.3,
+          "interaction": 1.3
+        }
+      },
+      "mean_stress_var_pct": 43.7
+    },
+    "machined_0MPa": {
+      "sigma_res_MPa": 0.0,
+      "label": "machined (0 MPa, baseline)",
+      "result": {
+        "n_total": 144,
+        "n_censored": 84,
+        "sigma": 0.1745,
+        "logLik": 11.32,
+        "variance_fractions": {
+          "mean_stress_method": 18.2,
+          "size_surface_standard": 55.3,
+          "rz_level": 22.6,
+          "sn_source": 2.5,
+          "damage_method": 0.3,
+          "interaction": 1.2
+        }
+      },
+      "mean_stress_var_pct": 18.2
+    },
+    "as_forged_+150MPa": {
+      "sigma_res_MPa": 150.0,
+      "label": "as-forged (+150 MPa tensile)",
+      "result": {
+        "n_total": 144,
+        "n_censored": 84,
+        "sigma": 0.2636,
+        "logLik": -25.27,
+        "variance_fractions": {
+          "mean_stress_method": 21.8,
+          "size_surface_standard": 53.9,
+          "rz_level": 18.2,
+          "sn_source": 5.2,
+          "damage_method": 0.2,
+          "interaction": 0.8
+        }
+      },
+      "mean_stress_var_pct": 21.8
+    }
+  },
+  "mean_stress_share_range_pct": [
+    18.2,
+    43.7
+  ],
+  "summary": "Mean-stress variance share: 0 MPa baseline 18.2%; ground -300 MPa 43.7%; as-forged +150 MPa 21.8%. Range across manufacturing states: 18.2--43.7 pp."
+}
